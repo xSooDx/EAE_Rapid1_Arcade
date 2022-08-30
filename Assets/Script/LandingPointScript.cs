@@ -31,7 +31,7 @@ public class LandingPointScript : MonoBehaviour
                     Debug.Log("Horizon Crash!!");
                 }
 
-                if (Mathf.Abs(_ship.GetRotateAngle()) > this.Req_RotateAngle+this.Req_RotateAngleTor)
+                if (!(_ship.GetRotateAngle()>=this.Req_RotateAngle-this.Req_RotateAngleTor && _ship.GetRotateAngle()<= this.Req_RotateAngle + this.Req_RotateAngleTor))
                 {
                     Debug.Log("Rotate Crash!!");
                 }
