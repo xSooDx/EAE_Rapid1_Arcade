@@ -87,7 +87,7 @@ public class ShipController : MonoBehaviour
 
         // calculate the speed
         VerticalSpd = (this._rg.velocity.y * -20f);
-        HorizontalSpd = (this._rg.velocity.x * -20f);
+        HorizontalSpd = (this._rg.velocity.x * 20f);
     }
 
     public float GetVerticalSpd()

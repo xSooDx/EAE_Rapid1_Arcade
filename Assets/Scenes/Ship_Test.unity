@@ -748,8 +748,8 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 20
-  m_LinearDrag: 0.5
+  m_Mass: 25
+  m_LinearDrag: 0.25
   m_AngularDrag: 1.5
   m_GravityScale: 0.05
   m_Material: {fileID: 0}
@@ -769,8 +769,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6c498160c1ba3b4bb170e1cb9c41f9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 20
-  Rot_Speed: 5
+  Speed: 25
+  Rot_Speed: 8
   VerticalSpd: 0
   HorizontalSpd: 0
   RotateAngle: 0
