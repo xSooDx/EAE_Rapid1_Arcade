@@ -16,12 +16,15 @@ public class ShipController : MonoBehaviour
     /// </summary>
     private Rigidbody2D _rg;
 
+    [Header("Ship Movement Parameter:")]
     [Tooltip("Speed of the ship")]
     public float Speed;
 
     [Tooltip("Rotation Speed")]
     public float Rot_Speed = 5;
 
+    [Space(5)]
+    [Header("Movement Info:")]
     [SerializeField]
     private float VerticalSpd;
     [SerializeField]
@@ -29,6 +32,8 @@ public class ShipController : MonoBehaviour
     [SerializeField]
     private float RotateAngle;
 
+    [Space(5)]
+    [Header("UI setup:")]
     [Tooltip("Text for showing vertical speed.")]
     public TextMeshProUGUI VerticalSpeedTxt;
     [Tooltip("Text for showing Horizontal speed.")]
