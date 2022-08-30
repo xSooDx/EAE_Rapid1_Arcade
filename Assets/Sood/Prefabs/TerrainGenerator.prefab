@@ -57,6 +57,7 @@ MonoBehaviour:
   meshDepth: 10
   edgeCollider: {fileID: 4393764064603996208}
   meshFilter: {fileID: 7358835137720440957}
+  meshRenderer: {fileID: 798182999334070853}
 --- !u!68 &4393764064603996208
 EdgeCollider2D:
   m_ObjectHideFlags: 0

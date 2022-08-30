@@ -20,6 +20,7 @@ public class TerrainGenerator1D : MonoBehaviour
 
     [SerializeField] EdgeCollider2D edgeCollider;
     [SerializeField] MeshFilter meshFilter;
+    [SerializeField] MeshRenderer meshRenderer;
 
     // Total width
     // offset 
@@ -46,6 +47,9 @@ public class TerrainGenerator1D : MonoBehaviour
         edgeCollider.points = null;
         meshFilter = GetComponent<MeshFilter>();
         meshFilter.mesh = null;
+        meshRenderer = GetComponent<MeshRenderer>();
+        //meshRenderer.material = null;
+
     }
 
     void DoPreCalculations()
@@ -72,6 +76,11 @@ public class TerrainGenerator1D : MonoBehaviour
 
     void SmoothHeightMap()
     {
+        if (heightMap == null || heightMap.Length == 0)
+        {
+            Debug.LogWarning("SmoothHeightMap: Height map is null");
+            return;
+        }
         float[] smoothKernel = { 1, 3, 1 };
         int kernelHalfSize = smoothKernel.Length / 2;
         float kernelSum = 0;
@@ -100,7 +109,7 @@ public class TerrainGenerator1D : MonoBehaviour
     {
         if (heightMap == null || heightMap.Length == 0)
         {
-            Debug.LogError("GenerateCollider: Height map is null");
+            Debug.LogWarning("SmoothHeightMap2: Height map is null");
             return;
         }
         float[] newHeightMap = new float[heightMap.Length];
@@ -128,7 +137,7 @@ public class TerrainGenerator1D : MonoBehaviour
     {
         if (heightMap == null || heightMap.Length == 0)
         {
-            Debug.LogError("GenerateCollider: Height map is null");
+            Debug.LogWarning("GenerateCollider: Height map is null");
             return;
         }
         List<Vector2> pointList = new List<Vector2>();
@@ -144,7 +153,7 @@ public class TerrainGenerator1D : MonoBehaviour
     {
         if (heightMap == null || heightMap.Length == 0)
         {
-            Debug.LogError("GenerateCollider: Height map is null");
+            Debug.LogWarning("GenerateMesh: Height map is null");
             return;
         }
 
@@ -175,6 +184,12 @@ public class TerrainGenerator1D : MonoBehaviour
         mesh.triangles = triangleList.ToArray();
         meshFilter.mesh = mesh;
 
+    }
+
+    void GenerateMaterial()
+    {
+        //Material material = new Material();
+        //meshRenderer.
     }
 
     float GetPointLocalXPosition(int idx)
@@ -214,5 +229,5 @@ public class TerrainGenerator1D : MonoBehaviour
 public class NoiseLayer
 {
     [Range(0f, 100f)] public float noiseStrength = 10f;
-    [Range(0f, 100f)] public float noisefrequency = 1f;
+    [Range(0f, 10f)] public float noisefrequency = 1f;
 }
