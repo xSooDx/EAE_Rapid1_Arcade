@@ -21,9 +21,16 @@ public class ShipController : MonoBehaviour
     [Range(0, 50)]
     public float Speed;
 
+    private float _speed;
+
     [Tooltip("Rotation Speed")]
     [Range(0, 20)]
     public float Rot_Speed = 5;
+
+    [Range(0, 100)]
+    public float FocusHeight;
+
+    public LayerMask GroundLayer;
 
     [Space(5)]
     [Header("Movement Info:")]
@@ -33,6 +40,8 @@ public class ShipController : MonoBehaviour
     private float HorizontalSpd;
     [SerializeField]
     private float RotateAngle;
+    [SerializeField]
+    private float Altitude;
 
     [Space(5)]
     [Header("UI setup:")]
@@ -40,6 +49,8 @@ public class ShipController : MonoBehaviour
     public TextMeshProUGUI VerticalSpeedTxt;
     [Tooltip("Text for showing Horizontal speed.")]
     public TextMeshProUGUI HorizontalSpeedTxt;
+    [Tooltip("Text for showing Altitude.")]
+    public TextMeshProUGUI AltitudeTxt;
 
     private void Awake()
     {
@@ -58,6 +69,7 @@ public class ShipController : MonoBehaviour
     void Start()
     {
         this._rg = gameObject.GetComponent<Rigidbody2D>();
+        if (MainGameController.gameController != null) MainGameController.gameController.GameOver.AddListener(GameOverAction);
     }
 
     void Update()
@@ -71,6 +83,32 @@ public class ShipController : MonoBehaviour
         {
             this.HorizontalSpeedTxt.text = HorizontalSpd.ToString("0");
         }
+
+        if (this.AltitudeTxt != null)//set the value text
+        {
+            this.AltitudeTxt.text = Altitude.ToString("0");
+        }
+
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up, 1000f, GroundLayer);
+        if (hit.collider != null)
+        {
+            Altitude = Vector2.Distance(hit.point, this.gameObject.transform.position) * 20f;
+            if (Altitude < FocusHeight && MainGameController.gameController != null)
+            {
+                MainGameController.gameController.StartFocus.Invoke(this.transform);
+            }
+            else
+            {
+                MainGameController.gameController.CancelFocus.Invoke();
+            }
+        }
+    }
+
+    public void InitialSetup(Vector2 _pos, Vector2 _force, float _rot)
+    {
+        this._rg.rotation = _rot;
+        this._rg.position = _pos;
+        this._rg.AddForce(_force);
     }
 
     private void FixedUpdate()
@@ -90,11 +128,31 @@ public class ShipController : MonoBehaviour
         }
         RotateAngle = this._rg.rotation;//set the value(for viewing)
 
-        _rg.AddRelativeForce(Vector2.up * Playerinput.PlayState.Push.ReadValue<float>() * Speed);//push the ship
+        float _push = Playerinput.PlayState.Push.ReadValue<float>();
+        if (_push > 0)
+        {
+            if (_speed < Speed)
+            {
+                _speed += Speed/10;
+            }
+            _rg.AddRelativeForce(Vector2.up* _push * _speed);//push the ship
+        }
+        else
+        {
+            _speed = 0;
+        }
+        
 
         // calculate the speed
         VerticalSpd = (this._rg.velocity.y * -20f);
         HorizontalSpd = (this._rg.velocity.x * 20f);
+    }
+
+    void GameOverAction(string _str1, string _str2)
+    {
+        Playerinput.Disable();
+        this._rg.velocity = Vector2.zero;
+        this._rg.isKinematic = true;
     }
 
     public float GetVerticalSpd()

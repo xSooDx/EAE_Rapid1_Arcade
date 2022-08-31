@@ -121,7 +121,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 25
-  Rot_Speed: 8
+  Rot_Speed: 1.5
   VerticalSpd: 0
   HorizontalSpd: 0
   RotateAngle: 0
