@@ -27,11 +27,13 @@ public class ShipController : MonoBehaviour
     [Range(0, 20)]
     public float Rot_Speed = 5;
 
+    [Tooltip("The height that need to be focus on")]
     [Range(0, 100)]
     public float FocusHeight;
 
+    [Tooltip("The layer of ground")]
     public LayerMask GroundLayer;
-
+    [Tooltip("The offset of height detection(for altitude)")]
     public Vector2 HeightOffest;
 
     [Space(5)]
@@ -106,6 +108,12 @@ public class ShipController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Setting when game start
+    /// </summary>
+    /// <param name="_pos"></param>
+    /// <param name="_force"></param>
+    /// <param name="_rot"></param>
     public void InitialSetup(Vector2 _pos, Vector2 _force, float _rot)
     {
         this._rg.rotation = _rot;
@@ -135,13 +143,17 @@ public class ShipController : MonoBehaviour
         {
             if (_speed < Speed)
             {
-                _speed += Speed / 10;
+                _speed += Speed / 30;
             }
             _rg.AddRelativeForce(Vector2.up * _push * _speed);//push the ship
         }
         else
         {
-            _speed = 0;
+            _speed -= Speed / 15;
+            if (_speed <= 0)
+            {
+                _speed = 0;
+            }
         }
 
 
@@ -150,6 +162,11 @@ public class ShipController : MonoBehaviour
         HorizontalSpd = (this._rg.velocity.x * 20f);
     }
 
+    /// <summary>
+    /// Something need to do when game's over
+    /// </summary>
+    /// <param name="_str1"></param>
+    /// <param name="_str2"></param>
     void GameOverAction(string _str1, string _str2)
     {
         Playerinput.Disable();
