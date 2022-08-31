@@ -32,6 +32,8 @@ public class ShipController : MonoBehaviour
 
     public LayerMask GroundLayer;
 
+    public Vector2 HeightOffest;
+
     [Space(5)]
     [Header("Movement Info:")]
     [SerializeField]
@@ -89,10 +91,10 @@ public class ShipController : MonoBehaviour
             this.AltitudeTxt.text = Altitude.ToString("0");
         }
 
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up, 1000f, GroundLayer);
+        RaycastHit2D hit = Physics2D.Raycast((Vector2)transform.position, -Vector2.up , 1000f, GroundLayer);
         if (hit.collider != null)
         {
-            Altitude = Vector2.Distance(hit.point, this.gameObject.transform.position) * 20f;
+            Altitude = Vector2.Distance(hit.point, (Vector2)this.gameObject.transform.position+ HeightOffest) * 20f;
             if (Altitude < FocusHeight && MainGameController.gameController != null)
             {
                 MainGameController.gameController.StartFocus.Invoke(this.transform);
@@ -133,15 +135,15 @@ public class ShipController : MonoBehaviour
         {
             if (_speed < Speed)
             {
-                _speed += Speed/10;
+                _speed += Speed / 10;
             }
-            _rg.AddRelativeForce(Vector2.up* _push * _speed);//push the ship
+            _rg.AddRelativeForce(Vector2.up * _push * _speed);//push the ship
         }
         else
         {
             _speed = 0;
         }
-        
+
 
         // calculate the speed
         VerticalSpd = (this._rg.velocity.y * -20f);
@@ -152,6 +154,7 @@ public class ShipController : MonoBehaviour
     {
         Playerinput.Disable();
         this._rg.velocity = Vector2.zero;
+        this._rg.angularVelocity = 0;
         this._rg.isKinematic = true;
     }
 
