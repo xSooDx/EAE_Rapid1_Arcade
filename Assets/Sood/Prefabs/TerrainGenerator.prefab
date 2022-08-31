@@ -44,14 +44,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 4150458838129551886}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a7b156d9cb5c30848a6bf1fa7a13ef72, type: 3}
+  m_Script: {fileID: 11500000, guid: 1307b2a89e3135e468a02845b0151d5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   startingIdx: 0
   terrainWidth: 0
-  distanceBetweenPoints: 0.2
+  distanceBetweenPoints: 1
   maxHeight: 20
-  minHeight: -5
+  minHeight: 10
   noiseSampleSeed: 0.5
   noiseLayers: []
   meshDepth: 10
@@ -362,7 +362,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: eae4b308f9efa9a4c8e4ef9959585137, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
