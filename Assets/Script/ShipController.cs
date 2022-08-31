@@ -18,9 +18,11 @@ public class ShipController : MonoBehaviour
 
     [Header("Ship Movement Parameter:")]
     [Tooltip("Speed of the ship")]
+    [Range(0, 50)]
     public float Speed;
 
     [Tooltip("Rotation Speed")]
+    [Range(0, 20)]
     public float Rot_Speed = 5;
 
     [Space(5)]
