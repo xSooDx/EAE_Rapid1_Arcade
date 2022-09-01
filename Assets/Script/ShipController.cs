@@ -16,12 +16,21 @@ public class ShipController : MonoBehaviour
     /// </summary>
     private Rigidbody2D _rg;
 
-    [Header("Ship Movement Parameter:")]
+    [Header("Ship Setting:")]
     [Tooltip("Speed of the ship")]
     [Range(0, 50)]
     public float Speed;
+    [Tooltip("How fast will ship speed up")]
+    [Range(0, 10)]
+    public float SpeedUpMultiplier;
+
+    [Tooltip("Amount of fuel")]
+    public float FuelAmount;
 
     private float _speed;
+
+    private float PushInput;
+    private float RotateInput;
 
     [Tooltip("Rotation Speed")]
     [Range(0, 20)]
@@ -55,6 +64,8 @@ public class ShipController : MonoBehaviour
     public TextMeshProUGUI HorizontalSpeedTxt;
     [Tooltip("Text for showing Altitude.")]
     public TextMeshProUGUI AltitudeTxt;
+    [Tooltip("Text for showing fuel amount")]
+    public TextMeshProUGUI FuelAmountTxt;
 
     private void Awake()
     {
@@ -93,10 +104,38 @@ public class ShipController : MonoBehaviour
             this.AltitudeTxt.text = Altitude.ToString("0");
         }
 
-        RaycastHit2D hit = Physics2D.Raycast((Vector2)transform.position, -Vector2.up , 1000f, GroundLayer);
+        if (this.FuelAmountTxt != null)//set the value text
+        {
+            this.FuelAmountTxt.text = FuelAmount.ToString("0");
+        }
+        if (FuelAmount <= 0 && MainGameController.gameController != null)
+        {
+            MainGameController.gameController.GameOver.Invoke("Game Over", "Out of fuel!!", false);
+        }
+        PushInput = Playerinput.PlayState.Push.ReadValue<float>();
+        RotateInput = Playerinput.PlayState.Rotate.ReadValue<float>();
+
+        if (PushInput > 0)
+        {
+            if (_speed < Speed)
+            {
+                _speed += Speed * Time.deltaTime * SpeedUpMultiplier;
+            }
+            FuelAmount -= Time.deltaTime * 3;
+        }
+        else
+        {
+            _speed -= Speed * Time.deltaTime * SpeedUpMultiplier * 2;
+            if (_speed <= 0)
+            {
+                _speed = 0;
+            }
+        }
+
+        RaycastHit2D hit = Physics2D.Raycast((Vector2)transform.position, -Vector2.up, 1000f, GroundLayer);
         if (hit.collider != null)
         {
-            Altitude = Vector2.Distance(hit.point, (Vector2)this.gameObject.transform.position+ HeightOffest) * 20f;
+            Altitude = Vector2.Distance(hit.point, (Vector2)this.gameObject.transform.position + HeightOffest) * 20f;
             if (Altitude < FocusHeight && MainGameController.gameController != null)
             {
                 MainGameController.gameController.StartFocus.Invoke(this.transform);
@@ -116,6 +155,8 @@ public class ShipController : MonoBehaviour
     /// <param name="_rot"></param>
     public void InitialSetup(Vector2 _pos, Vector2 _force, float _rot)
     {
+        Playerinput.Enable();
+        this._rg.isKinematic = false;
         this._rg.rotation = _rot;
         this._rg.position = _pos;
         this._rg.AddForce(_force);
@@ -124,8 +165,8 @@ public class ShipController : MonoBehaviour
     private void FixedUpdate()
     {
 
-        float _Rotate = Playerinput.PlayState.Rotate.ReadValue<float>();
-        this._rg.AddTorque(_Rotate * Rot_Speed);//rotate the ship
+
+        this._rg.AddTorque(RotateInput * Rot_Speed);//rotate the ship
 
         //set the maximum of angle
         if (this._rg.rotation < 0 && this._rg.rotation <= -90)
@@ -138,23 +179,8 @@ public class ShipController : MonoBehaviour
         }
         RotateAngle = this._rg.rotation;//set the value(for viewing)
 
-        float _push = Playerinput.PlayState.Push.ReadValue<float>();
-        if (_push > 0)
-        {
-            if (_speed < Speed)
-            {
-                _speed += Speed / 30;
-            }
-            _rg.AddRelativeForce(Vector2.up * _push * _speed);//push the ship
-        }
-        else
-        {
-            _speed -= Speed / 15;
-            if (_speed <= 0)
-            {
-                _speed = 0;
-            }
-        }
+        _rg.AddRelativeForce(Vector2.up * PushInput * _speed);//push the ship
+
 
 
         // calculate the speed
@@ -167,7 +193,7 @@ public class ShipController : MonoBehaviour
     /// </summary>
     /// <param name="_str1"></param>
     /// <param name="_str2"></param>
-    void GameOverAction(string _str1, string _str2)
+    void GameOverAction(string _str1, string _str2,bool _continue)
     {
         Playerinput.Disable();
         this._rg.velocity = Vector2.zero;

@@ -17,7 +17,7 @@ public class MainGameController : MonoBehaviour
     /// Event of game over
     /// </summary>
     [HideInInspector]
-    public UnityEvent<string,string> GameOver;
+    public UnityEvent<string,string,bool> GameOver;
 
     /// <summary>
     /// Event of camera focus on ship when it is low altitude
@@ -47,6 +47,8 @@ public class MainGameController : MonoBehaviour
     [Tooltip("Game Timer")]
     private float GameTime;
 
+    private Coroutine timecoroutine;
+
     [Tooltip("Text for showing time")]
     public TextMeshProUGUI TimeTxt;
 
@@ -63,11 +65,8 @@ public class MainGameController : MonoBehaviour
 
     private void Start()
     {
-        if (playerShip != null) playerShip.InitialSetup(InitialPos, InitialForce, InitialRotate);
-        if (GameMsgTitleTxt != null) GameMsgTitleTxt.text = "";
-        if (GameMsgDESCTxt != null) GameMsgDESCTxt.text = "";
         this.GameTime = 0;
-        StartCoroutine(TimeCounter());//start timer
+        iniSetup();
         GameOver.AddListener(GameOverFunc);//add function that will be trigger when game over
     }
 
@@ -76,21 +75,43 @@ public class MainGameController : MonoBehaviour
     /// </summary>
     /// <param name="_ShowTxt"></param>
     /// <param name="_Desc"></param>
-    void GameOverFunc(string _ShowTxt,string _Desc)
+    void GameOverFunc(string _ShowTxt,string _Desc,bool _continue)
     {
+        StopCoroutine(timecoroutine);
         if (GameMsgTitleTxt != null) GameMsgTitleTxt.text = _ShowTxt;
         if (GameMsgDESCTxt != null) GameMsgDESCTxt.text = _Desc;
-        StartCoroutine(RestartGameCounter());
+        StartCoroutine(RestartGameCounter(_continue));
+    }
+
+    void NewRound()
+    {
+        iniSetup();
+    }
+
+    void iniSetup()
+    {
+        if (playerShip != null) playerShip.InitialSetup(InitialPos, InitialForce, InitialRotate);
+        if (GameMsgTitleTxt != null) GameMsgTitleTxt.text = "";
+        if (GameMsgDESCTxt != null) GameMsgDESCTxt.text = "";
+        timecoroutine = StartCoroutine(TimeCounter());//start timer
     }
 
     /// <summary>
     /// the count down for reload scene
     /// </summary>
     /// <returns></returns>
-    IEnumerator RestartGameCounter()
+    IEnumerator RestartGameCounter(bool _continue)
     {
-        yield return new WaitForSeconds(5f);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        yield return new WaitForSeconds(3f);
+        if (_continue)
+        {
+            NewRound();
+        }
+        else
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+        
     }
 
     /// <summary>
@@ -99,12 +120,15 @@ public class MainGameController : MonoBehaviour
     /// <returns></returns>
     IEnumerator TimeCounter()
     {
-        if (TimeTxt != null)
+        while (true)
         {
-            TimeTxt.text = (GameTime / 60).ToString("00") + ":" + (GameTime % 60).ToString("00");
+            if (TimeTxt != null)
+            {
+                TimeTxt.text = (GameTime / 60).ToString("00") + ":" + (GameTime % 60).ToString("00");
+            }
+            yield return new WaitForSeconds(1f);
+            GameTime++;
         }
-        yield return new WaitForSeconds(1f);
-        GameTime++;
-        StartCoroutine(TimeCounter());
+        
     }
 }

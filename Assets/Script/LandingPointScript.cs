@@ -49,11 +49,11 @@ public class LandingPointScript : MonoBehaviour
 
     void CrashFunction(string _desc)
     {
-        if (MainGameController.gameController != null) MainGameController.gameController.GameOver.Invoke("Ship Crashed!!", _desc);
+        if (MainGameController.gameController != null) MainGameController.gameController.GameOver.Invoke("Ship Crashed!!", _desc,false);
     }
 
     void LandingFunction(string _desc)
     {
-        if (MainGameController.gameController != null) MainGameController.gameController.GameOver.Invoke("Success!!", _desc);
+        if (MainGameController.gameController != null) MainGameController.gameController.GameOver.Invoke("Success!!", _desc,true);
     }
 }
