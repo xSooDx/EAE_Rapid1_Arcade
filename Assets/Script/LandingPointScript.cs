@@ -10,6 +10,9 @@ public class LandingPointScript : MonoBehaviour
     [Tooltip("Horizontal speed exceed this value, crash")]
     public float Req_MAXHorizonSpeed;
 
+    /// <summary>
+    /// this is new
+    /// </summary>
     [Tooltip("Rotation requirement")]
     public float Req_RotateAngle;
     [Tooltip("Rotation requirement tolerance")]
@@ -35,10 +38,10 @@ public class LandingPointScript : MonoBehaviour
                     return;
                 }
 
-                if (!(_ship.GetRotateAngle()>=this.Req_RotateAngle-this.Req_RotateAngleTor && _ship.GetRotateAngle()<= this.Req_RotateAngle + this.Req_RotateAngleTor))
+                if (!(_ship.GetRotateAngle() >= this.Req_RotateAngle - this.Req_RotateAngleTor && _ship.GetRotateAngle() <= this.Req_RotateAngle + this.Req_RotateAngleTor))
                 {
                     Debug.Log("Rotate Crash!!");
-                     CrashFunction("Landing angle incorrect!");
+                    CrashFunction("Landing angle incorrect!");
                     return;
                 }
 
@@ -49,11 +52,11 @@ public class LandingPointScript : MonoBehaviour
 
     void CrashFunction(string _desc)
     {
-        if (MainGameController.gameController != null) MainGameController.gameController.GameOver.Invoke("Ship Crashed!!", _desc,false);
+        if (MainGameController.gameController != null) MainGameController.gameController.GameOver.Invoke("Ship Crashed!!", _desc, false);
     }
 
     void LandingFunction(string _desc)
     {
-        if (MainGameController.gameController != null) MainGameController.gameController.GameOver.Invoke("Success!!", _desc,true);
+        if (MainGameController.gameController != null) MainGameController.gameController.GameOver.Invoke("Success!!", _desc, true);
     }
 }
