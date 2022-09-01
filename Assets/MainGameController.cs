@@ -13,6 +13,13 @@ public class MainGameController : MonoBehaviour
     [Tooltip("The player charater")]
     public ShipController playerShip;
 
+    [Tooltip("The score that landing will get")]
+    public int LandingScore;
+
+    [Header("Game Info:")]
+    [SerializeField]
+    private int PlayerScore;
+
     /// <summary>
     /// Event of game over
     /// </summary>
@@ -23,7 +30,7 @@ public class MainGameController : MonoBehaviour
     /// Event of camera focus on ship when it is low altitude
     /// </summary>
     [HideInInspector]
-    public UnityEvent<Transform> StartFocus;
+    public UnityEvent StartFocus;
 
     /// <summary>
     /// Event of camera cancel focus on ship
@@ -58,6 +65,9 @@ public class MainGameController : MonoBehaviour
     [Tooltip("Text for game message description")]
     public TextMeshProUGUI GameMsgDESCTxt;
 
+    [Tooltip("Text for score")]
+    public TextMeshProUGUI ScoreTxt;
+
     private void Awake()
     {
         gameController = this;
@@ -65,9 +75,11 @@ public class MainGameController : MonoBehaviour
 
     private void Start()
     {
+        this.PlayerScore = 0;
         this.GameTime = 0;
         iniSetup();
         GameOver.AddListener(GameOverFunc);//add function that will be trigger when game over
+        //gameController.GameOver.Invoke("CALL!!", "TEST", true);
     }
 
     /// <summary>
@@ -80,6 +92,11 @@ public class MainGameController : MonoBehaviour
         StopCoroutine(timecoroutine);
         if (GameMsgTitleTxt != null) GameMsgTitleTxt.text = _ShowTxt;
         if (GameMsgDESCTxt != null) GameMsgDESCTxt.text = _Desc;
+        if (_continue)
+        {
+            PlayerScore += LandingScore;
+            if (ScoreTxt != null) ScoreTxt.text = PlayerScore.ToString();
+        }
         StartCoroutine(RestartGameCounter(_continue));
     }
 
@@ -93,6 +110,8 @@ public class MainGameController : MonoBehaviour
         if (playerShip != null) playerShip.InitialSetup(InitialPos, InitialForce, InitialRotate);
         if (GameMsgTitleTxt != null) GameMsgTitleTxt.text = "";
         if (GameMsgDESCTxt != null) GameMsgDESCTxt.text = "";
+        if (ScoreTxt != null) ScoreTxt.text = PlayerScore.ToString();
+        if (playerShip != null) playerShip.InitialSetup(InitialPos, InitialForce, InitialRotate);
         timecoroutine = StartCoroutine(TimeCounter());//start timer
     }
 
