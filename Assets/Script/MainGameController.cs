@@ -36,7 +36,7 @@ public class MainGameController : MonoBehaviour
     /// Event of camera cancel focus on ship
     /// </summary>
     [HideInInspector]
-    public UnityEvent CancelFocus;
+    public UnityEvent<bool> CancelFocus;
 
     [Space(5)]
     [Header("Ship Initial Setup:")]
@@ -113,6 +113,7 @@ public class MainGameController : MonoBehaviour
         if (ScoreTxt != null) ScoreTxt.text = PlayerScore.ToString();
         if (playerShip != null) playerShip.InitialSetup(InitialPos, InitialForce, InitialRotate);
         timecoroutine = StartCoroutine(TimeCounter());//start timer
+        gameController.CancelFocus.Invoke(true);
     }
 
     /// <summary>

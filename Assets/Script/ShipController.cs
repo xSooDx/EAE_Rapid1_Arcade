@@ -143,7 +143,7 @@ public class ShipController : MonoBehaviour
             }
             else
             {
-                MainGameController.gameController.CancelFocus.Invoke();
+                MainGameController.gameController.CancelFocus.Invoke(false);
             }
         }
     }
