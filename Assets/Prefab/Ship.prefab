@@ -121,12 +121,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 25
-  Rot_Speed: 1.5
+  SpeedUpMultiplier: 4
+  FuelAmount: 100
+  Rot_Speed: 0.8
+  FocusHeight: 50
+  GroundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  HeightOffest: {x: 0, y: -0.16}
   VerticalSpd: 0
   HorizontalSpd: 0
   RotateAngle: 0
+  Altitude: 0
   VerticalSpeedTxt: {fileID: 0}
   HorizontalSpeedTxt: {fileID: 0}
+  AltitudeTxt: {fileID: 0}
+  FuelAmountTxt: {fileID: 0}
 --- !u!58 &1058694967305720977
 CircleCollider2D:
   m_ObjectHideFlags: 0

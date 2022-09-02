@@ -45,6 +45,10 @@ public class ShipController : MonoBehaviour
     [Tooltip("The offset of height detection(for altitude)")]
     public Vector2 HeightOffest;
 
+    public Vector2 CargoPosition;
+
+    public CameraScript cameraControl;
+
     [Space(5)]
     [Header("Movement Info:")]
     [SerializeField]
@@ -137,14 +141,30 @@ public class ShipController : MonoBehaviour
         if (hit.collider != null)
         {
             Altitude = Vector2.Distance(hit.point, (Vector2)this.gameObject.transform.position + HeightOffest) * 20f;
-            if (Altitude < FocusHeight && MainGameController.gameController != null)
+
+            if (MainGameController.gameController != null)
             {
-                MainGameController.gameController.StartFocus.Invoke();
+                if (Altitude < FocusHeight)
+                {
+                    MainGameController.gameController.StartFocus.Invoke();
+                }
+                else
+                {
+                    MainGameController.gameController.CancelFocus.Invoke(false);
+                }
             }
-            else
+            else if (cameraControl != null)
             {
-                MainGameController.gameController.CancelFocus.Invoke(false);
+                if (Altitude < FocusHeight)
+                {
+                    cameraControl.FocusObject();
+                }
+                else
+                {
+                    cameraControl.CancelFocus(false);
+                }
             }
+
         }
     }
 
@@ -195,7 +215,7 @@ public class ShipController : MonoBehaviour
     /// </summary>
     /// <param name="_str1"></param>
     /// <param name="_str2"></param>
-    void GameOverAction(string _str1, string _str2,bool _continue)
+    void GameOverAction(string _str1, string _str2, bool _continue)
     {
         Playerinput.Disable();
         this._rg.velocity = Vector2.zero;
@@ -217,6 +237,22 @@ public class ShipController : MonoBehaviour
     {
         return this.RotateAngle;
     }
+
+    public Vector2 GetCargoPos()
+    {
+        return (Vector2)this.transform.position + CargoPosition;
+    }
+
+    public Rigidbody2D GetRigidBody()
+    {
+        return this._rg;
+    }
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawSphere(CargoPosition, 0.1f);
+    }
+#endif
 
 }
 

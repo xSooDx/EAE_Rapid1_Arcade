@@ -9,10 +9,8 @@ public class CameraScript : MonoBehaviour
     /// </summary>
     private bool IsFocus;
 
-
+    [Tooltip("Camera will follow it's target when x out of this value")]
     public float FollowBuffer;
-
-    private bool CanFocus;
 
     /// <summary>
     /// The focus target
@@ -63,7 +61,6 @@ public class CameraScript : MonoBehaviour
 
     private void Start()
     {
-        this.CanFocus = true;
         if (this.m_Camera != null)
         {
             this.OriginSize = this.m_Camera.orthographicSize;//set the original size
@@ -82,7 +79,7 @@ public class CameraScript : MonoBehaviour
             this.transform.position = Vector3.Lerp(this.transform.position, Target.position + offset, MoveSpeed);//move
             this.m_Camera.orthographicSize = Mathf.Lerp(this.m_Camera.orthographicSize, FocusSize, ZoomSpeed * Time.deltaTime);
         }
-        if (Mathf.Abs(Target.position.x - this.OriginPos.x) > this.FollowBuffer)
+        if (Mathf.Abs(Target.position.x - this.MovePos.x) > this.FollowBuffer)
         {
             Vector3 des = new Vector3(Target.position.x, this.MovePos.y, this.MovePos.z);
             this.MovePos = Vector3.Lerp(this.MovePos, des, MoveSpeed * Time.deltaTime * Mathf.Abs(Target.position.x - this.MovePos.x) * 1.5f);
@@ -98,7 +95,7 @@ public class CameraScript : MonoBehaviour
     /// Set the focus target and start focusing
     /// </summary>
     /// <param name="_target"></param>
-    void FocusObject()
+    public void FocusObject()
     {
         if (!IsFocus)//if is not focusing
         {
@@ -120,7 +117,7 @@ public class CameraScript : MonoBehaviour
     /// <summary>
     /// Cancel focusing and return to camera's original codition
     /// </summary>
-    void CancelFocus(bool _Reset)
+    public void CancelFocus(bool _Reset)
     {
         if (_Reset)
         {
