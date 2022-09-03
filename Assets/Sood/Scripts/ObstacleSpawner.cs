@@ -26,7 +26,7 @@ public class ObstacleSpawner : MonoBehaviour
         bool spawnOnRight = Random.Range(0, 2) == 1; // false => left
         float spawnX = spawnOnRight ? boundingSpace.max.x: boundingSpace.min.x;
         float spawnY = Random.Range(boundingSpace.min.y, boundingSpace.max.y);
-        Debug.Log($"{boundingSpace.min}, {boundingSpace.max}");
+        //Debug.Log($"{boundingSpace.min}, {boundingSpace.max}");
         Vector3 spawnPos = new Vector2(spawnX, spawnY) - boundingSpace.size/2;
 
         Obstacle obs = Instantiate(obstacle, transform.position + spawnPos, Quaternion.identity);

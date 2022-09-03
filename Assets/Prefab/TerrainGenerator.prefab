@@ -57,6 +57,8 @@ MonoBehaviour:
   - noiseStrength: 50
     noisefrequency: 10
   meshDepth: 2
+  textureScale: {x: 0, y: 0}
+  textureOffset: {x: 0, y: 0}
   edgeCollider: {fileID: 4393764064603996208}
   meshFilter: {fileID: 7358835137720440957}
   meshRenderer: {fileID: 798182999334070853}
