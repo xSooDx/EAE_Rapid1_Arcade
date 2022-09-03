@@ -70,6 +70,7 @@ public class ShipController : MonoBehaviour
     private void Awake()
     {
         Playerinput = new PlayerControl();
+        this._rg = this.gameObject.GetComponent<Rigidbody2D>();
     }
 
     private void OnEnable()
@@ -83,7 +84,7 @@ public class ShipController : MonoBehaviour
 
     void Start()
     {
-        this._rg = gameObject.GetComponent<Rigidbody2D>();
+        //this._rg = this.gameObject.GetComponent<Rigidbody2D>();
         if (MainGameController.gameController != null) MainGameController.gameController.GameOver.AddListener(GameOverAction);
     }
 
@@ -138,7 +139,7 @@ public class ShipController : MonoBehaviour
             Altitude = Vector2.Distance(hit.point, (Vector2)this.gameObject.transform.position + HeightOffest) * 20f;
             if (Altitude < FocusHeight && MainGameController.gameController != null)
             {
-                MainGameController.gameController.StartFocus.Invoke(this.transform);
+                MainGameController.gameController.StartFocus.Invoke();
             }
             else
             {
@@ -156,6 +157,7 @@ public class ShipController : MonoBehaviour
     public void InitialSetup(Vector2 _pos, Vector2 _force, float _rot)
     {
         Playerinput.Enable();
+        //if(this._rg==null) this.gameObject.GetComponent<Rigidbody2D>();
         this._rg.isKinematic = false;
         this._rg.rotation = _rot;
         this._rg.position = _pos;
