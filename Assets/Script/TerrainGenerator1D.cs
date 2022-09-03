@@ -191,17 +191,17 @@ public class TerrainGenerator1D : MonoBehaviour
         for (int i = 0; i < heightMap.Length; i++)
         {
             Vector3 p1 = new Vector3(GetPointLocalXPosition(i), heightMap[i]);
-            Vector3 p2 = new Vector3(GetPointLocalXPosition(i),lowestPoint);
+            Vector3 p2 = new Vector3(GetPointLocalXPosition(i), lowestPoint - meshDepth);
             vertexList.Add(p1);
             vertexList.Add(p2);
         }
 
-        vertexList.Add(new Vector3(GetPointLocalXPosition(0), lowestPoint));
-        vertexList.Add(new Vector3(GetPointLocalXPosition(0), lowestPoint - meshDepth));
+        //vertexList.Add(new Vector3(GetPointLocalXPosition(0), lowestPoint));
+        //vertexList.Add(new Vector3(GetPointLocalXPosition(0), lowestPoint - meshDepth));
 
-        int lastIdx = heightMap.Length - 1;
-        vertexList.Add(new Vector3(GetPointLocalXPosition(lastIdx), lowestPoint));
-        vertexList.Add(new Vector3(GetPointLocalXPosition(lastIdx), lowestPoint - meshDepth));
+        //int lastIdx = heightMap.Length - 1;
+        //vertexList.Add(new Vector3(GetPointLocalXPosition(lastIdx), lowestPoint));
+        //vertexList.Add(new Vector3(GetPointLocalXPosition(lastIdx), lowestPoint - meshDepth));
 
         // Generate Tris
         List<int> triangleList = new List<int>();
@@ -219,24 +219,21 @@ public class TerrainGenerator1D : MonoBehaviour
         // Generate UVs
         List<Vector2> uvList = new List<Vector2>();
         float factor = distanceBetweenPoints / heightMap.Length;
-        for (int i = 0; i < vertexList.Count - 4; i += 4)
+        for (int i = 0, j=0; i < vertexList.Count; i += 2, j++)
         {
-            float uvX = textureScale.x;
-            float uvY1 = textureScale.y * (vertexList[i].y - lowestPoint) / distanceBetweenPoints;
-            float uvY2 = textureScale.y * (vertexList[i+2].y - lowestPoint) / distanceBetweenPoints;
-            uvList.Add(new Vector2(0, uvY1));
-            uvList.Add(new Vector2(0, 0));
-            uvList.Add(new Vector2(uvX, uvY2));
+            float uvX = j * textureScale.x;
+            float uvY1 = textureScale.y * (vertexList[i].y - vertexList[i+1].y) / distanceBetweenPoints;
+            uvList.Add(new Vector2(uvX, uvY1));
             uvList.Add(new Vector2(uvX, 0));
         }
 
-        float xUV = textureScale.x * terrainWidth / distanceBetweenPoints;
-        float yUV = textureScale.y * meshDepth / distanceBetweenPoints;
+        //float xUV = textureScale.x * terrainWidth / distanceBetweenPoints;
+        //float yUV = textureScale.y * meshDepth / distanceBetweenPoints;
 
-        uvList.Add(new Vector2(0, yUV));
-        uvList.Add(new Vector2(0, 0));
-        uvList.Add(new Vector2(xUV, yUV));
-        uvList.Add(new Vector2(xUV, 0));
+        //uvList.Add(new Vector2(0, yUV));
+        //uvList.Add(new Vector2(0, 0));
+        //uvList.Add(new Vector2(xUV, yUV));
+        //uvList.Add(new Vector2(xUV, 0));
 
 
         //Debug.Log($"Mesh Gen tris {triangleList.Count}, verts {vertexList.Count}");
