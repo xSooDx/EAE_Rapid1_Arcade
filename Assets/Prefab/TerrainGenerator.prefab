@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7b156d9cb5c30848a6bf1fa7a13ef72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _generateTerrain: 0
   startingIdx: 0
   terrainWidth: 50
   distanceBetweenPoints: 0.25
@@ -59,6 +60,8 @@ MonoBehaviour:
   meshDepth: 2
   textureScale: {x: 0, y: 0}
   textureOffset: {x: 0, y: 0}
+  _generateForeground: 0
+  foregroundLayers: []
   edgeCollider: {fileID: 4393764064603996208}
   meshFilter: {fileID: 7358835137720440957}
   meshRenderer: {fileID: 798182999334070853}
