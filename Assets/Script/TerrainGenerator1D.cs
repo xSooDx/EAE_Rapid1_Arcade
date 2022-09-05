@@ -1,14 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(EdgeCollider2D), typeof(MeshFilter), typeof(MeshRenderer))]
+[RequireComponent(typeof(LineRenderer))]
 public class TerrainGenerator1D : MonoBehaviour
 {
+    public UnityEvent<TerrainGenerator1D, Vector2[]> onTerrainGenerated;
 
-    [InspectorButton("GenerateTerrain", ButtonWidth =250)]
+    [InspectorButton("GenerateTerrain", ButtonWidth = 250f)]
     public bool _generateTerrain;
-
 
     [Header("Generator Settings")]
     [Min(0)] public int startingIdx = 0;
@@ -28,7 +30,7 @@ public class TerrainGenerator1D : MonoBehaviour
     public Vector2 textureScale;
     public Vector2 textureOffset;
 
-    [InspectorButton("GenerateForeground", ButtonWidth = 250)]
+    [InspectorButton("GenerateForeground", ButtonWidth = 250f)]
     public bool _generateForeground;
 
     [Header("Foreground Textures")]
@@ -42,27 +44,22 @@ public class TerrainGenerator1D : MonoBehaviour
     [SerializeField] EdgeCollider2D edgeCollider;
     [SerializeField] MeshFilter meshFilter;
     [SerializeField] MeshRenderer meshRenderer;
+    [SerializeField] LineRenderer lineRenderer;
 
     GameObject[] foregroundObjs = null;
 
-    // Total width
-    // offset 
-
-    private void Awake()
+    public Vector2[] GetLocalTerrainPoints()
     {
-
+        return edgeCollider.points;
     }
 
-    void Start()
+    public Vector3[] GetLocalTerrainPoints3D()
     {
-
+        Vector3[] positions = new Vector3[lineRenderer.positionCount];
+        lineRenderer.GetPositions(positions);
+        return positions;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 
     void GetRequiredComponents()
     {
@@ -71,8 +68,7 @@ public class TerrainGenerator1D : MonoBehaviour
         meshFilter = GetComponent<MeshFilter>();
         meshFilter.mesh = null;
         meshRenderer = GetComponent<MeshRenderer>();
-        //meshRenderer.material = null;
-
+        lineRenderer = GetComponent<LineRenderer>();
     }
 
     void DoPreCalculations()
@@ -114,37 +110,6 @@ public class TerrainGenerator1D : MonoBehaviour
     {
         if (heightMap == null || heightMap.Length == 0)
         {
-            Debug.LogWarning("SmoothHeightMap: Height map is null");
-            return;
-        }
-        float[] smoothKernel = { 1, 3, 1 };
-        int kernelHalfSize = smoothKernel.Length / 2;
-        float kernelSum = 0;
-
-        for (int i = 0; i < smoothKernel.Length; i++)
-        {
-            kernelSum += smoothKernel[i];
-        }
-
-        float[] newHeightMap = new float[heightMap.Length];
-
-        for (int i = kernelHalfSize; i < heightMap.Length - kernelHalfSize; i++)
-        {
-            int i_ = i - kernelHalfSize;
-            float value = 0;
-            for (int j = 0; j < smoothKernel.Length; j++)
-            {
-                value += heightMap[i_ + j] * smoothKernel[j];
-            }
-            newHeightMap[i] = value / kernelSum;
-        }
-        heightMap = newHeightMap;
-    }
-
-    void SmoothHeightMap2()
-    {
-        if (heightMap == null || heightMap.Length == 0)
-        {
             Debug.LogWarning("SmoothHeightMap2: Height map is null");
             return;
         }
@@ -183,7 +148,7 @@ public class TerrainGenerator1D : MonoBehaviour
         List<Vector2> pointList = new List<Vector2>();
         for (int i = 0; i < heightMap.Length; i++)
         {
-            Vector2 p1 = new Vector3(GetPointLocalXPosition(i), heightMap[i]);
+            Vector2 p1 = new Vector2(GetPointLocalXPosition(i), heightMap[i]);
             pointList.Add(p1);
         }
         edgeCollider.points = pointList.ToArray();
@@ -298,31 +263,49 @@ public class TerrainGenerator1D : MonoBehaviour
         //meshRenderer.
     }
 
+    void GenerateTopLayer()
+    {
+        if (heightMap == null || heightMap.Length == 0)
+        {
+            Debug.LogWarning("GenerateCollider: Height map is null");
+            return;
+        }
+        List<Vector3> pointList = new List<Vector3>();
+        for (int i = 0; i < heightMap.Length; i++)
+        {
+            Vector3 p1 = new Vector3(GetPointLocalXPosition(i), heightMap[i]);
+            pointList.Add(p1);
+        }
+        lineRenderer.loop = false;
+        lineRenderer.useWorldSpace = false;
+        lineRenderer.positionCount = pointList.Count;
+        lineRenderer.SetPositions(pointList.ToArray());
+    }
+
     float GetPointLocalXPosition(int idx)
     {
         return distanceBetweenPoints * idx - (terrainWidth / 2);
     }
 
-    public void GenerateTerrain()
+    public void GenerateTerrain(bool generateForeground = true)
     {
         GetRequiredComponents();
         DoPreCalculations();
         GenerateHeightMap();
-        SmoothHeightMap2();
+        SmoothHeightMap();
         GenerateCollider();
         GenerateMesh();
-        GenerateForeground();
+        GenerateTopLayer();
+
+        if(generateForeground) GenerateForeground();
+
+        onTerrainGenerated.Invoke(this, GetLocalTerrainPoints());
     }
 
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        GetRequiredComponents();
-        DoPreCalculations();
-        GenerateHeightMap();
-        SmoothHeightMap2();
-        GenerateCollider();
-        GenerateMesh();
+        GenerateTerrain(false);
     }
 
     private void OnDrawGizmosSelected()
