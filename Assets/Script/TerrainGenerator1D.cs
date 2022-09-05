@@ -5,22 +5,45 @@ using UnityEngine;
 [RequireComponent(typeof(EdgeCollider2D), typeof(MeshFilter), typeof(MeshRenderer))]
 public class TerrainGenerator1D : MonoBehaviour
 {
+
+    [InspectorButton("GenerateTerrain", ButtonWidth =250)]
+    public bool _generateTerrain;
+
+
+    [Header("Generator Settings")]
     [Min(0)] public int startingIdx = 0;
     [Min(0)] int numberOfPoints = 50;
     [Min(0)] public float terrainWidth = 0;
-    [Range(0f, 10f)] public float distanceBetweenPoints = 1f;
+    [Range(0f, 4f)] public float distanceBetweenPoints = 1f;
     public float maxHeight = 20f;
     public float minHeight = 10f;
     [Range(0f, 1f)] public float noiseSampleSeed = 0.5f;
-    public NoiseLayer[] noiseLayers;
-    public float meshDepth = 10f;
 
+    [Header("Noise Layers")]
+    public NoiseLayer[] noiseLayers;
+
+    [Range(0f, 10f)] public float meshDepth = 10f;
+
+    [Header("Texture Settings")]
+    public Vector2 textureScale;
+    public Vector2 textureOffset;
+
+    [InspectorButton("GenerateForeground", ButtonWidth = 250)]
+    public bool _generateForeground;
+
+    [Header("Foreground Textures")]
+    public ForegroundLayer[] foregroundLayers;
 
     float[] heightMap;
+    float lowestPoint = float.MaxValue;
+    float highestPoint = float.MinValue;
 
+    [Header("Components")]
     [SerializeField] EdgeCollider2D edgeCollider;
     [SerializeField] MeshFilter meshFilter;
     [SerializeField] MeshRenderer meshRenderer;
+
+    GameObject[] foregroundObjs = null;
 
     // Total width
     // offset 
@@ -57,6 +80,9 @@ public class TerrainGenerator1D : MonoBehaviour
         //terrainWidth = numberOfPoints * distanceBetweenPoints;
 
         numberOfPoints = (int)(terrainWidth / distanceBetweenPoints);
+
+        lowestPoint = float.MaxValue;
+        highestPoint = float.MinValue;
     }
 
     void GenerateHeightMap()
@@ -71,6 +97,16 @@ public class TerrainGenerator1D : MonoBehaviour
                 value += SimplexNoise.Generate(layer.noisefrequency * distanceBetweenPoints * (startingIdx + i), noiseSampleSeed) * layer.noiseStrength;
             }
             heightMap[i] = Mathf.Clamp(value, minHeight, maxHeight); ;
+            
+            if(heightMap[i] < lowestPoint)
+            {
+                lowestPoint = heightMap[i];
+            }
+
+            if(heightMap[i] > highestPoint)
+            {
+                highestPoint = heightMap[i]; ;
+            }
         }
     }
 
@@ -124,6 +160,10 @@ public class TerrainGenerator1D : MonoBehaviour
             {
                 newHeightMap[i] = diff1 < diff2 ? heightMap[i - 1] : heightMap[i + 1];
             }
+            //else if (diff1 < 0 && diff2 < 0) // local minima
+            //{
+            //    newHeightMap[i] = diff1 < diff2 ? heightMap[i - 1] : heightMap[i + 1];
+            //}
             else
             {
                 newHeightMap[i] = heightMap[i];
@@ -158,36 +198,102 @@ public class TerrainGenerator1D : MonoBehaviour
         }
 
         Mesh mesh = new Mesh();
+        
+        // Generate verts
         List<Vector3> vertexList = new List<Vector3>();
         for (int i = 0; i < heightMap.Length; i++)
         {
-            Vector2 p1 = new Vector3(GetPointLocalXPosition(i), heightMap[i]);
-            Vector2 p2 = new Vector3(GetPointLocalXPosition(i), -meshDepth);
+            Vector3 p1 = new Vector3(GetPointLocalXPosition(i), heightMap[i]);
+            Vector3 p2 = new Vector3(GetPointLocalXPosition(i), lowestPoint - meshDepth);
             vertexList.Add(p1);
             vertexList.Add(p2);
         }
 
+        // Generate Tris
         List<int> triangleList = new List<int>();
-
         for (int i = 0; i < vertexList.Count - 2; i += 2)
         {
             triangleList.Add(i);
             triangleList.Add(i + 2);
             triangleList.Add(i + 1);
 
-            triangleList.Add(i + 2);
+            triangleList.Add(i + 2);    
             triangleList.Add(i + 3);
             triangleList.Add(i + 1);
         }
+
+        // Generate UVs
+        List<Vector2> uvList = new List<Vector2>();
+        float factor = distanceBetweenPoints / heightMap.Length;
+        for (int i = 0, j=0; i < vertexList.Count; i += 2, j++)
+        {
+            float uvX = j * textureScale.x;
+            float uvY1 = textureScale.y * (vertexList[i].y - vertexList[i+1].y) / distanceBetweenPoints;
+            uvList.Add(new Vector2(uvX, uvY1));
+            uvList.Add(new Vector2(uvX, 0));
+        }
+
         //Debug.Log($"Mesh Gen tris {triangleList.Count}, verts {vertexList.Count}");
         mesh.vertices = vertexList.ToArray();
         mesh.triangles = triangleList.ToArray();
+        mesh.uv = uvList.ToArray();
         meshFilter.mesh = mesh;
 
     }
 
-    void GenerateMaterial()
+    void GenerateForeground()
     {
+        if(foregroundObjs != null)
+        {
+            foreach(GameObject obj in foregroundObjs)
+            {
+                if(obj) DestroyImmediate(obj);
+            }
+        }
+
+        foregroundObjs = new GameObject[foregroundLayers.Length];
+
+        for(int i = 0; i < foregroundLayers.Length; i++)
+        {
+            ForegroundLayer fgLayer = foregroundLayers[i];
+            GameObject obj = new GameObject($"ForegroundLayer {i + 1}");
+            obj.transform.position = transform.position + new Vector3( 0, fgLayer.yOffset, fgLayer.zOffset);
+            obj.transform.parent = transform;
+
+            Vector3[] vertList = {
+                new Vector3(GetPointLocalXPosition(0), lowestPoint),
+                new Vector3(GetPointLocalXPosition(0), lowestPoint - meshDepth),
+                new Vector3(GetPointLocalXPosition(heightMap.Length-1), lowestPoint),
+                new Vector3(GetPointLocalXPosition(heightMap.Length-1),  lowestPoint - meshDepth),
+            };
+
+            int[] tris = {
+                0,2,1,2,3,1
+            };
+            // ToDo better scaling
+
+            float textureRatio = terrainWidth / meshDepth;
+
+            Vector2[] uvList =
+            {
+                new Vector2(0, 1) * fgLayer.scale,
+                new Vector2(0, 0),
+                new Vector2(textureRatio, 1) * fgLayer.scale,
+                new Vector2(textureRatio, 0) * fgLayer.scale,
+            };
+
+            MeshFilter mf = obj.AddComponent<MeshFilter>();
+            MeshRenderer mr = obj.AddComponent<MeshRenderer>();
+            Mesh mesh = new Mesh();
+            mesh.vertices = vertList;
+            mesh.triangles = tris;
+            mesh.uv = uvList;
+
+            mf.mesh = mesh;
+            mr.material = fgLayer.fgMaterial;
+            foregroundObjs[i] = obj;
+
+        }
         //Material material = new Material();
         //meshRenderer.
     }
@@ -197,19 +303,29 @@ public class TerrainGenerator1D : MonoBehaviour
         return distanceBetweenPoints * idx - (terrainWidth / 2);
     }
 
+    public void GenerateTerrain()
+    {
+        GetRequiredComponents();
+        DoPreCalculations();
+        GenerateHeightMap();
+        SmoothHeightMap2();
+        GenerateCollider();
+        GenerateMesh();
+        GenerateForeground();
+    }
+
 #if UNITY_EDITOR
     private void OnValidate()
     {
         GetRequiredComponents();
         DoPreCalculations();
         GenerateHeightMap();
-        //SmoothHeightMap();
         SmoothHeightMap2();
         GenerateCollider();
         GenerateMesh();
     }
 
-    private void OnDrawGizmos()
+    private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.cyan;
         if (heightMap != null && heightMap.Length > 0)
@@ -230,4 +346,13 @@ public class NoiseLayer
 {
     [Range(0f, 100f)] public float noiseStrength = 10f;
     [Range(0f, 10f)] public float noisefrequency = 1f;
+}
+
+[System.Serializable]
+public class ForegroundLayer
+{
+    public Vector2 scale = new Vector2(1,1);
+    public Material fgMaterial;
+    public float yOffset;
+    public float zOffset;
 }
