@@ -65,12 +65,16 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  _generateTerrain: 0
-  startingIdx: 0
+  planetTerrain: 0
+  topLayerThickness: 1
+  planetRadius: 0
+  angleBetweenPoints: 1
+  foregroundResolution: 10
   terrainWidth: 30
   distanceBetweenPoints: 0.25
   maxHeight: 30
   minHeight: -10
+  startingIdx: 0
   noiseSampleSeed: 0.38
   noiseLayers:
   - noiseStrength: 50
@@ -81,16 +85,18 @@ MonoBehaviour:
   textureScale: {x: 0.2, y: 0.2}
   textureOffset: {x: 0, y: 0}
   randomForegroundOffset: 0
-  _generateForeground: 0
+  _generateTerrain: 0
   foregroundLayers:
   - scale: {x: 0.25, y: 1}
     fgMaterial: {fileID: 2100000, guid: 0ccbf8db573b7fe4fb1c1974d019e968, type: 2}
     yOffset: 0.3
     zOffset: -0.1
+    yDepth: 0
   - scale: {x: 0.2, y: 1}
     fgMaterial: {fileID: 2100000, guid: 01a6c809b8a22b340933c35f1f22d12c, type: 2}
     yOffset: 0
     zOffset: -0.2
+    yDepth: 0
   edgeCollider: {fileID: 4393764064603996208}
   meshFilter: {fileID: 7358835137720440957}
   meshRenderer: {fileID: 798182999334070853}
