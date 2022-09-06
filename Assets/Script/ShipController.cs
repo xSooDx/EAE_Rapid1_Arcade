@@ -40,11 +40,16 @@ public class ShipController : MonoBehaviour
     [Range(0, 10)]
     public float RotSpeedUpMultiplier;
 
+    public bool RotateLock;
+
     private float _RotateSpd;
 
     [Tooltip("The height that need to be focus on")]
     [Range(0, 100)]
     public float FocusHeight;
+
+    [Range(1, 10)]
+    public float SearchField;
 
     [Tooltip("The layer of ground")]
     public LayerMask GroundLayer;
@@ -110,7 +115,15 @@ public class ShipController : MonoBehaviour
 
         if (this.AltitudeTxt != null)//set the value text
         {
-            this.AltitudeTxt.text = Altitude.ToString("0");
+            if (Altitude >= 0)
+            {
+                this.AltitudeTxt.text = Altitude.ToString("0");
+            }
+            else
+            {
+                this.AltitudeTxt.text = "N/A";
+            }
+            
         }
 
         if (this.FuelAmountTxt != null)//set the value text
@@ -156,13 +169,27 @@ public class ShipController : MonoBehaviour
                 _RotateSpd = 0;
             }
         }
+        Collider2D[] GroundChk = Physics2D.OverlapCircleAll(this.gameObject.transform.position, SearchField, GroundLayer);
 
-        RaycastHit2D hit = Physics2D.Raycast((Vector2)transform.position, -Vector2.up, 1000f, GroundLayer);
-        if (hit.collider != null)
+        float _distance = -99f;
+        foreach (var item in GroundChk)
         {
-            Altitude = Vector2.Distance(hit.point, (Vector2)this.gameObject.transform.position + HeightOffest) * 20f;
+            Vector2 _pos = item.ClosestPoint((Vector2)this.gameObject.transform.position);
+            
+            float _dis = Vector2.Distance(_pos, (Vector2)this.gameObject.transform.position);
+            
+            if (_distance < 0 || _distance >= _dis)
+            {
+                _distance = _dis;
+            }
+            
+        }
+        
+        Altitude = _distance * 20f;
 
-            if (GameEventManager.gameEvent != null) 
+        if (Altitude >= 0)
+        {
+            if (GameEventManager.gameEvent != null)
             {
                 if (Altitude < FocusHeight)
                 {
@@ -184,8 +211,48 @@ public class ShipController : MonoBehaviour
                     cameraControl.CancelFocus(false);
                 }
             }
-
         }
+        else
+        {
+            if (GameEventManager.gameEvent != null)
+            {
+                GameEventManager.gameEvent.CancelFocus.Invoke(false);
+            }
+            else if (cameraControl != null)
+            {
+                cameraControl.CancelFocus(false);
+            }
+        }
+       
+        //RaycastHit2D hit = Physics2D.Raycast((Vector2)transform.position, -Vector2.up, 1000f, GroundLayer);
+        //if (hit.collider != null)
+        //{
+        //    Altitude = Vector2.Distance(hit.point, (Vector2)this.gameObject.transform.position + HeightOffest) * 20f;
+
+        //    if (GameEventManager.gameEvent != null)
+        //    {
+        //        if (Altitude < FocusHeight)
+        //        {
+        //            GameEventManager.gameEvent.StartFocus.Invoke();
+        //        }
+        //        else
+        //        {
+        //            GameEventManager.gameEvent.CancelFocus.Invoke(false);
+        //        }
+        //    }
+        //    else if (cameraControl != null)
+        //    {
+        //        if (Altitude < FocusHeight)
+        //        {
+        //            cameraControl.FocusObject();
+        //        }
+        //        else
+        //        {
+        //            cameraControl.CancelFocus(false);
+        //        }
+        //    }
+
+        //}
     }
 
     /// <summary>
@@ -211,14 +278,18 @@ public class ShipController : MonoBehaviour
         this._rg.AddTorque(RotateInput * _RotateSpd);//rotate the ship
 
         //set the maximum of angle
-        if (this._rg.rotation < 0 && this._rg.rotation <= -90)
+        if (RotateLock)
         {
-            this._rg.rotation = -90;
+            if (this._rg.rotation < 0 && this._rg.rotation <= -90)
+            {
+                this._rg.rotation = -90;
+            }
+            if (this._rg.rotation > 0 && this._rg.rotation >= 90)
+            {
+                this._rg.rotation = 90;
+            }
         }
-        if (this._rg.rotation > 0 && this._rg.rotation >= 90)
-        {
-            this._rg.rotation = 90;
-        }
+
         RotateAngle = this._rg.rotation;//set the value(for viewing)
 
         _rg.AddRelativeForce(Vector2.up * PushInput * _speed);//push the ship
@@ -262,6 +333,11 @@ public class ShipController : MonoBehaviour
     {
         return this._rg;
     }
-
+#if UNITY_EDITOR
+    void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(this.gameObject.transform.position, SearchField);
+    }
+#endif
 }
 
