@@ -19,12 +19,14 @@ public class PickupSpawner : MonoBehaviour
 
     public void OnTerrainGeneratedCallback(TerrainGenerator1D terrainGenerator, Vector2[] terrainPointsLocal)
     {
+        Debug.Log("SOOD: " + terrainPointsLocal.Length);
         List<Vector2> potentialSpawnPoints = new List<Vector2>();
         for(int i = 0; i < terrainPointsLocal.Length-1; i++)
         {
             if (Mathf.Abs(terrainPointsLocal[i].y - terrainPointsLocal[i+1].y) < maxHeightDelta)
             {
                 Vector2 newPos = (terrainPointsLocal[i] + terrainPointsLocal[i + 1]) / 2;
+                Debug.Log("SOOD: 2 " + newPos);
                 potentialSpawnPoints.Add(newPos);
                 Debug.DrawRay(newPos, Vector2.up, Color.yellow);
             }
@@ -32,18 +34,20 @@ public class PickupSpawner : MonoBehaviour
 
         int pickupCount = Mathf.Min(Random.Range(minPickups, maxPickups), potentialSpawnPoints.Count);
 
-        int randRange = pickupCount / potentialSpawnPoints.Count;
+        int randRange = potentialSpawnPoints.Count/ pickupCount;
         int currStart = 0;
 
         CalculateTotalWeight();
         float currWeightVal = 0f;
+        Debug.Log($"SOOD: 3 {pickupCount} / {potentialSpawnPoints.Count} -- {randRange}");
         for (int i = 0; i< pickupCount; i++)
         {
             int idx = Random.Range(currStart, currStart + randRange);
 
-            Vector2 spawnPoint = potentialSpawnPoints[idx];
+            Vector2 spawnPoint = potentialSpawnPoints[idx] +  (Vector2)terrainGenerator.transform.position;
             float randRoll = Random.Range(0, totalWeight);
-            foreach(PickupSpawnSettings pickup in pickupSettings)
+            Debug.Log($"SOOD: 4 {spawnPoint} {randRoll}");
+            foreach (PickupSpawnSettings pickup in pickupSettings)
             {
                 if(randRoll < currWeightVal + pickup.spawnWeight)
                 {

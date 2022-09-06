@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7358835137720440957}
   - component: {fileID: 798182999334070853}
   - component: {fileID: 7117686327405313756}
+  - component: {fileID: 997335025686004570}
   m_Layer: 0
   m_Name: TerrainGenerator
   m_TagString: Untagged
@@ -50,7 +51,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onTerrainGenerated:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 997335025686004570}
+        m_TargetAssemblyTypeName: PickupSpawner, Assembly-CSharp
+        m_MethodName: OnTerrainGeneratedCallback
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _generateTerrain: 0
   startingIdx: 0
   terrainWidth: 30
   distanceBetweenPoints: 0.25
@@ -63,16 +77,16 @@ MonoBehaviour:
   - noiseStrength: 10
     noisefrequency: 10
   meshDepth: 1.8
-  textureScale: {x: 0.25, y: 0.25}
+  textureScale: {x: 0.2, y: 0.2}
   textureOffset: {x: 0, y: 0}
   randomForegroundOffset: 0
   _generateForeground: 0
   foregroundLayers:
-  - scale: {x: 0.21, y: 0.99}
+  - scale: {x: 0.25, y: 1}
     fgMaterial: {fileID: 2100000, guid: 0ccbf8db573b7fe4fb1c1974d019e968, type: 2}
     yOffset: 0.3
     zOffset: -0.1
-  - scale: {x: 0.19, y: 0.99}
+  - scale: {x: 0.2, y: 1}
     fgMaterial: {fileID: 2100000, guid: 01a6c809b8a22b340933c35f1f22d12c, type: 2}
     yOffset: 0
     zOffset: -0.2
@@ -248,7 +262,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 36ccf613e06261141959b1f159dfde5d, type: 2}
+  - {fileID: 2100000, guid: 65e44524927226a40a6d99ec740b5968, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -487,3 +501,22 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 0
   m_Loop: 0
+--- !u!114 &997335025686004570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4150458838129551886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00ea8efc3bb53724ba914dea0de7dafa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHeightDelta: 0.05
+  pickupSettings:
+  - spawnWeight: 1
+    scoreMultiplier: 1
+    spawnPrefab: {fileID: 5072043042987565259, guid: 4c75aced05986ef43a7e168118883967, type: 3}
+  minPickups: 4
+  maxPickups: 6

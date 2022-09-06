@@ -9,8 +9,8 @@ public class TerrainGenerator1D : MonoBehaviour
 {
     public UnityEvent<TerrainGenerator1D, Vector2[]> onTerrainGenerated;
 
-    //[InspectorButton("GenerateTerrain", ButtonWidth = 250f)]
-    //public bool _generateTerrain;
+    [InspectorButton("GenerateTerrainInternal", ButtonWidth = 250f)]
+    public bool _generateTerrain;
 
     [Header("Generator Settings")]
     [Min(0)] public int startingIdx = 0;
@@ -289,6 +289,11 @@ public class TerrainGenerator1D : MonoBehaviour
     float GetPointLocalXPosition(int idx)
     {
         return distanceBetweenPoints * idx - (terrainWidth / 2);
+    }
+
+    void GenerateTerrainInternal()
+    {
+        GenerateTerrain(true);
     }
 
     public void GenerateTerrain(bool generateForeground = true)
