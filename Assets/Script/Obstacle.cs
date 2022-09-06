@@ -6,6 +6,7 @@ using UnityEngine;
 public class Obstacle : MonoBehaviour
 {
     [SerializeField] Rigidbody2D myRigidbody;
+    public string description = "Knocked Out!";
 
     public Vector2 velocity
     {
@@ -22,5 +23,6 @@ public class Obstacle : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         //Destroy(this.gameObject);
+        if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.GameOver.Invoke("Ship Crashed!!", description, false);
     }
 }
