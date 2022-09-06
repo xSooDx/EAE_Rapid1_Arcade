@@ -145,10 +145,10 @@ public class TerrainGenerator1D : MonoBehaviour
             {
                 newHeightMap[i] = diff1 < diff2 ? heightMap[i - 1] : heightMap[i + 1];
             }
-            //else if (diff1 < 0 && diff2 < 0) // local minima
-            //{
-            //    newHeightMap[i] = diff1 < diff2 ? heightMap[i - 1] : heightMap[i + 1];
-            //}
+            else if (diff1 < 0 && diff2 < 0) // local minima
+            {
+                newHeightMap[i] = diff1 < diff2 ? heightMap[i - 1] : heightMap[i + 1];
+            }
             else
             {
                 newHeightMap[i] = heightMap[i];
