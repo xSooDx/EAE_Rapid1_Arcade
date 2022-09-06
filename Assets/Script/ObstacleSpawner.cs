@@ -40,6 +40,7 @@ public class ObstacleSpawner : MonoBehaviour
         Obstacle obs = Instantiate(obstacle, transform.position + spawnPos, Quaternion.identity);
         obs.velocity = new Vector2(spawnOnRight ? -spawnVelocity : spawnVelocity, 0);
         obs.angularVelocity = spawnOnRight ? - 60f : 60f;
+        obstacleList.Add(obs);
     }
 
     IEnumerator ObstacleSpawnCountdownRoutine(float timeToSpawn)
