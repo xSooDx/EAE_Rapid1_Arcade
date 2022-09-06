@@ -2,7 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LandingPointScript : MonoBehaviour
+/// <summary>
+/// the basic function of a landing position
+/// </summary>
+public abstract class LandingPointScript : MonoBehaviour
 {
     [Tooltip("Vertical speed exceed this value, crash")]
     public float Req_MAXVerticalSpeed;
@@ -19,44 +22,13 @@ public class LandingPointScript : MonoBehaviour
     public float Req_RotateAngleTor;
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Player")
-        {
-            ShipController _ship = collision.gameObject.GetComponent<ShipController>();
-            if (_ship != null)
-            {
-                if (_ship.GetVerticalSpd() > this.Req_MAXVerticalSpeed)
-                {
-                    Debug.Log("Vertical Crash!!");
-                    CrashFunction("Too fast on vertical speed!");
-                    return;
-                }
-
-                if (Mathf.Abs(_ship.GetHorizontalSpd()) > this.Req_MAXHorizonSpeed)
-                {
-                    Debug.Log("Horizon Crash!!");
-                    CrashFunction("Too fast on horizontal speed!");
-                    return;
-                }
-
-                if (!(_ship.GetRotateAngle() >= this.Req_RotateAngle - this.Req_RotateAngleTor && _ship.GetRotateAngle() <= this.Req_RotateAngle + this.Req_RotateAngleTor))
-                {
-                    Debug.Log("Rotate Crash!!");
-                    CrashFunction("Landing angle incorrect!");
-                    return;
-                }
-
-                LandingFunction("Perfect Landing");
-            }
-        }
+        TouchAction(collision);
     }
 
-    void CrashFunction(string _desc)
+    public virtual void TouchAction(Collision2D _col)
     {
-        if (MainGameController.gameController != null) MainGameController.gameController.GameOver.Invoke("Ship Crashed!!", _desc, false);
+        Debug.Log("Touch "+ _col.gameObject.name);
     }
 
-    void LandingFunction(string _desc)
-    {
-        if (MainGameController.gameController != null) MainGameController.gameController.GameOver.Invoke("Success!!", _desc, true);
-    }
+    
 }
