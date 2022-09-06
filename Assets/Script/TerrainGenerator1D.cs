@@ -9,8 +9,8 @@ public class TerrainGenerator1D : MonoBehaviour
 {
     public UnityEvent<TerrainGenerator1D, Vector2[]> onTerrainGenerated;
 
-    [InspectorButton("GenerateTerrain", ButtonWidth = 250f)]
-    public bool _generateTerrain;
+    //[InspectorButton("GenerateTerrain", ButtonWidth = 250f)]
+    //public bool _generateTerrain;
 
     [Header("Generator Settings")]
     [Min(0)] public int startingIdx = 0;
@@ -29,6 +29,8 @@ public class TerrainGenerator1D : MonoBehaviour
     [Header("Texture Settings")]
     public Vector2 textureScale;
     public Vector2 textureOffset;
+
+    public bool randomForegroundOffset = false;
 
     [InspectorButton("GenerateForeground", ButtonWidth = 250f)]
     public bool _generateForeground;
@@ -237,14 +239,16 @@ public class TerrainGenerator1D : MonoBehaviour
             };
             // ToDo better scaling
 
+            float randomOffset = randomForegroundOffset ? Random.Range(0f, 1f) : 0f;
+
             float textureRatio = terrainWidth / meshDepth;
 
             Vector2[] uvList =
             {
-                new Vector2(0, 1) * fgLayer.scale,
-                new Vector2(0, 0),
-                new Vector2(textureRatio, 1) * fgLayer.scale,
-                new Vector2(textureRatio, 0) * fgLayer.scale,
+                new Vector2(randomOffset, 1 * fgLayer.scale.y) ,
+                new Vector2(randomOffset, 0),
+                new Vector2(randomOffset + textureRatio, 1) * fgLayer.scale,
+                new Vector2(randomOffset + textureRatio, 0) * fgLayer.scale,
             };
 
             MeshFilter mf = obj.AddComponent<MeshFilter>();

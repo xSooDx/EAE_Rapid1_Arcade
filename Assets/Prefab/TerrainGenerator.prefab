@@ -51,7 +51,6 @@ MonoBehaviour:
   onTerrainGenerated:
     m_PersistentCalls:
       m_Calls: []
-  _generateTerrain: 0
   startingIdx: 0
   terrainWidth: 30
   distanceBetweenPoints: 0.25
@@ -66,6 +65,7 @@ MonoBehaviour:
   meshDepth: 1.8
   textureScale: {x: 0.25, y: 0.25}
   textureOffset: {x: 0, y: 0}
+  randomForegroundOffset: 0
   _generateForeground: 0
   foregroundLayers:
   - scale: {x: 0.21, y: 0.99}

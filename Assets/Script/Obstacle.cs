@@ -2,13 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class Obstacle : MonoBehaviour
 {
-    public Vector2 velocity;
+    [SerializeField] Rigidbody2D myRigidbody;
 
-    // Update is called once per frame
-    void Update()
+    public Vector2 velocity
     {
-        transform.position += (Vector3) velocity * Time.deltaTime;
+        get { return myRigidbody.velocity; }
+        set { myRigidbody.velocity = value; }
+    }
+
+    public float angularVelocity
+    {
+        get { return myRigidbody.angularVelocity; }
+        set { myRigidbody.angularVelocity = value; }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        //Destroy(this.gameObject);
     }
 }
