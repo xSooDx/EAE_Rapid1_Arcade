@@ -28,7 +28,7 @@ public class Landing_normal : LandingPointScript
                     return;
                 }
 
-                if (!(_ship.GetRotateAngle() >= this.Req_RotateAngle - this.Req_RotateAngleTor && _ship.GetRotateAngle() <= this.Req_RotateAngle + this.Req_RotateAngleTor))
+                if (!RotationChk(_col.transform.position - transform.position, _ship.GetRotateAngle()))
                 {
                     Debug.Log("Rotate Crash!!");
                     CrashFunction("Landing angle incorrect!");
@@ -44,6 +44,8 @@ public class Landing_normal : LandingPointScript
     {
         if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.GameOver.Invoke("Ship Crashed!!", _desc, false);
     }
+
+    
 
     void LandingFunction(string _desc)
     {

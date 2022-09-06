@@ -21,7 +21,7 @@ public class ShipController : MonoBehaviour
     [Range(0, 50)]
     public float Speed;
     [Tooltip("How fast will ship speed up")]
-    [Range(0, 20)]
+    [Range(0, 100)]
     public float SpeedUpMultiplier;
 
     [Tooltip("Amount of fuel")]
@@ -123,7 +123,7 @@ public class ShipController : MonoBehaviour
             {
                 this.AltitudeTxt.text = "N/A";
             }
-            
+
         }
 
         if (this.FuelAmountTxt != null)//set the value text
@@ -175,16 +175,16 @@ public class ShipController : MonoBehaviour
         foreach (var item in GroundChk)
         {
             Vector2 _pos = item.ClosestPoint((Vector2)this.gameObject.transform.position);
-            
+
             float _dis = Vector2.Distance(_pos, (Vector2)this.gameObject.transform.position);
-            
+
             if (_distance < 0 || _distance >= _dis)
             {
                 _distance = _dis;
             }
-            
+
         }
-        
+
         Altitude = _distance * 20f;
 
         if (Altitude >= 0)
@@ -223,7 +223,13 @@ public class ShipController : MonoBehaviour
                 cameraControl.CancelFocus(false);
             }
         }
-       
+
+        RotateAngle = this.transform.rotation.eulerAngles.z;
+
+        // calculate the speed
+        VerticalSpd = Mathf.Abs(this._rg.velocity.y * -20f);
+        HorizontalSpd = (this._rg.velocity.x * 20f);
+
         //RaycastHit2D hit = Physics2D.Raycast((Vector2)transform.position, -Vector2.up, 1000f, GroundLayer);
         //if (hit.collider != null)
         //{
@@ -290,15 +296,14 @@ public class ShipController : MonoBehaviour
             }
         }
 
-        RotateAngle = this._rg.rotation;//set the value(for viewing)
+        // RotateAngle = this._rg.rotation;//set the value(for viewing)
+
 
         _rg.AddRelativeForce(Vector2.up * PushInput * _speed);//push the ship
 
 
 
-        // calculate the speed
-        VerticalSpd = (this._rg.velocity.y * -20f);
-        HorizontalSpd = (this._rg.velocity.x * 20f);
+
     }
 
     /// <summary>
@@ -313,6 +318,7 @@ public class ShipController : MonoBehaviour
         this._rg.angularVelocity = 0;
         this._rg.isKinematic = true;
     }
+
 
     public float GetVerticalSpd()
     {

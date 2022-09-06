@@ -25,10 +25,43 @@ public abstract class LandingPointScript : MonoBehaviour
         TouchAction(collision);
     }
 
-    public virtual void TouchAction(Collision2D _col)
+    public bool RotationChk(Vector2 _dir, float _rotAngle, float _localrot = 0)
     {
-        Debug.Log("Touch "+ _col.gameObject.name);
+        int sign = (_dir.x >= 0) ? -1 : 1;
+        int offset = (sign >= 0) ? 0 : 360;
+        float angle = Vector2.Angle(_dir, Vector2.up) * sign + offset + _localrot;
+        Debug.Log(angle);
+        float _min = angle - Req_RotateAngleTor;
+        float _MAX = angle + Req_RotateAngleTor;
+        if (_min < 0)
+        {
+            if (_rotAngle >= _min + 360 || _rotAngle <= _MAX)
+            {
+                return true;
+            }
+        }
+        else if (_MAX > 360)
+        {
+            if (_rotAngle >= _min || _rotAngle <= _MAX - 360)
+            {
+                return true;
+            }
+        }
+        else
+        {
+            if (_rotAngle >= _min && _rotAngle <= _MAX)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
-    
+    public virtual void TouchAction(Collision2D _col)
+    {
+        Debug.Log("Touch " + _col.gameObject.name);
+    }
+
+
 }
