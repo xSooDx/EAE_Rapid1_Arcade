@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// the basic function of a landing position
+/// </summary>
 public abstract class LandingPointScript : MonoBehaviour
 {
     [Tooltip("Vertical speed exceed this value, crash")]

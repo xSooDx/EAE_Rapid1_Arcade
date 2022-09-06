@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 public class MainGameController : MonoBehaviour
@@ -20,23 +19,7 @@ public class MainGameController : MonoBehaviour
     [SerializeField]
     private int PlayerScore;
 
-    /// <summary>
-    /// Event of game over
-    /// </summary>
-    [HideInInspector]
-    public UnityEvent<string,string,bool> GameOver;
 
-    /// <summary>
-    /// Event of camera focus on ship when it is low altitude
-    /// </summary>
-    [HideInInspector]
-    public UnityEvent StartFocus;
-
-    /// <summary>
-    /// Event of camera cancel focus on ship
-    /// </summary>
-    [HideInInspector]
-    public UnityEvent<bool> CancelFocus;
 
     [Space(5)]
     [Header("Ship Initial Setup:")]
@@ -78,8 +61,8 @@ public class MainGameController : MonoBehaviour
         this.PlayerScore = 0;
         this.GameTime = 0;
         iniSetup();
-        GameOver.AddListener(GameOverFunc);//add function that will be trigger when game over
-        //gameController.GameOver.Invoke("CALL!!", "TEST", true);
+        if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.GameOver.AddListener(GameOverFunc);//add function that will be trigger when game over
+        if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.AddScore.AddListener(AddScore);
     }
 
     /// <summary>
@@ -87,17 +70,22 @@ public class MainGameController : MonoBehaviour
     /// </summary>
     /// <param name="_ShowTxt"></param>
     /// <param name="_Desc"></param>
-    void GameOverFunc(string _ShowTxt,string _Desc,bool _continue)
+    void GameOverFunc(string _ShowTxt, string _Desc, bool _continue)
     {
         StopCoroutine(timecoroutine);
         if (GameMsgTitleTxt != null) GameMsgTitleTxt.text = _ShowTxt;
         if (GameMsgDESCTxt != null) GameMsgDESCTxt.text = _Desc;
         if (_continue)
         {
-            PlayerScore += LandingScore;
+            AddScore(LandingScore);
             if (ScoreTxt != null) ScoreTxt.text = PlayerScore.ToString();
         }
         StartCoroutine(RestartGameCounter(_continue));
+    }
+
+    void AddScore(int _score)
+    {
+        PlayerScore += _score;
     }
 
     void NewRound()
@@ -113,7 +101,7 @@ public class MainGameController : MonoBehaviour
         if (ScoreTxt != null) ScoreTxt.text = PlayerScore.ToString();
         if (playerShip != null) playerShip.InitialSetup(InitialPos, InitialForce, InitialRotate);
         timecoroutine = StartCoroutine(TimeCounter());//start timer
-        gameController.CancelFocus.Invoke(true);
+        if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.CancelFocus.Invoke(true);
     }
 
     /// <summary>
@@ -131,7 +119,7 @@ public class MainGameController : MonoBehaviour
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
-        
+
     }
 
     /// <summary>
@@ -149,6 +137,6 @@ public class MainGameController : MonoBehaviour
             yield return new WaitForSeconds(1f);
             GameTime++;
         }
-        
+
     }
 }

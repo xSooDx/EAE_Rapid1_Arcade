@@ -68,8 +68,8 @@ public class CameraScript : MonoBehaviour
         this.OriginPos = this.MovePos = gameObject.transform.position;
 
         // add event that can be trigger when you need focus on something
-        if (MainGameController.gameController != null) MainGameController.gameController.StartFocus.AddListener(FocusObject);
-        if (MainGameController.gameController != null) MainGameController.gameController.CancelFocus.AddListener(CancelFocus);
+        if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.StartFocus.AddListener(FocusObject);
+        if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.CancelFocus.AddListener(CancelFocus);
     }
 
     private void FixedUpdate()

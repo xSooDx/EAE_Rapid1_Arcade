@@ -2,25 +2,39 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// script for prize
+/// </summary>
 public class Landing_Prize : LandingPointScript
 {
     private Rigidbody2D _rg;
-    private DistanceJoint2D _joint;
 
     private FixedJoint2D _Fjoint;
 
-    public float Weight;
+    private ShipController _shipCtrl;
+
+    public string PrizeID;
+
+    public int PrizeScore;
+
+    private bool _IsGrabbing;
+
     private void Awake()
     {
-        this._rg= GetComponent<Rigidbody2D>();
-        this._joint= GetComponent<DistanceJoint2D>();
+        this._rg = GetComponent<Rigidbody2D>();
         this._Fjoint = GetComponent<FixedJoint2D>();
-        if (this._joint != null) this._joint.enabled = false;
         if (this._Fjoint != null) this._Fjoint.enabled = false;
+        this._IsGrabbing = false;
     }
+
+    private void Start()
+    {
+        if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.PrizeLand.AddListener(DropPrize);
+    }
+
     public override void TouchAction(Collision2D _col)
     {
-        if (_col.gameObject.tag == "Player")
+        if (_col.gameObject.tag == "Player" && !this._IsGrabbing)
         {
             ShipController _ship = _col.gameObject.GetComponent<ShipController>();
             if (_ship != null)
@@ -53,24 +67,39 @@ public class Landing_Prize : LandingPointScript
 
     void CrashFunction(string _desc)
     {
-        if (MainGameController.gameController != null) MainGameController.gameController.GameOver.Invoke("Ship Crashed!!", _desc, false);
+        if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.GameOver.Invoke("Ship Crashed!!", _desc, false);
     }
 
     void LandingFunction(ShipController _ship)
     {
-        //V1
-        //this.transform.position = _ship.GetCargoPos();
-        //this.transform.SetParent(_ship.gameObject.transform);
-        //if (this._rg != null) this._rg.isKinematic = true;
-        //this.gameObject.layer = 7;
-
         if (this._Fjoint != null && _ship.GetRigidBody() != null) this._Fjoint.connectedBody = _ship.GetRigidBody();
         this._Fjoint.enabled = true;
+        this._shipCtrl = _ship;
+        this._IsGrabbing = true;
         this.gameObject.layer = 7;
+    }
 
-        //V2
-        //if (this._joint != null && _ship.GetRigidBody() != null) this._joint.connectedBody = _ship.GetRigidBody();
-        //this._joint.enabled = true;
-        //this.gameObject.layer = 7;
+    void DropPrize(string _prizeid)
+    {
+        if (!PrizeID.Equals(_prizeid) || !_IsGrabbing) return;
+
+        this._Fjoint.connectedBody = null;
+        this._Fjoint.enabled = false;
+        this._shipCtrl = null;
+        this.gameObject.layer = 6;
+
+        if (GameEventManager.gameEvent != null)
+        {
+            GameEventManager.gameEvent.AddScore.Invoke(this.PrizeScore);
+            GameEventManager.gameEvent.GameOver.Invoke("Success!!", "The prize is delivered", true);
+            GameEventManager.gameEvent.PrizeLand.RemoveListener(DropPrize);
+        }
+        Destroy(this.gameObject);
+        //this._IsGrabbing = false;
+    }
+
+    public ShipController GetShipController()
+    {
+        return _shipCtrl;
     }
 }

@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Script for normal landing point
+/// </summary>
 public class Landing_normal : LandingPointScript
 {
     public override void TouchAction(Collision2D _col)
@@ -39,11 +42,15 @@ public class Landing_normal : LandingPointScript
 
     void CrashFunction(string _desc)
     {
-        if (MainGameController.gameController != null) MainGameController.gameController.GameOver.Invoke("Ship Crashed!!", _desc, false);
+        if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.GameOver.Invoke("Ship Crashed!!", _desc, false);
     }
 
     void LandingFunction(string _desc)
     {
-        if (MainGameController.gameController != null) MainGameController.gameController.GameOver.Invoke("Success!!", _desc, true);
+        if (GameEventManager.gameEvent != null)
+        {
+            GameEventManager.gameEvent.GameOver.Invoke("Success!!", _desc, true);
+            GameEventManager.gameEvent.AddScore.Invoke(100);
+        }
     }
 }

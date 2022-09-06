@@ -21,7 +21,7 @@ public class ShipController : MonoBehaviour
     [Range(0, 50)]
     public float Speed;
     [Tooltip("How fast will ship speed up")]
-    [Range(0, 10)]
+    [Range(0, 20)]
     public float SpeedUpMultiplier;
 
     [Tooltip("Amount of fuel")]
@@ -36,6 +36,12 @@ public class ShipController : MonoBehaviour
     [Range(0, 20)]
     public float Rot_Speed = 5;
 
+    [Tooltip("How fast will ship rotate speed up")]
+    [Range(0, 10)]
+    public float RotSpeedUpMultiplier;
+
+    private float _RotateSpd;
+
     [Tooltip("The height that need to be focus on")]
     [Range(0, 100)]
     public float FocusHeight;
@@ -44,8 +50,6 @@ public class ShipController : MonoBehaviour
     public LayerMask GroundLayer;
     [Tooltip("The offset of height detection(for altitude)")]
     public Vector2 HeightOffest;
-
-    public Vector2 CargoPosition;
 
     public CameraScript cameraControl;
 
@@ -89,7 +93,7 @@ public class ShipController : MonoBehaviour
     void Start()
     {
         //this._rg = this.gameObject.GetComponent<Rigidbody2D>();
-        if (MainGameController.gameController != null) MainGameController.gameController.GameOver.AddListener(GameOverAction);
+        if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.GameOver.AddListener(GameOverAction);
     }
 
     void Update()
@@ -113,9 +117,9 @@ public class ShipController : MonoBehaviour
         {
             this.FuelAmountTxt.text = FuelAmount.ToString("0");
         }
-        if (FuelAmount <= 0 && MainGameController.gameController != null)
+        if (FuelAmount <= 0 && GameEventManager.gameEvent != null)
         {
-            MainGameController.gameController.GameOver.Invoke("Game Over", "Out of fuel!!", false);
+            GameEventManager.gameEvent.GameOver.Invoke("Game Over", "Out of fuel!!", false);
         }
         PushInput = Playerinput.PlayState.Push.ReadValue<float>();
         RotateInput = Playerinput.PlayState.Rotate.ReadValue<float>();
@@ -124,16 +128,32 @@ public class ShipController : MonoBehaviour
         {
             if (_speed < Speed)
             {
-                _speed += Speed * Time.deltaTime * SpeedUpMultiplier;
+                _speed += (_speed + SpeedUpMultiplier) * Time.deltaTime;
             }
             FuelAmount -= Time.deltaTime * 3;
         }
         else
         {
-            _speed -= Speed * Time.deltaTime * SpeedUpMultiplier * 2;
+            _speed -= (_speed + SpeedUpMultiplier) * Time.deltaTime * 2;
             if (_speed <= 0)
             {
                 _speed = 0;
+            }
+        }
+
+        if (RotateInput != 0)
+        {
+            if (_RotateSpd < Rot_Speed)
+            {
+                _RotateSpd += (_RotateSpd + RotSpeedUpMultiplier) * Time.deltaTime;
+            }
+        }
+        else
+        {
+            _RotateSpd -= (Rot_Speed + RotSpeedUpMultiplier) * Time.deltaTime * 2;
+            if (_RotateSpd <= 0)
+            {
+                _RotateSpd = 0;
             }
         }
 
@@ -142,15 +162,15 @@ public class ShipController : MonoBehaviour
         {
             Altitude = Vector2.Distance(hit.point, (Vector2)this.gameObject.transform.position + HeightOffest) * 20f;
 
-            if (MainGameController.gameController != null)
+            if (GameEventManager.gameEvent != null) 
             {
                 if (Altitude < FocusHeight)
                 {
-                    MainGameController.gameController.StartFocus.Invoke();
+                    GameEventManager.gameEvent.StartFocus.Invoke();
                 }
                 else
                 {
-                    MainGameController.gameController.CancelFocus.Invoke(false);
+                    GameEventManager.gameEvent.CancelFocus.Invoke(false);
                 }
             }
             else if (cameraControl != null)
@@ -188,7 +208,7 @@ public class ShipController : MonoBehaviour
     {
 
 
-        this._rg.AddTorque(RotateInput * Rot_Speed);//rotate the ship
+        this._rg.AddTorque(RotateInput * _RotateSpd);//rotate the ship
 
         //set the maximum of angle
         if (this._rg.rotation < 0 && this._rg.rotation <= -90)
@@ -238,21 +258,10 @@ public class ShipController : MonoBehaviour
         return this.RotateAngle;
     }
 
-    public Vector2 GetCargoPos()
-    {
-        return (Vector2)this.transform.position + CargoPosition;
-    }
-
     public Rigidbody2D GetRigidBody()
     {
         return this._rg;
     }
-#if UNITY_EDITOR
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawSphere(CargoPosition, 0.1f);
-    }
-#endif
 
 }
 
