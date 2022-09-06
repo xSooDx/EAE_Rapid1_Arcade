@@ -74,6 +74,7 @@ public class Landing_Prize : LandingPointScript
     {
         if (this._Fjoint != null && _ship.GetRigidBody() != null) this._Fjoint.connectedBody = _ship.GetRigidBody();
         this._Fjoint.enabled = true;
+        this._Fjoint.connectedAnchor = new Vector2(0, 0.1f);
         this._shipCtrl = _ship;
         this._IsGrabbing = true;
         this.gameObject.layer = 7;
