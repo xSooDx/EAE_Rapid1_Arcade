@@ -145,10 +145,10 @@ public class TerrainGenerator1D : MonoBehaviour
             {
                 newHeightMap[i] = diff1 < diff2 ? heightMap[i - 1] : heightMap[i + 1];
             }
-            //else if (diff1 < 0 && diff2 < 0) // local minima
-            //{
-            //    newHeightMap[i] = diff1 < diff2 ? heightMap[i - 1] : heightMap[i + 1];
-            //}
+            else if (diff1 < 0 && diff2 < 0) // local minima
+            {
+                newHeightMap[i] = diff1 < diff2 ? heightMap[i - 1] : heightMap[i + 1];
+            }
             else
             {
                 newHeightMap[i] = heightMap[i];
@@ -158,7 +158,7 @@ public class TerrainGenerator1D : MonoBehaviour
         heightMap = newHeightMap;
     }
 
-    Vector2[] GenerateCollider()
+    Vector2[] GenerateTerrainEdge()
     {
         if (heightMap == null || heightMap.Length == 0)
         {
@@ -174,7 +174,7 @@ public class TerrainGenerator1D : MonoBehaviour
         return pointList.ToArray();
     }
 
-    Vector2[] GeneratePlanetCollider()
+    Vector2[] GeneratePlanetEdge()
     {
         if (heightMap == null || heightMap.Length == 0)
         {
@@ -328,6 +328,8 @@ public class TerrainGenerator1D : MonoBehaviour
             ForegroundLayer fgLayer = foregroundLayers[i];
             GameObject obj = new GameObject($"ForegroundLayer {i + 1}");
             obj.transform.position = transform.position + new Vector3( 0, fgLayer.yOffset, fgLayer.zOffset);
+            obj.transform.localScale = transform.localScale;
+            obj.transform.rotation = transform.rotation;
             obj.transform.parent = transform;
 
             Vector3[] vertList = {
@@ -382,6 +384,8 @@ public class TerrainGenerator1D : MonoBehaviour
 
             GameObject obj = new GameObject($"ForegroundLayer {i + 1}");
             obj.transform.position = transform.position + new Vector3(0, 0, fgLayer.zOffset);
+            obj.transform.localScale = transform.localScale;
+            obj.transform.rotation = transform.rotation;
             obj.transform.parent = transform;
 
             List<Vector3> vertexList = new List<Vector3>();
@@ -524,14 +528,14 @@ public class TerrainGenerator1D : MonoBehaviour
         
         if (planetTerrain)
         {
-            edgeCollider.points = GeneratePlanetCollider();
+            edgeCollider.points = GeneratePlanetEdge();
             meshFilter.mesh = GeneratePlanetMesh();
             GeneratePlanetTopLayer();
             if (generateForeground) GeneratePlanetForeground();
         }
         else
         {
-            edgeCollider.points = GenerateCollider();
+            edgeCollider.points = GenerateTerrainEdge();
             meshFilter.mesh = GenerateMesh();
             GenerateTopLayer();
             if (generateForeground) GenerateForeground();
@@ -544,20 +548,6 @@ public class TerrainGenerator1D : MonoBehaviour
     private void OnValidate()
     {
         GenerateTerrain(false);
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.cyan;
-        if (heightMap != null && heightMap.Length > 0)
-        {
-            for (int i = 0; i < heightMap.Length - 1; i++)
-            {
-                Vector2 p1 = transform.position + new Vector3(GetPointLocalXPosition(i), heightMap[i]);
-                Vector2 p2 = transform.position + new Vector3(GetPointLocalXPosition(i + 1), heightMap[i + 1]);
-                Gizmos.DrawLine(p1, p2);
-            }
-        }
     }
 #endif
 }

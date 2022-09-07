@@ -22,15 +22,15 @@ public class PickupSpawner : MonoBehaviour
     public void OnTerrainGeneratedCallback(TerrainGenerator1D terrainGenerator, Vector2[] terrainPointsLocal)
     {
         List<Vector2> potentialSpawnPoints = new List<Vector2>();
-        for(int i = 0; i < terrainPointsLocal.Length-1; i++)
+        float sqMaxHeightDelta = maxHeightDelta * maxHeightDelta;
+        for (int i = 0; i < terrainPointsLocal.Length-1; i++)
         {
-            if (Mathf.Abs(terrainPointsLocal[i].y - terrainPointsLocal[i+1].y) < maxHeightDelta)
-            {
+            //if (Mathf.Abs(terrainPointsLocal[i].sqrMagnitude - terrainPointsLocal[i+1].sqrMagnitude) < maxHeightDelta)
+            //{
                 Vector2 newPos = (terrainPointsLocal[i] + terrainPointsLocal[i + 1]) / 2;
-                newPos.y += 0.01f;
                 potentialSpawnPoints.Add(newPos);
-                Debug.DrawRay(newPos, Vector2.up, Color.yellow);
-            }
+                //Debug.DrawRay(newPos, Vector2.up, Color.yellow);
+            //}
         }
 
         int dropOffPointIdx = potentialSpawnPoints.Count / 2;
@@ -51,8 +51,10 @@ public class PickupSpawner : MonoBehaviour
         for (int i = 0; i< pickupCount; i++)
         {
             int idx = Random.Range(currStart, currStart + randRange);
+            Vector2 dir = (potentialSpawnPoints[idx] - (Vector2)transform.position).normalized;
 
-            Vector2 spawnPoint = potentialSpawnPoints[idx] +  (Vector2)terrainGenerator.transform.position;
+            Vector2 spawnPoint = ((potentialSpawnPoints[idx] + dir * 0.2f) * transform.localScale) + (Vector2)transform.position;
+            Debug.DrawRay(spawnPoint, dir, Color.red, 10f);
             float randRoll = Random.Range(0, totalWeight);
             //Debug.Log($"SOOD: 4 {spawnPoint} {randRoll}");
             foreach (PickupSpawnSettings pickup in pickupSettings)
@@ -63,6 +65,7 @@ public class PickupSpawner : MonoBehaviour
                     Instantiate(pickup.spawnPrefab, spawnPoint, Quaternion.identity);
                     break;
                 }
+                if(terrainGenerator.planetTerrain)
                 currWeightVal += pickup.spawnWeight;
             }
 
