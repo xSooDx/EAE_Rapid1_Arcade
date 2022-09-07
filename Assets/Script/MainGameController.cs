@@ -99,7 +99,6 @@ public class MainGameController : MonoBehaviour
         if (GameMsgTitleTxt != null) GameMsgTitleTxt.text = "";
         if (GameMsgDESCTxt != null) GameMsgDESCTxt.text = "";
         if (ScoreTxt != null) ScoreTxt.text = PlayerScore.ToString();
-        if (playerShip != null) playerShip.InitialSetup(InitialPos, InitialForce, InitialRotate);
         timecoroutine = StartCoroutine(TimeCounter());//start timer
         if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.CancelFocus.Invoke(true);
     }

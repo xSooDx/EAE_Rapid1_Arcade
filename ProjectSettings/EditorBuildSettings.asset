@@ -5,10 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
-    path: Assets/Scenes/ProductionLevels/MailnGameLevel.unity
-    guid: 786709e89432cbc4ca2b19eca61df2b0
   - enabled: 0
     path: Assets/Scenes/ProtoDemoScene.unity
     guid: c3613efb9774ae04b9e16a3dc88063c7
+  - enabled: 1
+    path: Assets/Scenes/ClawDemoScene.unity
+    guid: 593be63ff43f80a4f8c0a4fac8251463
   m_configObjects: {}

@@ -40,4 +40,10 @@ public class GameEventManager : MonoBehaviour
     /// add score
     /// </summary>
     public UnityEvent<int> AddScore;
+
+    public UnityEvent<Transform> ClosePlanet;
+
+    public UnityEvent LeavePlanet;
+
+    public UnityEvent PlayerCrash;
 }
