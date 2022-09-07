@@ -63,6 +63,8 @@ public class simpleCameraFollow : MonoBehaviour
     [Range(0, 100)]
     public float UnFocusRatio;
 
+    private float _vol = 0;
+
     private void Awake()
     {
         this.m_Camera = gameObject.GetComponent<Camera>();
@@ -88,14 +90,14 @@ public class simpleCameraFollow : MonoBehaviour
 
             if (IsFocus)
             {
-                this.m_Camera.orthographicSize = Mathf.Lerp(this.m_Camera.orthographicSize, FocusSize, ZoomSpeed * Time.deltaTime);
+                this.m_Camera.orthographicSize = Mathf.Lerp(this.m_Camera.orthographicSize, FocusSize, ZoomSpeed * Time.deltaTime * 2);
                 Vector3 _Fpos = this.Planet.position + (Target.position - this.Planet.position) / 100f * FocusRatio;
                 _Fpos.z = offset.z;
                 this.transform.position = Vector3.Lerp(this.transform.position, _Fpos, MoveSpeed);
             }
             else
             {
-                this.m_Camera.orthographicSize = Mathf.Lerp(this.m_Camera.orthographicSize, OriginSize, ZoomSpeed * Time.deltaTime);
+                this.m_Camera.orthographicSize = Mathf.Lerp(this.m_Camera.orthographicSize, OriginSize, ZoomSpeed * Time.deltaTime * 2);
                 Vector3 _Fpos = this.Planet.position + (Target.position - this.Planet.position) / 100f * UnFocusRatio;
                 _Fpos.z = offset.z;
                 this.transform.position = Vector3.Lerp(this.transform.position, _Fpos, MoveSpeed);//move
@@ -103,6 +105,11 @@ public class simpleCameraFollow : MonoBehaviour
             RotateCamera(this.Planet.position);
 
         }
+
+    }
+
+    void zoom()
+    {
 
     }
 
