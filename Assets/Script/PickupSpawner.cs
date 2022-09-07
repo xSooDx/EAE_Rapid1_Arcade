@@ -14,6 +14,8 @@ public class PickupSpawner : MonoBehaviour
 
     float totalWeight = 0;
 
+    public bool off;
+
     void Awake()
     {
 
@@ -21,6 +23,7 @@ public class PickupSpawner : MonoBehaviour
 
     public void OnTerrainGeneratedCallback(TerrainGenerator1D terrainGenerator, Vector2[] terrainPointsLocal)
     {
+        if (off) return;
         List<Vector2> potentialSpawnPoints = new List<Vector2>();
         float sqMaxHeightDelta = maxHeightDelta * maxHeightDelta;
         for (int i = 0; i < terrainPointsLocal.Length-1; i++)

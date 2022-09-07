@@ -2985,7 +2985,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4393764064603996209, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
       propertyPath: foregroundLayers.Array.data[0].yDepth
-      value: 1.3
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 4393764064603996209, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
       propertyPath: foregroundLayers.Array.data[1].yDepth
@@ -2997,7 +2997,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4393764064603996209, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
       propertyPath: foregroundLayers.Array.data[3].yDepth
-      value: 0.75
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 4393764064603996209, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
       propertyPath: foregroundLayers.Array.data[0].scale.x
@@ -3009,7 +3009,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4393764064603996209, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
       propertyPath: foregroundLayers.Array.data[0].yOffset
-      value: 1.2
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4393764064603996209, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: foregroundLayers.Array.data[0].zOffset
+      value: -0.3
       objectReference: {fileID: 0}
     - target: {fileID: 4393764064603996209, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
       propertyPath: foregroundLayers.Array.data[1].scale.x
@@ -3021,7 +3025,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4393764064603996209, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
       propertyPath: foregroundLayers.Array.data[1].yOffset
-      value: 1
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4393764064603996209, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: foregroundLayers.Array.data[1].zOffset
+      value: -0.6
       objectReference: {fileID: 0}
     - target: {fileID: 4393764064603996209, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
       propertyPath: foregroundLayers.Array.data[2].scale.x
@@ -3033,11 +3041,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4393764064603996209, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
       propertyPath: foregroundLayers.Array.data[2].yOffset
-      value: 0.6
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 4393764064603996209, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
       propertyPath: foregroundLayers.Array.data[2].zOffset
-      value: -0.3
+      value: -0.9
       objectReference: {fileID: 0}
     - target: {fileID: 4393764064603996209, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
       propertyPath: foregroundLayers.Array.data[3].scale.x
@@ -3049,11 +3057,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4393764064603996209, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
       propertyPath: foregroundLayers.Array.data[3].yOffset
-      value: 0.35
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4393764064603996209, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
       propertyPath: foregroundLayers.Array.data[3].zOffset
-      value: -0.4
+      value: -1.2
       objectReference: {fileID: 0}
     - target: {fileID: 4393764064603996209, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
       propertyPath: noiseLayers.Array.data[0].noiseStrength
