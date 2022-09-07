@@ -49,6 +49,7 @@ public class TerrainGenerator1D : MonoBehaviour
     public float morphSpeed = 10f;
     public float morphDuration = 2f;
     public float morphInterval = 10f;
+    public float shakeIntensity = 1f;
 
     int numberOfPoints = 0;
     float[] heightMap;
@@ -558,13 +559,16 @@ public class TerrainGenerator1D : MonoBehaviour
         {
             yield return new WaitForSeconds(morphInterval);
             float timer = morphDuration;
+            Vector3 startPosition = transform.position;
             while (timer > 0)
             {
                 noiseSampleSeed += morphSpeed * Time.deltaTime;
                 GenerateTerrain(false, false);
                 timer -= Time.deltaTime;
+                transform.position = startPosition + Random.insideUnitSphere * shakeIntensity;
                 yield return new WaitForEndOfFrame();
             }
+            transform.position = startPosition;
         }
     }
 

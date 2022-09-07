@@ -100,6 +100,7 @@ MonoBehaviour:
   morphSpeed: 1
   morphDuration: 2
   morphInterval: 3
+  shakeIntensity: 1
   edgeCollider: {fileID: 4393764064603996208}
   meshFilter: {fileID: 7358835137720440957}
   meshRenderer: {fileID: 798182999334070853}
