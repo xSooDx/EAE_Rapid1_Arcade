@@ -56,7 +56,7 @@ public class PickupSpawner : MonoBehaviour
             int idx = Random.Range(currStart, currStart + randRange);
             Vector2 dir = terrainGenerator.planetTerrain? (potentialSpawnPoints[idx]).normalized : transform.up;
 
-            Vector2 spawnPoint = ((potentialSpawnPoints[idx] + dir * 0.2f) * transform.localScale) + (Vector2)transform.position;
+            Vector2 spawnPoint = ((potentialSpawnPoints[idx] + dir * 0.5f) * transform.localScale) + (Vector2)transform.position;
             Debug.DrawRay(spawnPoint, dir, Color.red, 10f);
             float randRoll = Random.Range(0, totalWeight);
             //Debug.Log($"SOOD: 4 {spawnPoint} {randRoll}");

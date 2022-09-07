@@ -619,9 +619,9 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 25
-  m_LinearDrag: 0.03
-  m_AngularDrag: 1.8
+  m_Mass: 20
+  m_LinearDrag: 0
+  m_AngularDrag: 0
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
@@ -889,8 +889,8 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 1, g: 0.36477983, b: 0.36477983, a: 1}
-        key1: {r: 0.30027324, g: 0.2761955, b: 0.8962264, a: 1}
+        key0: {r: 1, g: 0.36477983, b: 0.36477983, a: 0.78431374}
+        key1: {r: 0.30027324, g: 0.2761955, b: 0.8962264, a: 0.78431374}
         key2: {r: 0.8962264, g: 0.7240989, b: 0.14091605, a: 0}
         key3: {r: 1, g: 0.28930813, b: 0.97944057, a: 0}
         key4: {r: 0, g: 0.8018868, b: 0.7221335, a: 0}
@@ -905,7 +905,7 @@ ParticleSystem:
         ctime5: 46838
         ctime6: 56090
         ctime7: 65535
-        atime0: 578
+        atime0: 0
         atime1: 65535
         atime2: 0
         atime3: 0
@@ -948,8 +948,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.5
-      minScalar: 0.1
+      scalar: 0.4
+      minScalar: 0.05
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -1411,7 +1411,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 0.48
+      value: 0.1
       mode: 0
       spread: 0
       speed:
