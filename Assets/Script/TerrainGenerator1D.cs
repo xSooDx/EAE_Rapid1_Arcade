@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(EdgeCollider2D), typeof(MeshFilter), typeof(MeshRenderer))]
+[RequireComponent(typeof(PolygonCollider2D), typeof(MeshFilter), typeof(MeshRenderer))]
 [RequireComponent(typeof(LineRenderer))]
 public class TerrainGenerator1D : MonoBehaviour
 {
@@ -57,7 +57,7 @@ public class TerrainGenerator1D : MonoBehaviour
     float highestPoint = float.MinValue;
 
     [Header("Components")]
-    [SerializeField] EdgeCollider2D edgeCollider;
+    [SerializeField] PolygonCollider2D polyCollider;
     [SerializeField] MeshFilter meshFilter;
     [SerializeField] MeshRenderer meshRenderer;
     [SerializeField] LineRenderer lineRenderer;
@@ -71,7 +71,7 @@ public class TerrainGenerator1D : MonoBehaviour
 
     public Vector2[] GetLocalTerrainPoints()
     {
-        return edgeCollider.points;
+        return polyCollider.points;
     }
 
     public Vector3[] GetLocalTerrainPoints3D()
@@ -84,8 +84,8 @@ public class TerrainGenerator1D : MonoBehaviour
 
     void GetRequiredComponents()
     {
-        edgeCollider = GetComponent<EdgeCollider2D>();
-        edgeCollider.points = null;
+        polyCollider = GetComponent<PolygonCollider2D>();
+        polyCollider.points = null;
         meshFilter = GetComponent<MeshFilter>();
         meshFilter.mesh = null;
         meshRenderer = GetComponent<MeshRenderer>();
@@ -531,17 +531,18 @@ public class TerrainGenerator1D : MonoBehaviour
         DoPreCalculations();
         GenerateHeightMap();
         SmoothHeightMap();
-        
+
         if (planetTerrain)
         {
-            edgeCollider.points = GeneratePlanetEdge();
+            polyCollider.SetPath(0, GeneratePlanetEdge());
             meshFilter.mesh = GeneratePlanetMesh();
             GeneratePlanetTopLayer();
             if (generateForeground) GeneratePlanetForeground();
         }
         else
         {
-            edgeCollider.points = GenerateTerrainEdge();
+
+            polyCollider.SetPath(0, GenerateTerrainEdge());
             meshFilter.mesh = GenerateMesh();
             GenerateTopLayer();
             if (generateForeground) GenerateForeground();
@@ -573,7 +574,7 @@ public class TerrainGenerator1D : MonoBehaviour
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        GenerateTerrain(false, false);
+        GenerateTerrain(false, false);        
     }
 #endif
 }
