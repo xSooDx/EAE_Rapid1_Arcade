@@ -44,4 +44,6 @@ public class GameEventManager : MonoBehaviour
     public UnityEvent<Transform> ClosePlanet;
 
     public UnityEvent LeavePlanet;
+
+    public UnityEvent PlayerCrash;
 }

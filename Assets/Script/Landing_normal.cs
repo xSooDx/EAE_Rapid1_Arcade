@@ -42,7 +42,11 @@ public class Landing_normal : LandingPointScript
 
     void CrashFunction(string _desc)
     {
-        if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.GameOver.Invoke("Ship Crashed!!", _desc, false);
+        if (GameEventManager.gameEvent != null)
+        {
+            GameEventManager.gameEvent.GameOver.Invoke("Ship Crashed!!", _desc, false);
+            GameEventManager.gameEvent.PlayerCrash.Invoke();
+        }
     }
 
     

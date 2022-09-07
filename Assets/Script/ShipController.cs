@@ -58,6 +58,10 @@ public class ShipController : MonoBehaviour
 
     public CameraScript cameraControl;
 
+    public ParticleSystem emitParticle;
+
+    public ClawAnimationControl animationControl;
+
     [Space(5)]
     [Header("Movement Info:")]
     [SerializeField]
@@ -84,6 +88,7 @@ public class ShipController : MonoBehaviour
     {
         Playerinput = new PlayerControl();
         this._rg = this.gameObject.GetComponent<Rigidbody2D>();
+        if (emitParticle != null) emitParticle.Stop();
     }
 
     private void OnEnable()
@@ -98,7 +103,11 @@ public class ShipController : MonoBehaviour
     void Start()
     {
         //this._rg = this.gameObject.GetComponent<Rigidbody2D>();
-        if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.GameOver.AddListener(GameOverAction);
+        if (GameEventManager.gameEvent != null)
+        {
+            GameEventManager.gameEvent.GameOver.AddListener(GameOverAction);
+            GameEventManager.gameEvent.PlayerCrash.AddListener(Crash);
+        }
     }
 
     void Update()
@@ -144,6 +153,13 @@ public class ShipController : MonoBehaviour
                 _speed += (_speed + SpeedUpMultiplier) * Time.deltaTime;
             }
             FuelAmount -= Time.deltaTime * 3;
+            if (emitParticle != null)
+            {
+                if (!emitParticle.isEmitting)
+                {
+                    emitParticle.Play();
+                }
+            }
         }
         else
         {
@@ -151,6 +167,14 @@ public class ShipController : MonoBehaviour
             if (_speed <= 0)
             {
                 _speed = 0;
+            }
+            if (emitParticle != null)
+            {
+                if (emitParticle.isEmitting)
+                {
+                    emitParticle.Stop();
+                }
+
             }
         }
 
@@ -178,7 +202,7 @@ public class ShipController : MonoBehaviour
             foreach (var item in GroundChk)
             {
                 _pos = item.gameObject.transform.position;
-                
+
                 float _dis = Vector2.Distance(_pos, (Vector2)this.gameObject.transform.position);
 
                 if (_distance < 0 || _distance >= _dis)
@@ -304,6 +328,7 @@ public class ShipController : MonoBehaviour
         this._rg.rotation = _rot;
         this._rg.position = _pos;
         this._rg.AddForce(_force);
+        if (animationControl != null) animationControl.Resetitem();
     }
 
     private void FixedUpdate()
@@ -346,6 +371,11 @@ public class ShipController : MonoBehaviour
         this._rg.velocity = Vector2.zero;
         this._rg.angularVelocity = 0;
         this._rg.isKinematic = true;
+    }
+
+    void Crash()
+    {
+        if (animationControl != null) animationControl.Explosion();
     }
 
 
