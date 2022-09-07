@@ -51,7 +51,7 @@ public class PickupSpawner : MonoBehaviour
         for (int i = 0; i< pickupCount; i++)
         {
             int idx = Random.Range(currStart, currStart + randRange);
-            Vector2 dir = (potentialSpawnPoints[idx] - (Vector2)transform.position).normalized;
+            Vector2 dir = terrainGenerator.planetTerrain? (potentialSpawnPoints[idx]).normalized : transform.up;
 
             Vector2 spawnPoint = ((potentialSpawnPoints[idx] + dir * 0.2f) * transform.localScale) + (Vector2)transform.position;
             Debug.DrawRay(spawnPoint, dir, Color.red, 10f);
@@ -65,7 +65,7 @@ public class PickupSpawner : MonoBehaviour
                     Instantiate(pickup.spawnPrefab, spawnPoint, Quaternion.identity);
                     break;
                 }
-                if(terrainGenerator.planetTerrain)
+
                 currWeightVal += pickup.spawnWeight;
             }
 
