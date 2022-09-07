@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class simpleCameraFollow : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class simpleCameraFollow : MonoBehaviour
     /// The focus target
     /// </summary>
     public Transform Target;
+
+    public Transform Planet;
 
     /// <summary>
     /// camera on this gameobject
@@ -54,6 +57,12 @@ public class simpleCameraFollow : MonoBehaviour
 
     private Vector3 MovePos;
 
+    [Range(0, 100)]
+    public float FocusRatio;
+
+    [Range(0, 100)]
+    public float UnFocusRatio;
+
     private void Awake()
     {
         this.m_Camera = gameObject.GetComponent<Camera>();
@@ -76,14 +85,25 @@ public class simpleCameraFollow : MonoBehaviour
     {
         if (Target != null)
         {
-            this.transform.position = Vector3.Lerp(this.transform.position, Target.position + offset, MoveSpeed);//move
+
             if (IsFocus)
             {
                 this.m_Camera.orthographicSize = Mathf.Lerp(this.m_Camera.orthographicSize, FocusSize, ZoomSpeed * Time.deltaTime);
+                Vector3 _Fpos = this.Planet.position + (Target.position - this.Planet.position) / 100f * FocusRatio;
+                _Fpos.z = offset.z;
+                this.transform.position = Vector3.Lerp(this.transform.position, _Fpos, MoveSpeed);
             }
-            
+            else
+            {
+                this.m_Camera.orthographicSize = Mathf.Lerp(this.m_Camera.orthographicSize, OriginSize, ZoomSpeed * Time.deltaTime);
+                Vector3 _Fpos = this.Planet.position + (Target.position - this.Planet.position) / 100f * UnFocusRatio;
+                _Fpos.z = offset.z;
+                this.transform.position = Vector3.Lerp(this.transform.position, _Fpos, MoveSpeed);//move
+            }
+            RotateCamera(this.Planet.position);
+
         }
-        
+
     }
 
     /// <summary>
@@ -99,7 +119,7 @@ public class simpleCameraFollow : MonoBehaviour
             {
                 this.MovePos = gameObject.transform.position;//set the original position
                 this.IsFocus = true;
-                this.transform.position = Target.position + offset;
+                //this.transform.position = Target.position + offset;
                 CooldownCnt = 0;
             }
         }
@@ -140,7 +160,16 @@ public class simpleCameraFollow : MonoBehaviour
         {
             this.MovePos = this.OriginPos;
         }
-        this.m_Camera.orthographicSize = OriginSize;
+        //this.m_Camera.orthographicSize = OriginSize;
         CooldownCnt = 0;
+    }
+
+    void RotateCamera(Vector2 _target)
+    {
+        Vector2 _dir = (Vector2)this.transform.position - _target;
+        int sign = (_dir.x >= 0) ? -1 : 1;
+        int offset = (sign >= 0) ? 0 : 360;
+        float angle = Vector2.Angle(_dir.normalized, Vector2.up) * sign + offset;
+        gameObject.transform.DORotateQuaternion(Quaternion.Euler(0f, 0f, angle), 0.01f);
     }
 }

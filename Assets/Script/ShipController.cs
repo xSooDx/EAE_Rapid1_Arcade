@@ -170,71 +170,72 @@ public class ShipController : MonoBehaviour
             }
         }
         Collider2D[] GroundChk = Physics2D.OverlapCircleAll(this.gameObject.transform.position, SearchField, GroundLayer);
-
-        float _distance = -99f;
-        foreach (var item in GroundChk)
+        if (GroundChk.Length > 0)
         {
-            Vector2 _pos = item.ClosestPoint((Vector2)this.gameObject.transform.position);
-
-            float _dis = Vector2.Distance(_pos, (Vector2)this.gameObject.transform.position);
-
-            if (_distance < 0 || _distance >= _dis)
+            Vector2 _pos = this.transform.position;
+            float _distance = -99f;
+            foreach (var item in GroundChk)
             {
-                _distance = _dis;
+                _pos = item.gameObject.transform.position;
+
+                float _dis = Vector2.Distance(_pos, (Vector2)this.gameObject.transform.position);
+
+                if (_distance < 0 || _distance >= _dis)
+                {
+                    _distance = _dis;
+                }
+
             }
 
-        }
-
-        Altitude = _distance * 20f;
-
-        if (Altitude >= 0)
-        {
-            if (GameEventManager.gameEvent != null)
+            //Altitude = _distance * 20f;
+            if (_distance >= 0)
             {
-                if (Altitude < FocusHeight)
+                RaycastHit2D hit = Physics2D.Raycast((Vector2)transform.position, _pos - (Vector2)this.gameObject.transform.position, 1000f, GroundLayer);
+                if (hit.collider != null)
                 {
-                    GameEventManager.gameEvent.StartFocus.Invoke();
-                }
-                else
-                {
-                    GameEventManager.gameEvent.CancelFocus.Invoke(false);
+                    Altitude = Vector2.Distance(hit.point, (Vector2)this.gameObject.transform.position + HeightOffest) * 10f;
+
+                    if (GameEventManager.gameEvent != null)
+                    {
+                        if (Altitude < FocusHeight)
+                        {
+                            GameEventManager.gameEvent.StartFocus.Invoke();
+                        }
+                        else
+                        {
+                            GameEventManager.gameEvent.CancelFocus.Invoke(false);
+                        }
+                    }
+                    else if (cameraControl != null)
+                    {
+                        if (Altitude < FocusHeight)
+                        {
+                            cameraControl.FocusObject();
+                        }
+                        else
+                        {
+                            cameraControl.CancelFocus(false);
+                        }
+                    }
+
                 }
             }
-            else if (cameraControl != null)
-            {
-                if (Altitude < FocusHeight)
-                {
-                    cameraControl.FocusObject();
-                }
-                else
-                {
-                    cameraControl.CancelFocus(false);
-                }
-            }
+
         }
         else
         {
-            if (GameEventManager.gameEvent != null)
-            {
-                GameEventManager.gameEvent.CancelFocus.Invoke(false);
-            }
-            else if (cameraControl != null)
-            {
-                cameraControl.CancelFocus(false);
-            }
+            Altitude = -1f;
         }
 
-        RotateAngle = this.transform.rotation.eulerAngles.z;
 
-        // calculate the speed
-        VerticalSpd = Mathf.Abs(this._rg.velocity.y * -20f);
-        HorizontalSpd = (this._rg.velocity.x * 20f);
 
-        //RaycastHit2D hit = Physics2D.Raycast((Vector2)transform.position, -Vector2.up, 1000f, GroundLayer);
-        //if (hit.collider != null)
+
+
+
+
+
+        //if (Altitude >= 0)
         //{
-        //    Altitude = Vector2.Distance(hit.point, (Vector2)this.gameObject.transform.position + HeightOffest) * 20f;
-
         //    if (GameEventManager.gameEvent != null)
         //    {
         //        if (Altitude < FocusHeight)
@@ -257,8 +258,26 @@ public class ShipController : MonoBehaviour
         //            cameraControl.CancelFocus(false);
         //        }
         //    }
-
         //}
+        //else
+        //{
+        //    if (GameEventManager.gameEvent != null)
+        //    {
+        //        GameEventManager.gameEvent.CancelFocus.Invoke(false);
+        //    }
+        //    else if (cameraControl != null)
+        //    {
+        //        cameraControl.CancelFocus(false);
+        //    }
+        //}
+
+        RotateAngle = this.transform.rotation.eulerAngles.z;
+
+        // calculate the speed
+        VerticalSpd = Mathf.Abs(this._rg.velocity.y * -20f);
+        HorizontalSpd = (this._rg.velocity.x * 20f);
+
+
     }
 
     /// <summary>
