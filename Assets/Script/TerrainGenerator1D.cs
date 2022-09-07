@@ -451,8 +451,6 @@ public class TerrainGenerator1D : MonoBehaviour
             mr.material = fgLayer.fgMaterial;
 
         }
-        //Material material = new Material();
-        //meshRenderer.
     }
 
     void GenerateTopLayer()
