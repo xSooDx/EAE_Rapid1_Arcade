@@ -48,7 +48,7 @@ public class ShipController : MonoBehaviour
     [Range(0, 100)]
     public float FocusHeight;
 
-    [Range(1, 10)]
+    [Range(1, 20)]
     public float SearchField;
 
     [Tooltip("The layer of ground")]
@@ -173,18 +173,24 @@ public class ShipController : MonoBehaviour
         if (GroundChk.Length > 0)
         {
             Vector2 _pos = this.transform.position;
+            Transform _planet = null;
             float _distance = -99f;
             foreach (var item in GroundChk)
             {
                 _pos = item.gameObject.transform.position;
-
+                
                 float _dis = Vector2.Distance(_pos, (Vector2)this.gameObject.transform.position);
 
                 if (_distance < 0 || _distance >= _dis)
                 {
                     _distance = _dis;
+                    _planet = item.gameObject.transform;
                 }
 
+            }
+            if (GameEventManager.gameEvent != null)
+            {
+                GameEventManager.gameEvent.ClosePlanet.Invoke(_planet);
             }
 
             //Altitude = _distance * 20f;
@@ -225,6 +231,10 @@ public class ShipController : MonoBehaviour
         else
         {
             Altitude = -1f;
+            if (GameEventManager.gameEvent != null)
+            {
+                GameEventManager.gameEvent.LeavePlanet.Invoke();
+            }
         }
 
 

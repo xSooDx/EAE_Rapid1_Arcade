@@ -10,7 +10,7 @@ public class Landing_Destination : LandingPointScript
     // Start is called before the first frame update
     public override void TouchAction(Collision2D _col)
     {
-        if (_col.gameObject.tag == "Player" || _col.gameObject.tag == "Prize")
+        if (_col.gameObject.tag == "Prize")
         {
             ShipController _ship = _col.gameObject.tag == "Player"? _col.gameObject.GetComponent<ShipController>(): _col.gameObject.GetComponent<Landing_Prize>().GetShipController();
             if (_ship != null)

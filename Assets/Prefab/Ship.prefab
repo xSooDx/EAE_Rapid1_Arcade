@@ -124,7 +124,7 @@ PolygonCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 490352347}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -256,8 +256,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.12}
-  m_Size: {x: 0.39, y: 0.87}
+  m_Offset: {x: 0, y: -0.01}
+  m_Size: {x: 0.39, y: 1.05}
   m_Direction: 0
 --- !u!1 &1034757341
 GameObject:
@@ -501,7 +501,7 @@ PolygonCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1114460154}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -616,9 +616,9 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 25
-  m_LinearDrag: 0.25
+  m_LinearDrag: 0.03
   m_AngularDrag: 1.8
-  m_GravityScale: 0.03
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -636,12 +636,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec4d79e0e98cd624687532fd8ee631c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 25
-  SpeedUpMultiplier: 12
+  Speed: 40
+  SpeedUpMultiplier: 100
   FuelAmount: 600
-  Rot_Speed: 3.2
-  RotSpeedUpMultiplier: 2
+  Rot_Speed: 12
+  RotSpeedUpMultiplier: 5
+  RotateLock: 0
   FocusHeight: 50
+  SearchField: 10
   GroundLayer:
     serializedVersion: 2
     m_Bits: 64
