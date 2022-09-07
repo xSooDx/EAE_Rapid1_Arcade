@@ -45,6 +45,11 @@ public class TerrainGenerator1D : MonoBehaviour
     [Header("Foreground Textures")]
     public ForegroundLayer[] foregroundLayers;
 
+    [Header("Terrain Morph Settings")]
+    public float morphSpeed = 10f;
+    public float morphDuration = 2f;
+    public float morphInterval = 10f;
+
     int numberOfPoints = 0;
     float[] heightMap;
     float lowestPoint = float.MaxValue;
@@ -58,7 +63,9 @@ public class TerrainGenerator1D : MonoBehaviour
 
     private void Start()
     {
-        GenerateTerrainInternal();
+        GenerateTerrain(true, true);
+
+        StartCoroutine(MorphTerrain());
     }
 
     public Vector2[] GetLocalTerrainPoints()
@@ -516,10 +523,10 @@ public class TerrainGenerator1D : MonoBehaviour
 
     void GenerateTerrainInternal()
     {
-        GenerateTerrain(true);
+        GenerateTerrain(true, false);
     }
 
-    public void GenerateTerrain(bool generateForeground = true)
+    public void GenerateTerrain(bool generateForeground, bool doCallback)
     {
         GetRequiredComponents();
         DoPreCalculations();
@@ -541,13 +548,30 @@ public class TerrainGenerator1D : MonoBehaviour
             if (generateForeground) GenerateForeground();
         }
 
-        onTerrainGenerated.Invoke(this, GetLocalTerrainPoints());
+        if(doCallback) onTerrainGenerated.Invoke(this, GetLocalTerrainPoints());
+    }
+
+    IEnumerator MorphTerrain()
+    {
+        
+        while (true)
+        {
+            yield return new WaitForSeconds(morphInterval);
+            float timer = morphDuration;
+            while (timer > 0)
+            {
+                noiseSampleSeed += morphSpeed * Time.deltaTime;
+                GenerateTerrain(false, false);
+                timer -= Time.deltaTime;
+                yield return new WaitForEndOfFrame();
+            }
+        }
     }
 
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        GenerateTerrain(false);
+        GenerateTerrain(false, false);
     }
 #endif
 }
