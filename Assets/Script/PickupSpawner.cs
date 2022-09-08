@@ -5,9 +5,12 @@ using UnityEngine;
 public class PickupSpawner : MonoBehaviour
 {
     public float maxHeightDelta = 0.05f;
+    public float dropOffZoneHeight = 10f;
+    public float dropOffZoneCount = 10f;
+    public float spawnOffsetAngle = 30f;
     public PickupSpawnSettings[] pickupSettings;
 
-    public GameObject dropOffPrefab;
+    public DropOffZoneMovementScript dropOffPrefab;
 
     public int minPickups = 3;
     public int maxPickups = 6;
@@ -38,8 +41,6 @@ public class PickupSpawner : MonoBehaviour
 
         int dropOffPointIdx = potentialSpawnPoints.Count / 2;
         Vector2 dropOffPosition = potentialSpawnPoints[dropOffPointIdx] + (Vector2)terrainGenerator.transform.position;
-        // ToDo - Store and destroy
-        Instantiate(dropOffPrefab, dropOffPosition, Quaternion.identity);
 
         potentialSpawnPoints.RemoveAt(dropOffPointIdx);
 
@@ -74,6 +75,22 @@ public class PickupSpawner : MonoBehaviour
 
             currStart += randRange;
         }
+
+        SpawnDropOffZone();
+    }
+
+    void SpawnDropOffZone()
+    {
+        float angleBetweenSpawns = 360f / dropOffZoneCount;
+        for(int i = 0; i< dropOffZoneCount; i++)
+        {
+            Quaternion spawnAngle = Quaternion.Euler(0, 0, spawnOffsetAngle + angleBetweenSpawns * i);
+            Vector3 spawnPos = transform.position + spawnAngle * new Vector2(0, dropOffZoneHeight * transform.localScale.y);
+
+            DropOffZoneMovementScript dropoff = Instantiate(dropOffPrefab, spawnPos, spawnAngle);
+
+            dropoff.orbitTarget = transform;
+        }
     }
 
     void CalculateTotalWeight()
@@ -85,10 +102,18 @@ public class PickupSpawner : MonoBehaviour
         }
     }
 
+#if UNITY_EDITOR
     private void OnValidate()
     {
         CalculateTotalWeight();
     }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(transform.position, transform.position + transform.up * (dropOffZoneHeight * transform.localScale.y));
+    }
+#endif
 }
 
 [System.Serializable]

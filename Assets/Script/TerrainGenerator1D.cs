@@ -237,10 +237,10 @@ public class TerrainGenerator1D : MonoBehaviour
 
         // Generate UVs
         List<Vector2> uvList = new List<Vector2>();
-        float randomOffset = fullRandomize ? Random.Range(0f, 1f) : 0f;
+        //float randomOffset = noiseSampleSeed;
         for (int i = 0, j=0; i < vertexList.Count; i += 2, j++)
         {
-            float uvX = randomOffset + j * textureScale.x;
+            float uvX = j * textureScale.x;
             float uvY1 = textureScale.y * (vertexList[i].y - vertexList[i+1].y) / distanceBetweenPoints;
             uvList.Add(new Vector2(uvX, uvY1));
             uvList.Add(new Vector2(uvX, 0));
@@ -297,10 +297,10 @@ public class TerrainGenerator1D : MonoBehaviour
         List<Vector2> uvList = new List<Vector2>();
         float circumfence = 2 * Mathf.PI * (planetRadius);
         float distanceBetweenPoints = circumfence / numberOfPoints;
-        float randomOffset = fullRandomize ? Random.Range(0f, 1f) : 0f;
+        //float randomOffset = fullRandomize ? Random.Range(0f, 1f) : 0f;
         for (int i = 0, j = 0; i < vertexList.Count; i += 2, j++)
         {
-            float uvX = randomOffset + j * textureScale.x;
+            float uvX = j * textureScale.x;
             float uvY1 = textureScale.y * (vertexList[i].magnitude - vertexList[i + 1].magnitude) / distanceBetweenPoints;
             uvList.Add(new Vector2(uvX, uvY1));
             uvList.Add(new Vector2(uvX, 0));
