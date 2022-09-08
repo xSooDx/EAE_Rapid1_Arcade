@@ -17,7 +17,7 @@ public class GameEventManager : MonoBehaviour
     /// Event of game over
     /// </summary>
     [HideInInspector]
-    public UnityEvent<string, string, bool> GameOver;
+    public UnityEvent<string, string, bool, bool> GameOver;
 
     /// <summary>
     /// Event of camera focus on ship when it is low altitude

@@ -42,6 +42,7 @@ public class ShipController : MonoBehaviour
 
     public bool RotateLock;
 
+    [SerializeField]
     private float _RotateSpd;
 
     [Tooltip("The height that need to be focus on")]
@@ -55,6 +56,8 @@ public class ShipController : MonoBehaviour
     public LayerMask GroundLayer;
     [Tooltip("The offset of height detection(for altitude)")]
     public Vector2 HeightOffest;
+
+    public Transform GrabPoint;
 
     public CameraScript cameraControl;
 
@@ -141,7 +144,7 @@ public class ShipController : MonoBehaviour
         }
         if (FuelAmount <= 0 && GameEventManager.gameEvent != null)
         {
-            GameEventManager.gameEvent.GameOver.Invoke("Game Over", "Out of fuel!!", false);
+            GameEventManager.gameEvent.GameOver.Invoke("Game Over", "Out of fuel!!", false, true);
         }
         PushInput = Playerinput.PlayState.Push.ReadValue<float>();
         RotateInput = Playerinput.PlayState.Rotate.ReadValue<float>();
@@ -193,6 +196,7 @@ public class ShipController : MonoBehaviour
                 _RotateSpd = 0;
             }
         }
+        //this._rg.angularVelocity = 0;
         Collider2D[] GroundChk = Physics2D.OverlapCircleAll(this.gameObject.transform.position, SearchField, GroundLayer);
         if (GroundChk.Length > 0)
         {
@@ -322,13 +326,18 @@ public class ShipController : MonoBehaviour
     /// <param name="_rot"></param>
     public void InitialSetup(Vector2 _pos, Vector2 _force, float _rot)
     {
-        Playerinput.Enable();
+        SetCanMove();
         //if(this._rg==null) this.gameObject.GetComponent<Rigidbody2D>();
-        this._rg.isKinematic = false;
         this._rg.rotation = _rot;
         this._rg.position = _pos;
         this._rg.AddForce(_force);
         if (animationControl != null) animationControl.Resetitem();
+    }
+
+    public void SetCanMove()
+    {
+        Playerinput.Enable();
+        this._rg.isKinematic = false;
     }
 
     private void FixedUpdate()
@@ -366,7 +375,7 @@ public class ShipController : MonoBehaviour
     /// </summary>
     /// <param name="_str1"></param>
     /// <param name="_str2"></param>
-    void GameOverAction(string _str1, string _str2, bool _continue)
+    void GameOverAction(string _str1, string _str2, bool _continue,bool _rstPos)
     {
         Playerinput.Disable();
         this._rg.velocity = Vector2.zero;
@@ -398,6 +407,11 @@ public class ShipController : MonoBehaviour
     public Rigidbody2D GetRigidBody()
     {
         return this._rg;
+    }
+
+    public Transform GetGrabPoint()
+    {
+        return GrabPoint;
     }
 #if UNITY_EDITOR
     void OnDrawGizmos()

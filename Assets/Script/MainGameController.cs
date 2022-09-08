@@ -65,37 +65,48 @@ public class MainGameController : MonoBehaviour
         if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.AddScore.AddListener(AddScore);
     }
 
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.R))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+    }
+
     /// <summary>
     /// thing do when game's over
     /// </summary>
     /// <param name="_ShowTxt"></param>
     /// <param name="_Desc"></param>
-    void GameOverFunc(string _ShowTxt, string _Desc, bool _continue)
+    void GameOverFunc(string _ShowTxt, string _Desc, bool _continue, bool _resetPos)
     {
         StopCoroutine(timecoroutine);
         if (GameMsgTitleTxt != null) GameMsgTitleTxt.text = _ShowTxt;
         if (GameMsgDESCTxt != null) GameMsgDESCTxt.text = _Desc;
         if (_continue)
         {
-            AddScore(LandingScore);
+            //AddScore(LandingScore);
             if (ScoreTxt != null) ScoreTxt.text = PlayerScore.ToString();
         }
-        StartCoroutine(RestartGameCounter(_continue));
+        StartCoroutine(RestartGameCounter(_continue, _resetPos));
     }
+
+
 
     void AddScore(int _score)
     {
         PlayerScore += _score;
     }
 
-    void NewRound()
+    void NewRound(bool _rstPos = true)
     {
-        iniSetup();
+        iniSetup(_rstPos);
     }
 
-    void iniSetup()
+    void iniSetup(bool _rstPos = true)
     {
-        if (playerShip != null) playerShip.InitialSetup(InitialPos, InitialForce, InitialRotate);
+        if (playerShip != null && _rstPos) playerShip.InitialSetup(InitialPos, InitialForce, InitialRotate);
+        if (!_rstPos) playerShip.SetCanMove();
         if (GameMsgTitleTxt != null) GameMsgTitleTxt.text = "";
         if (GameMsgDESCTxt != null) GameMsgDESCTxt.text = "";
         if (ScoreTxt != null) ScoreTxt.text = PlayerScore.ToString();
@@ -107,18 +118,23 @@ public class MainGameController : MonoBehaviour
     /// the count down for reload scene
     /// </summary>
     /// <returns></returns>
-    IEnumerator RestartGameCounter(bool _continue)
+    IEnumerator RestartGameCounter(bool _continue, bool _resetPos)
     {
         yield return new WaitForSeconds(3f);
         if (_continue)
         {
-            NewRound();
+            NewRound(_resetPos);
         }
         else
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
+    }
+
+    IEnumerator RestartGameCounter()
+    {
+        yield return new WaitForSeconds(3f);
     }
 
     /// <summary>
