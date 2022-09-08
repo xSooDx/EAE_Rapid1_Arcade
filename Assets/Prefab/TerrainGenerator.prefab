@@ -70,6 +70,8 @@ MonoBehaviour:
   planetRadius: 0
   angleBetweenPoints: 1
   foregroundResolution: 10
+  planetCapSprite: {fileID: 0}
+  planetCapZOffset: 1.5
   terrainWidth: 30
   distanceBetweenPoints: 0.25
   maxHeight: 30
