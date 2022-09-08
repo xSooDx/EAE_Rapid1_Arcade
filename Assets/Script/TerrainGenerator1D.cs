@@ -66,7 +66,7 @@ public class TerrainGenerator1D : MonoBehaviour
 
     private void Start()
     {
-        if (fullRandomize) noiseSampleSeed = Random.Range(float.MinValue, float.MaxValue);
+        if (fullRandomize) noiseSampleSeed = Random.Range(0f, 1f);
         GenerateTerrain(true, true);
 
         StartCoroutine(MorphTerrain());
