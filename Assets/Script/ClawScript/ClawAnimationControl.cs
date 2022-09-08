@@ -19,6 +19,8 @@ public class TransformState
     public Quaternion originalRotation;
 
     public Collider2D itemCollider;
+
+
 }
 
 public class ClawAnimationControl : MonoBehaviour
@@ -28,6 +30,8 @@ public class ClawAnimationControl : MonoBehaviour
     public ClawState GrabState;
 
     public ClawState CrashState;
+
+    public float explosionForce;
 
     public List<TransformState> partState;
 
@@ -59,7 +63,7 @@ public class ClawAnimationControl : MonoBehaviour
         }
     }
 
-    public void Explosion()
+    public void Explosion(Vector2 _dir)
     {
 #if UNITY_EDITOR 
         if (Application.isPlaying)
@@ -70,10 +74,11 @@ public class ClawAnimationControl : MonoBehaviour
                 {
                     Rigidbody2D _rg = item.part.GetComponent<Rigidbody2D>() == null ? item.part.AddComponent<Rigidbody2D>() : item.part.GetComponent<Rigidbody2D>();
                     item.itemCollider.enabled = true;
-                    //_rg.gravityScale = 0;
-                    _rg.drag = 0.5f;
-                    _rg.AddForce(new Vector2(Random.Range(-10, 10) * 70f, Random.Range(1, 10) * 70f));
-                    _rg.AddTorque(Random.Range(-10, 10));
+                    _rg.gravityScale = 0;
+                    _rg.mass = 25;
+                    //_rg.drag = 0.5f;
+                    _rg.AddForce(new Vector2(Random.Range(_dir.x - 10, _dir.x + 10) * explosionForce, Random.Range(_dir.y, _dir.y + 10) * explosionForce));
+                    _rg.AddTorque(Random.Range(-1, 2)*800);
                 }
             }
     }

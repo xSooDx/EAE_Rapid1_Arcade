@@ -554,3 +554,4 @@ MonoBehaviour:
   Req_MAXHorizonSpeed: 10
   Req_RotateAngle: 0
   Req_RotateAngleTor: 10
+  Direction: {x: 0, y: 0}

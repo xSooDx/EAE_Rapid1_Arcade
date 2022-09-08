@@ -39,6 +39,7 @@ public class Landing_Prize : LandingPointScript
             ShipController _ship = _col.gameObject.GetComponent<ShipController>();
             if (_ship != null)
             {
+                this.Direction = _col.transform.position - transform.position;
                 if (_ship.GetVerticalSpd() > this.Req_MAXVerticalSpeed)
                 {
                     Debug.Log("Vertical Crash!!");
@@ -53,7 +54,7 @@ public class Landing_Prize : LandingPointScript
                     return;
                 }
 
-                if (!(_ship.GetRotateAngle() >= this.Req_RotateAngle - this.Req_RotateAngleTor && _ship.GetRotateAngle() <= this.Req_RotateAngle + this.Req_RotateAngleTor))
+                if (!RotationChk(_col.transform.position - transform.position, _ship.GetRotateAngle()))
                 {
                     Debug.Log("Rotate Crash!!");
                     CrashFunction("Landing angle incorrect!");
@@ -67,7 +68,11 @@ public class Landing_Prize : LandingPointScript
 
     void CrashFunction(string _desc)
     {
-        if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.GameOver.Invoke("Ship Crashed!!", _desc, false);
+        if (GameEventManager.gameEvent != null)
+        {
+            GameEventManager.gameEvent.GameOver.Invoke("Ship Crashed!!", _desc, false);
+            GameEventManager.gameEvent.PlayerCrash.Invoke(this.Direction);
+        }
     }
 
     void LandingFunction(ShipController _ship)

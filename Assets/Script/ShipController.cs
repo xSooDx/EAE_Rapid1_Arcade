@@ -374,9 +374,9 @@ public class ShipController : MonoBehaviour
         this._rg.isKinematic = true;
     }
 
-    void Crash()
+    void Crash(Vector2 _dir)
     {
-        if (animationControl != null) animationControl.Explosion();
+        if (animationControl != null) animationControl.Explosion(_dir);
     }
 
 

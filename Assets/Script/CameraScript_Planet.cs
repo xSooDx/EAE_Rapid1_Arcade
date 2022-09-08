@@ -12,8 +12,7 @@ public class CameraScript_Planet : MonoBehaviour
 
     private bool ClosePlanet;
 
-    [Tooltip("Camera will follow it's target when x out of this value")]
-    public float FollowBuffer;
+    private bool FocusOnPlayer;
 
     /// <summary>
     /// The focus target
@@ -26,9 +25,6 @@ public class CameraScript_Planet : MonoBehaviour
     /// camera on this gameobject
     /// </summary>
     private Camera m_Camera;
-
-    [Tooltip("The size when zoom in")]
-    public float FocusSize;
 
     [Tooltip("The size when zoom in")]
     public float ZoomoutSize;
@@ -73,8 +69,14 @@ public class CameraScript_Planet : MonoBehaviour
     [Range(0, 100)]
     public float UnFocusRatio;
 
-    [Range(0, 10)]
-    public float FocusBuffer;
+    [Range(0, 100)]
+    public float minZoom;
+
+    [Range(0, 500)]
+    public float MaxZoom;
+
+    [Range(0, 100)]
+    public float ZoomLimit;
 
     private void Awake()
     {
@@ -90,30 +92,38 @@ public class CameraScript_Planet : MonoBehaviour
         this.OriginPos = this.MovePos = gameObject.transform.position;
 
         // add event that can be trigger when you need focus on something
-        if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.StartFocus.AddListener(FocusObject);
-        if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.CancelFocus.AddListener(CancelFocus);
-        if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.ClosePlanet.AddListener(InPlanet);
-        if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.LeavePlanet.AddListener(OutPlanet);
+        if (GameEventManager.gameEvent != null)
+        {
+            GameEventManager.gameEvent.StartFocus.AddListener(FocusObject);
+            GameEventManager.gameEvent.CancelFocus.AddListener(CancelFocus);
+            GameEventManager.gameEvent.ClosePlanet.AddListener(InPlanet);
+            GameEventManager.gameEvent.LeavePlanet.AddListener(OutPlanet);
+            GameEventManager.gameEvent.PlayerCrash.AddListener(Crash);
+        }
+       
     }
 
     private void FixedUpdate()
     {
         if (Target != null)
         {
-            Debug.Log(ClosePlanet);
-            if (ClosePlanet)
+            if (ClosePlanet && !FocusOnPlayer)
             {
                 Vector3 _Fpos = this.Planet.position + (Target.position - this.Planet.position) / 100f * (IsFocus ? FocusRatio : UnFocusRatio);
                 _Fpos.z = offset.z;
-                float _dis = (Vector2.Distance(_Fpos, IsFocus ? this.Planet.position : Target.position) + FocusBuffer) * (IsFocus ? 1f : 2f);
-                this.m_Camera.orthographicSize = Mathf.Lerp(this.m_Camera.orthographicSize, _dis / 2, ZoomSpeed * Time.deltaTime * (IsFocus ? 1f : 2f));
+                float _dis = Vector2.Distance(_Fpos, Target.position) ;
+                float newZoom = Mathf.Lerp(minZoom, MaxZoom, _dis / ZoomLimit);
+                this.m_Camera.fieldOfView = Mathf.Lerp(m_Camera.fieldOfView, newZoom, Time.deltaTime * ZoomSpeed);
+                //float _dis = (Vector2.Distance(_Fpos, IsFocus ? this.Planet.position : Target.position) + FocusBuffer) * (IsFocus ? 1f : 2f);
+                //this.m_Camera.orthographicSize = Mathf.Lerp(this.m_Camera.orthographicSize, _dis / 2, ZoomSpeed * Time.deltaTime * (IsFocus ? 1f : 2f));
                 this.transform.position = Vector3.Lerp(this.transform.position, _Fpos, MoveSpeed);
                 RotateCamera(this.Planet.position);
             }
             else
             {
                 this.transform.position = Vector3.Lerp(this.transform.position, Target.position + offset, MoveSpeed);
-                this.m_Camera.orthographicSize = Mathf.Lerp(this.m_Camera.orthographicSize, ZoomoutSize, ZoomSpeed * Time.deltaTime * (IsFocus ? 1f : 2f));
+                this.m_Camera.fieldOfView = Mathf.Lerp(m_Camera.fieldOfView, FocusOnPlayer? 50 : ZoomoutSize, Time.deltaTime * ZoomSpeed);
+                //this.m_Camera.orthographicSize = Mathf.Lerp(this.m_Camera.orthographicSize, ZoomoutSize, ZoomSpeed * Time.deltaTime * (IsFocus ? 1f : 2f));
             }
 
         }
@@ -142,6 +152,10 @@ public class CameraScript_Planet : MonoBehaviour
         }
     }
 
+    void Crash(Vector2 _dir)
+    {
+        FocusOnPlayer = true;
+    }
     public void InPlanet(Transform _planet)
     {
         if (_planet != null)
@@ -187,6 +201,7 @@ public class CameraScript_Planet : MonoBehaviour
     {
         if (_Reset)
         {
+            FocusOnPlayer = false;
             ResetCamera(_Reset);
             return;
         }
