@@ -45,18 +45,18 @@ public class Landing_normal : LandingPointScript
     {
         if (GameEventManager.gameEvent != null)
         {
-            GameEventManager.gameEvent.GameOver.Invoke("Ship Crashed!!", _desc, false);
+            GameEventManager.gameEvent.GameOver.Invoke("Ship Crashed!!", _desc, false, true);
             GameEventManager.gameEvent.PlayerCrash.Invoke(this.Direction);
         }
     }
 
-    
+
 
     void LandingFunction(string _desc)
     {
         if (GameEventManager.gameEvent != null)
         {
-            GameEventManager.gameEvent.GameOver.Invoke("Success!!", _desc, true);
+            GameEventManager.gameEvent.GameOver.Invoke("Success!!", _desc, true, true);
             GameEventManager.gameEvent.AddScore.Invoke(100);
         }
     }

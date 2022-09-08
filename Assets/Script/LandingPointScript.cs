@@ -60,6 +60,38 @@ public abstract class LandingPointScript : MonoBehaviour
         return false;
     }
 
+    public bool RotationChk(float _rotAngle)
+    {
+        float angle = this.transform.rotation.eulerAngles.z;
+
+        float _min = angle - Req_RotateAngleTor;
+        float _MAX = angle + Req_RotateAngleTor;
+        //Debug.Log(_min + "~" + _MAX);
+        if (_min < 0)
+        {
+            if (_rotAngle >= _min + 360 || _rotAngle <= _MAX)
+            {
+                return true;
+            }
+        }
+        else if (_MAX > 360)
+        {
+            if (_rotAngle >= _min || _rotAngle <= _MAX - 360)
+            {
+                return true;
+            }
+        }
+        else
+        {
+            if (_rotAngle >= _min && _rotAngle <= _MAX)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public virtual void TouchAction(Collision2D _col)
     {
         Debug.Log("Touch " + _col.gameObject.name);

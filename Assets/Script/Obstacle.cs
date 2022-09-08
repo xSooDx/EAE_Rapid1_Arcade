@@ -23,6 +23,6 @@ public class Obstacle : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         //Destroy(this.gameObject);
-        if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.GameOver.Invoke("Ship Crashed!!", description, false);
+        if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.GameOver.Invoke("Ship Crashed!!", description, false, true);
     }
 }
