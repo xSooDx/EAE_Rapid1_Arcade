@@ -9,11 +9,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
       propertyPath: maxPickups
-      value: 5
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
       propertyPath: minPickups
-      value: 1
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
       propertyPath: dropOffZoneCount
@@ -22,6 +22,86 @@ PrefabInstance:
     - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
       propertyPath: dropOffZoneHeight
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: pickupSettings.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: pickupSettings.Array.data[0].spawnPrefab
+      value: 
+      objectReference: {fileID: 7466057740846821881, guid: 16054d60567ecb249b92c9093aa0e5e0, type: 3}
+    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: pickupSettings.Array.data[1].spawnPrefab
+      value: 
+      objectReference: {fileID: 7466057740846821881, guid: 32b137688771f824ebe5792ee0c650ff, type: 3}
+    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: pickupSettings.Array.data[1].spawnWeight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: pickupSettings.Array.data[2].spawnPrefab
+      value: 
+      objectReference: {fileID: 7466057740846821881, guid: 49de958e30fa5644297b42722471ec1d, type: 3}
+    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: pickupSettings.Array.data[2].spawnWeight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: pickupSettings.Array.data[3].spawnPrefab
+      value: 
+      objectReference: {fileID: 7466057740846821881, guid: 7e143f8f02e891847ad6420e490d0d00, type: 3}
+    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: pickupSettings.Array.data[3].spawnWeight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: pickupSettings.Array.data[4].spawnPrefab
+      value: 
+      objectReference: {fileID: 7466057740846821881, guid: 4cd34e6ac0f521a48b237242b3ce5474, type: 3}
+    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: pickupSettings.Array.data[4].spawnWeight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: pickupSettings.Array.data[5].spawnPrefab
+      value: 
+      objectReference: {fileID: 7466057740846821881, guid: 11762d6cd4e0fa846bbcc4c164df182f, type: 3}
+    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: pickupSettings.Array.data[5].spawnWeight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: pickupSettings.Array.data[6].spawnPrefab
+      value: 
+      objectReference: {fileID: 7466057740846821881, guid: 11762d6cd4e0fa846bbcc4c164df182f, type: 3}
+    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: pickupSettings.Array.data[6].spawnWeight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: pickupSettings.Array.data[1].scoreMultiplier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: pickupSettings.Array.data[2].scoreMultiplier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: pickupSettings.Array.data[3].scoreMultiplier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: pickupSettings.Array.data[4].scoreMultiplier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: pickupSettings.Array.data[5].scoreMultiplier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: pickupSettings.Array.data[6].scoreMultiplier
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1471695200977483964, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
       propertyPath: m_RootOrder
@@ -6981,3 +7061,25 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+--- !u!1 &8617878290883178272 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4150458838129551886, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+  m_PrefabInstance: {fileID: 5620983781628560686}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2975689388221357294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8617878290883178272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68c5f1cb018197c44ade0344fbf620d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gravitySource: {fileID: 0}
+  obstaclePrefab: {fileID: 9050626005741347588, guid: 2bae1e255f3d7814e9839009e69543b6, type: 3}
+  obstacleCount: 6
+  minHeight: 3.5
+  maxHeight: 4.5

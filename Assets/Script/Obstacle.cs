@@ -13,6 +13,11 @@ public class Obstacle : MonoBehaviour
         get { return myRigidbody.velocity; }
         set { myRigidbody.velocity = value; }
     }
+    public float mass
+    {
+        get { return myRigidbody.mass; }
+        set { myRigidbody.mass = value; }
+    }
 
     public float angularVelocity
     {
@@ -22,7 +27,9 @@ public class Obstacle : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        //Destroy(this.gameObject);
-        if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.GameOver.Invoke("Ship Crashed!!", description, false, true);
+        if (collision.transform.CompareTag("Player"))
+        {
+            if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.GameOver.Invoke("Ship Crashed!!", description, false, true);
+        }
     }
 }

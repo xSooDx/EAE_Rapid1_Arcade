@@ -26,8 +26,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1132822357642533879}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 12}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7466057740846821887}
@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 0f1604845fd271146ac4177001a981f4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: efa47f5e280ba09458514ebfcf2b0f87, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -102,14 +102,14 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.35, y: 0.36666667}
+    oldSize: {x: 0.32, y: 0.22}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.21, y: 0.22}
+  m_Size: {x: 0.32, y: 0.22}
   m_EdgeRadius: 0
 --- !u!1 &7466057740846821881
 GameObject:
@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 7466057740846821378}
   - component: {fileID: 7466057740846821376}
   m_Layer: 7
-  m_Name: Pickup1X
+  m_Name: Pickup 2
   m_TagString: Prize
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -165,6 +165,7 @@ MonoBehaviour:
   Direction: {x: 0, y: 0}
   PrizeID: 
   PrizeScore: 0
+  FollowTarget: 0
 --- !u!50 &7466057740846821378
 Rigidbody2D:
   serializedVersion: 4
