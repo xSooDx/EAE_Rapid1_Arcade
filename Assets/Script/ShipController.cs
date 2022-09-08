@@ -21,7 +21,7 @@ public class ShipController : MonoBehaviour
     [Range(0, 50)]
     public float Speed;
     [Tooltip("How fast will ship speed up")]
-    [Range(0, 10)]
+    [Range(0, 20)]
     public float SpeedUpMultiplier;
 
     [Tooltip("Amount of fuel")]
@@ -36,6 +36,12 @@ public class ShipController : MonoBehaviour
     [Range(0, 20)]
     public float Rot_Speed = 5;
 
+    [Tooltip("How fast will ship rotate speed up")]
+    [Range(0, 10)]
+    public float RotSpeedUpMultiplier;
+
+    private float _RotateSpd;
+
     [Tooltip("The height that need to be focus on")]
     [Range(0, 100)]
     public float FocusHeight;
@@ -44,6 +50,8 @@ public class ShipController : MonoBehaviour
     public LayerMask GroundLayer;
     [Tooltip("The offset of height detection(for altitude)")]
     public Vector2 HeightOffest;
+
+    public CameraScript cameraControl;
 
     [Space(5)]
     [Header("Movement Info:")]
@@ -70,6 +78,7 @@ public class ShipController : MonoBehaviour
     private void Awake()
     {
         Playerinput = new PlayerControl();
+        this._rg = this.gameObject.GetComponent<Rigidbody2D>();
     }
 
     private void OnEnable()
@@ -83,8 +92,8 @@ public class ShipController : MonoBehaviour
 
     void Start()
     {
-        this._rg = gameObject.GetComponent<Rigidbody2D>();
-        if (MainGameController.gameController != null) MainGameController.gameController.GameOver.AddListener(GameOverAction);
+        //this._rg = this.gameObject.GetComponent<Rigidbody2D>();
+        if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.GameOver.AddListener(GameOverAction);
     }
 
     void Update()
@@ -108,9 +117,9 @@ public class ShipController : MonoBehaviour
         {
             this.FuelAmountTxt.text = FuelAmount.ToString("0");
         }
-        if (FuelAmount <= 0 && MainGameController.gameController != null)
+        if (FuelAmount <= 0 && GameEventManager.gameEvent != null)
         {
-            MainGameController.gameController.GameOver.Invoke("Game Over", "Out of fuel!!", false);
+            GameEventManager.gameEvent.GameOver.Invoke("Game Over", "Out of fuel!!", false);
         }
         PushInput = Playerinput.PlayState.Push.ReadValue<float>();
         RotateInput = Playerinput.PlayState.Rotate.ReadValue<float>();
@@ -119,16 +128,32 @@ public class ShipController : MonoBehaviour
         {
             if (_speed < Speed)
             {
-                _speed += Speed * Time.deltaTime * SpeedUpMultiplier;
+                _speed += (_speed + SpeedUpMultiplier) * Time.deltaTime;
             }
             FuelAmount -= Time.deltaTime * 3;
         }
         else
         {
-            _speed -= Speed * Time.deltaTime * SpeedUpMultiplier * 2;
+            _speed -= (_speed + SpeedUpMultiplier) * Time.deltaTime * 2;
             if (_speed <= 0)
             {
                 _speed = 0;
+            }
+        }
+
+        if (RotateInput != 0)
+        {
+            if (_RotateSpd < Rot_Speed)
+            {
+                _RotateSpd += (_RotateSpd + RotSpeedUpMultiplier) * Time.deltaTime;
+            }
+        }
+        else
+        {
+            _RotateSpd -= (Rot_Speed + RotSpeedUpMultiplier) * Time.deltaTime * 2;
+            if (_RotateSpd <= 0)
+            {
+                _RotateSpd = 0;
             }
         }
 
@@ -136,14 +161,30 @@ public class ShipController : MonoBehaviour
         if (hit.collider != null)
         {
             Altitude = Vector2.Distance(hit.point, (Vector2)this.gameObject.transform.position + HeightOffest) * 20f;
-            if (Altitude < FocusHeight && MainGameController.gameController != null)
+
+            if (GameEventManager.gameEvent != null) 
             {
-                MainGameController.gameController.StartFocus.Invoke(this.transform);
+                if (Altitude < FocusHeight)
+                {
+                    GameEventManager.gameEvent.StartFocus.Invoke();
+                }
+                else
+                {
+                    GameEventManager.gameEvent.CancelFocus.Invoke(false);
+                }
             }
-            else
+            else if (cameraControl != null)
             {
-                MainGameController.gameController.CancelFocus.Invoke();
+                if (Altitude < FocusHeight)
+                {
+                    cameraControl.FocusObject();
+                }
+                else
+                {
+                    cameraControl.CancelFocus(false);
+                }
             }
+
         }
     }
 
@@ -156,6 +197,7 @@ public class ShipController : MonoBehaviour
     public void InitialSetup(Vector2 _pos, Vector2 _force, float _rot)
     {
         Playerinput.Enable();
+        //if(this._rg==null) this.gameObject.GetComponent<Rigidbody2D>();
         this._rg.isKinematic = false;
         this._rg.rotation = _rot;
         this._rg.position = _pos;
@@ -166,7 +208,7 @@ public class ShipController : MonoBehaviour
     {
 
 
-        this._rg.AddTorque(RotateInput * Rot_Speed);//rotate the ship
+        this._rg.AddTorque(RotateInput * _RotateSpd);//rotate the ship
 
         //set the maximum of angle
         if (this._rg.rotation < 0 && this._rg.rotation <= -90)
@@ -193,7 +235,7 @@ public class ShipController : MonoBehaviour
     /// </summary>
     /// <param name="_str1"></param>
     /// <param name="_str2"></param>
-    void GameOverAction(string _str1, string _str2,bool _continue)
+    void GameOverAction(string _str1, string _str2, bool _continue)
     {
         Playerinput.Disable();
         this._rg.velocity = Vector2.zero;
@@ -214,6 +256,11 @@ public class ShipController : MonoBehaviour
     public float GetRotateAngle()
     {
         return this.RotateAngle;
+    }
+
+    public Rigidbody2D GetRigidBody()
+    {
+        return this._rg;
     }
 
 }
