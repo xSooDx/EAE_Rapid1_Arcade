@@ -84,7 +84,7 @@ MonoBehaviour:
   meshDepth: 1.8
   textureScale: {x: 0.2, y: 0.2}
   textureOffset: {x: 0, y: 0}
-  randomForegroundOffset: 1
+  fullRandomize: 0
   _generateTerrain: 0
   foregroundLayers:
   - scale: {x: 0.25, y: 1}
