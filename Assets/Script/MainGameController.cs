@@ -65,6 +65,14 @@ public class MainGameController : MonoBehaviour
         if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.AddScore.AddListener(AddScore);
     }
 
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.R))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+    }
+
     /// <summary>
     /// thing do when game's over
     /// </summary>

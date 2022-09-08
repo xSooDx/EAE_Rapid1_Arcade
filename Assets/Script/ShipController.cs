@@ -56,6 +56,8 @@ public class ShipController : MonoBehaviour
     [Tooltip("The offset of height detection(for altitude)")]
     public Vector2 HeightOffest;
 
+    public Transform GrabPoint;
+
     public CameraScript cameraControl;
 
     public ParticleSystem emitParticle;
@@ -398,6 +400,11 @@ public class ShipController : MonoBehaviour
     public Rigidbody2D GetRigidBody()
     {
         return this._rg;
+    }
+
+    public Transform GetGrabPoint()
+    {
+        return GrabPoint;
     }
 #if UNITY_EDITOR
     void OnDrawGizmos()

@@ -13,9 +13,7 @@ public class ClawState
 public class TransformState
 {
     public GameObject part;
-    [HideInInspector]
     public Vector3 originalPosition;
-    [HideInInspector]
     public Quaternion originalRotation;
 
     public Collider2D itemCollider;
@@ -41,8 +39,8 @@ public class ClawAnimationControl : MonoBehaviour
         {
             if (item.part != null)
             {
-                item.originalPosition = item.part.transform.position;
-                item.originalRotation = item.part.transform.rotation;
+                item.originalPosition = item.part.transform.localPosition;
+                item.originalRotation = item.part.transform.localRotation;
             }
         }
     }
@@ -57,8 +55,8 @@ public class ClawAnimationControl : MonoBehaviour
                 {
                     Destroy(item.part.GetComponent<Rigidbody2D>());
                 }
-                item.part.transform.position = item.originalPosition;
-                item.part.transform.rotation = item.originalRotation;
+                item.part.transform.localPosition = item.originalPosition;
+                item.part.transform.localRotation = item.originalRotation;
             }
         }
     }

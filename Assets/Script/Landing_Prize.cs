@@ -82,7 +82,11 @@ public class Landing_Prize : LandingPointScript
         this._Fjoint.connectedAnchor = new Vector2(0, 0.1f);
         this._shipCtrl = _ship;
         this._IsGrabbing = true;
-        this.gameObject.layer = 7;
+        this.gameObject.layer = LayerMask.NameToLayer("Prize_Grab");
+        foreach (Transform _child in gameObject.transform.GetComponentInChildren<Transform>())
+        {
+            _child.gameObject.layer= LayerMask.NameToLayer("Prize_Grab");
+        }
     }
 
     void DropPrize(string _prizeid)
