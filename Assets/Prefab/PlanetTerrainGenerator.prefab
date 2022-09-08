@@ -3928,6 +3928,10 @@ PrefabInstance:
       value: 2.7
       objectReference: {fileID: 0}
     - target: {fileID: 4393764064603996209, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: fullRandomize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4393764064603996209, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
       propertyPath: morphDuration
       value: 3
       objectReference: {fileID: 0}
@@ -3948,8 +3952,20 @@ PrefabInstance:
       value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 4393764064603996209, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: PlanetCapSprite
+      value: 
+      objectReference: {fileID: 896590607360054934, guid: 7efb6a667d518b34390026f37b5b5b7c, type: 3}
+    - target: {fileID: 4393764064603996209, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
       propertyPath: noiseSampleSeed
       value: 0.18159533
+      objectReference: {fileID: 0}
+    - target: {fileID: 4393764064603996209, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: planetCapSprite
+      value: 
+      objectReference: {fileID: 896590607360054934, guid: 7efb6a667d518b34390026f37b5b5b7c, type: 3}
+    - target: {fileID: 4393764064603996209, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: planetCapZOffset
+      value: -1.5
       objectReference: {fileID: 0}
     - target: {fileID: 4393764064603996209, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
       propertyPath: topLayerThickness

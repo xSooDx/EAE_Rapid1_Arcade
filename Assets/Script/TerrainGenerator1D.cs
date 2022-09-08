@@ -18,6 +18,8 @@ public class TerrainGenerator1D : MonoBehaviour
     [Min(0)] public float planetRadius = 0;
     [Range(0.01f, 5f)] public float angleBetweenPoints = 1f;
     [Min(1)]public int foregroundResolution = 10;
+    public GameObject planetCapSprite;
+    public float planetCapZOffset = 1.5f;
 
     [Header("Flat Terrain Settings")]
     [Min(0)] public float terrainWidth = 0;
@@ -64,7 +66,7 @@ public class TerrainGenerator1D : MonoBehaviour
 
     private void Start()
     {
-        if (fullRandomize) noiseSampleSeed = Random.Range(float.MinValue, float.MaxValue);
+        if (fullRandomize) noiseSampleSeed = Random.Range(0f, 1f);
         GenerateTerrain(true, true);
 
         StartCoroutine(MorphTerrain());
@@ -452,8 +454,11 @@ public class TerrainGenerator1D : MonoBehaviour
 
             mf.mesh = mesh;
             mr.material = fgLayer.fgMaterial;
-
         }
+
+        Transform t = Instantiate(planetCapSprite, transform).transform;
+        t.position += new Vector3(0, 0, planetCapZOffset);
+        
     }
 
     void GenerateTopLayer()
