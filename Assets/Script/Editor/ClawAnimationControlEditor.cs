@@ -11,7 +11,7 @@ public class ClawAnimationControlEditor : Editor
         if (GUILayout.Button("Explotion"))
         {
             Debug.Log("Boom~~~");
-            animationControl.Explosion();
+            animationControl.Explosion(new Vector2(Random.Range(-10,10),Random.Range(1,10)));
         }
 
         if (GUILayout.Button("Reset"))

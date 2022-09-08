@@ -20,6 +20,8 @@ public abstract class LandingPointScript : MonoBehaviour
     public float Req_RotateAngle;
     [Tooltip("Rotation requirement tolerance")]
     public float Req_RotateAngleTor;
+
+    public Vector2 Direction;
     private void OnCollisionEnter2D(Collision2D collision)
     {
         TouchAction(collision);

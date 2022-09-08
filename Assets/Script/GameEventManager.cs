@@ -45,5 +45,5 @@ public class GameEventManager : MonoBehaviour
 
     public UnityEvent LeavePlanet;
 
-    public UnityEvent PlayerCrash;
+    public UnityEvent<Vector2> PlayerCrash;
 }

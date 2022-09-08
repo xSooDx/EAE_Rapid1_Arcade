@@ -14,6 +14,7 @@ public class Landing_normal : LandingPointScript
             ShipController _ship = _col.gameObject.GetComponent<ShipController>();
             if (_ship != null)
             {
+                this.Direction = _col.transform.position - transform.position;
                 if (_ship.GetVerticalSpd() > this.Req_MAXVerticalSpeed)
                 {
                     Debug.Log("Vertical Crash!!");
@@ -45,7 +46,7 @@ public class Landing_normal : LandingPointScript
         if (GameEventManager.gameEvent != null)
         {
             GameEventManager.gameEvent.GameOver.Invoke("Ship Crashed!!", _desc, false);
-            GameEventManager.gameEvent.PlayerCrash.Invoke();
+            GameEventManager.gameEvent.PlayerCrash.Invoke(this.Direction);
         }
     }
 
