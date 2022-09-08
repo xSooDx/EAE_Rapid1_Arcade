@@ -335,7 +335,8 @@ public class ShipController : MonoBehaviour
     {
 
 
-        this._rg.AddTorque(RotateInput * _RotateSpd);//rotate the ship
+        //this._rg.AddTorque(RotateInput * _RotateSpd);//rotate the ship
+        this._rg.rotation += RotateInput * _RotateSpd;
 
         //set the maximum of angle
         if (RotateLock)

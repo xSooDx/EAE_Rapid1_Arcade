@@ -553,7 +553,6 @@ public class TerrainGenerator1D : MonoBehaviour
 
     IEnumerator MorphTerrain()
     {
-        
         while (true)
         {
             yield return new WaitForSeconds(morphInterval);
@@ -561,11 +560,11 @@ public class TerrainGenerator1D : MonoBehaviour
             Vector3 startPosition = transform.position;
             while (timer > 0)
             {
+                yield return new WaitForFixedUpdate();
                 noiseSampleSeed += morphSpeed * Time.deltaTime;
                 GenerateTerrain(false, false);
                 timer -= Time.deltaTime;
                 transform.position = startPosition + Random.insideUnitSphere * shakeIntensity;
-                yield return new WaitForEndOfFrame();
             }
             transform.position = startPosition;
         }
