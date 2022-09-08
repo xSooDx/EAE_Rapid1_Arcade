@@ -22,6 +22,8 @@ public class Landing_Prize : LandingPointScript
 
     public bool FollowTarget;
 
+    public PresentAnimationControl presentAnimation;
+
     private void Awake()
     {
         this._rg = GetComponent<Rigidbody2D>();
@@ -98,6 +100,7 @@ public class Landing_Prize : LandingPointScript
             this.gameObject.layer = LayerMask.NameToLayer("Prize_Grab");
             this.transform.SetParent(this._shipCtrl.GetGrabPoint());
             this.transform.localPosition = Vector2.zero;
+            //this.transform.position = this._shipCtrl.GetGrabPoint().position;
             this.transform.DORotateQuaternion(Quaternion.Euler(0f, 0f, 0f), 1f);
             this.FollowTarget = true;
             //if (this._Fjoint != null && _ship.GetRigidBody() != null) this._Fjoint.connectedBody = _ship.GetRigidBody();
@@ -127,7 +130,8 @@ public class Landing_Prize : LandingPointScript
             GameEventManager.gameEvent.GameOver.Invoke("Success!!", "The prize is delivered", true, false);
             GameEventManager.gameEvent.PrizeLand.RemoveListener(DropPrize);
         }
-        Destroy(this.gameObject);
+        if (presentAnimation != null) presentAnimation.OpenPresent();
+        Destroy(this.gameObject,3f);
         //this._IsGrabbing = false;
     }
 
