@@ -7,6 +7,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: maxPickups
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: minPickups
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: dropOffZoneCount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: dropOffZoneHeight
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 1471695200977483964, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -3941,7 +3957,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4393764064603996209, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
       propertyPath: shakeIntensity
-      value: 0.05
+      value: 0.065
       objectReference: {fileID: 0}
     - target: {fileID: 4393764064603996209, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
       propertyPath: textureScale.x
