@@ -20,6 +20,9 @@ public class ShipController : MonoBehaviour
     [Tooltip("Speed of the ship")]
     [Range(0, 50)]
     public float Speed;
+
+    [Range(0, 50)]
+    public float MaxSpeed;
     [Tooltip("How fast will ship speed up")]
     [Range(0, 100)]
     public float SpeedUpMultiplier;
@@ -198,6 +201,7 @@ public class ShipController : MonoBehaviour
         }
         //this._rg.angularVelocity = 0;
         Collider2D[] GroundChk = Physics2D.OverlapCircleAll(this.gameObject.transform.position, SearchField, GroundLayer);
+        if (LocationPointer.navSystem != null) LocationPointer.navSystem.UpdatePointer(GroundChk);
         if (GroundChk.Length > 0)
         {
             Vector2 _pos = this.transform.position;
@@ -364,7 +368,10 @@ public class ShipController : MonoBehaviour
 
 
         _rg.AddRelativeForce(Vector2.up * PushInput * _speed);//push the ship
-
+        if (_rg.velocity.magnitude > MaxSpeed)
+        {
+            _rg.velocity = _rg.velocity.normalized * MaxSpeed;
+        }
 
 
 

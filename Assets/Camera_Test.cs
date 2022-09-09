@@ -12,16 +12,10 @@ public class Camera_Test : MonoBehaviour
 
     public Transform Planet;
 
-    [Range(0,100)]
-    public float FocusRatio;
 
     [Tooltip("Camera move speed")]
     public float MoveSpeed;
 
-    [Tooltip("The offset position for following target")]
-    public Vector3 offset;
-
-    public float FocusBuffer;
 
 
     /// <summary>
@@ -29,8 +23,12 @@ public class Camera_Test : MonoBehaviour
     /// </summary>
     private Camera m_Camera;
 
-    [Tooltip("Camera zoom speed")]
-    public float ZoomSpeed;
+    public Canvas MainCanvas;
+
+    public RectTransform UI_Element;
+
+    [SerializeField]
+    private Vector2 Pos;
 
     private void Awake()
     {
@@ -39,12 +37,18 @@ public class Camera_Test : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Vector3 _Fpos = this.Planet.position + (Target.position - this.Planet.position) / 100f * FocusRatio;
-        _Fpos.z = offset.z;
-        float _dis = Vector2.Distance(_Fpos, this.Planet.position)+ FocusBuffer;
-        this.m_Camera.orthographicSize = Mathf.Lerp(this.m_Camera.orthographicSize, _dis/2, ZoomSpeed * Time.deltaTime * 2);
-        this.transform.position = Vector3.Lerp(this.transform.position, _Fpos, MoveSpeed);
-        RotateCamera(this.Planet.position);
+        //this.m_Camera.wi
+
+        RectTransform CanvasRect = MainCanvas.GetComponent<RectTransform>();
+
+        Vector2 ViewportPosition = m_Camera.WorldToViewportPoint(Target.position);
+        Pos = ViewportPosition;
+        float Xpos = Mathf.Clamp((ViewportPosition.x * CanvasRect.sizeDelta.x) - (CanvasRect.sizeDelta.x * 0.5f), CanvasRect.rect.xMin, CanvasRect.rect.xMax);
+        float YPos = Mathf.Clamp((ViewportPosition.y * CanvasRect.sizeDelta.y) - (CanvasRect.sizeDelta.y * 0.5f), CanvasRect.rect.yMin, CanvasRect.rect.yMax);
+        Vector2 WorldObject_ScreenPosition = new Vector2(Xpos, YPos);
+
+        //now you can set the position of the ui element
+        UI_Element.anchoredPosition = WorldObject_ScreenPosition;
     }
 
     void RotateCamera(Vector2 _target)

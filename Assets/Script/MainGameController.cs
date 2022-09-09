@@ -23,6 +23,7 @@ public class MainGameController : MonoBehaviour
 
     [Space(5)]
     [Header("Ship Initial Setup:")]
+    public bool SetPostion;
     [Tooltip("The position where player start")]
     public Vector2 InitialPos;
     [Tooltip("The velocity add when game start")]
@@ -71,6 +72,7 @@ public class MainGameController : MonoBehaviour
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
+        if (ScoreTxt != null) ScoreTxt.text = PlayerScore.ToString();
     }
 
     /// <summary>
@@ -86,7 +88,7 @@ public class MainGameController : MonoBehaviour
         if (_continue)
         {
             //AddScore(LandingScore);
-            if (ScoreTxt != null) ScoreTxt.text = PlayerScore.ToString();
+            
         }
         StartCoroutine(RestartGameCounter(_continue, _resetPos));
     }
@@ -98,14 +100,9 @@ public class MainGameController : MonoBehaviour
         PlayerScore += _score;
     }
 
-    void NewRound(bool _rstPos = true)
-    {
-        iniSetup(_rstPos);
-    }
-
     void iniSetup(bool _rstPos = true)
     {
-        if (playerShip != null && _rstPos) playerShip.InitialSetup(InitialPos, InitialForce, InitialRotate);
+        if (playerShip != null && _rstPos && SetPostion) playerShip.InitialSetup(InitialPos, InitialForce, InitialRotate);
         if (!_rstPos) playerShip.SetCanMove();
         if (GameMsgTitleTxt != null) GameMsgTitleTxt.text = "";
         if (GameMsgDESCTxt != null) GameMsgDESCTxt.text = "";
@@ -123,18 +120,13 @@ public class MainGameController : MonoBehaviour
         yield return new WaitForSeconds(3f);
         if (_continue)
         {
-            NewRound(_resetPos);
+            iniSetup(_resetPos);
         }
         else
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
-    }
-
-    IEnumerator RestartGameCounter()
-    {
-        yield return new WaitForSeconds(3f);
     }
 
     /// <summary>
