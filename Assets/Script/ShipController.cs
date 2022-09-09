@@ -147,7 +147,8 @@ public class ShipController : MonoBehaviour
         }
         if (FuelAmount <= 0 && GameEventManager.gameEvent != null)
         {
-            GameEventManager.gameEvent.GameOver.Invoke("Game Over", "Out of fuel!!", false, true);
+            GameEnd _action = new GameEnd();
+            GameEventManager.gameEvent.GameOver.Invoke("Game Over", "Out of fuel!!", _action);
         }
         PushInput = Playerinput.PlayState.Push.ReadValue<float>();
         RotateInput = Playerinput.PlayState.Rotate.ReadValue<float>();
@@ -341,6 +342,7 @@ public class ShipController : MonoBehaviour
     public void SetCanMove()
     {
         Playerinput.Enable();
+        this.transform.parent = null;
         this._rg.isKinematic = false;
     }
 
@@ -382,7 +384,7 @@ public class ShipController : MonoBehaviour
     /// </summary>
     /// <param name="_str1"></param>
     /// <param name="_str2"></param>
-    void GameOverAction(string _str1, string _str2, bool _continue,bool _rstPos)
+    void GameOverAction(string _str1, string _str2, GameEndAction gameState)
     {
         Playerinput.Disable();
         this._rg.velocity = Vector2.zero;

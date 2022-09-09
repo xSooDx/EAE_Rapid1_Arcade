@@ -83,7 +83,8 @@ public class Landing_Prize : LandingPointScript
     {
         if (GameEventManager.gameEvent != null)
         {
-            GameEventManager.gameEvent.GameOver.Invoke("Ship Crashed!!", _desc, true, true);
+            Continue_ResetPos _action = new Continue_ResetPos();
+            GameEventManager.gameEvent.GameOver.Invoke("Ship Crashed!!", _desc, _action);
             GameEventManager.gameEvent.PlayerCrash.Invoke(this.Direction);
         }
     }
@@ -119,7 +120,7 @@ public class Landing_Prize : LandingPointScript
 
         this._Fjoint.connectedBody = null;
         this._Fjoint.enabled = false;
-        this.transform.SetParent(null);
+        //this.transform.SetParent(null);
         this._shipCtrl = null;
         this.gameObject.layer = 6;
 
@@ -127,7 +128,8 @@ public class Landing_Prize : LandingPointScript
         if (GameEventManager.gameEvent != null)
         {
             GameEventManager.gameEvent.AddScore.Invoke(this.PrizeScore);
-            GameEventManager.gameEvent.GameOver.Invoke("Success!!", "The prize is delivered", true, false);
+            Continue_MaintainPos _action = new Continue_MaintainPos();
+            GameEventManager.gameEvent.GameOver.Invoke("Success!!", "The prize is delivered", _action);
             GameEventManager.gameEvent.PrizeLand.RemoveListener(DropPrize);
         }
         if (presentAnimation != null) presentAnimation.OpenPresent();

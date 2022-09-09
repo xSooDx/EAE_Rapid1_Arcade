@@ -114,8 +114,6 @@ public class CameraScript_Planet : MonoBehaviour
                 float _dis = Vector2.Distance(_Fpos, Target.position) ;
                 float newZoom = Mathf.Lerp(minZoom, MaxZoom, _dis / ZoomLimit);
                 this.m_Camera.fieldOfView = Mathf.Lerp(m_Camera.fieldOfView, newZoom, Time.deltaTime * ZoomSpeed);
-                //float _dis = (Vector2.Distance(_Fpos, IsFocus ? this.Planet.position : Target.position) + FocusBuffer) * (IsFocus ? 1f : 2f);
-                //this.m_Camera.orthographicSize = Mathf.Lerp(this.m_Camera.orthographicSize, _dis / 2, ZoomSpeed * Time.deltaTime * (IsFocus ? 1f : 2f));
                 this.transform.position = Vector3.Lerp(this.transform.position, _Fpos, MoveSpeed);
                 RotateCamera(this.Planet.position);
             }
@@ -123,7 +121,6 @@ public class CameraScript_Planet : MonoBehaviour
             {
                 this.transform.position = Vector3.Lerp(this.transform.position, Target.position + offset, MoveSpeed);
                 this.m_Camera.fieldOfView = Mathf.Lerp(m_Camera.fieldOfView, FocusOnPlayer? 50 : ZoomoutSize, Time.deltaTime * ZoomSpeed);
-                //this.m_Camera.orthographicSize = Mathf.Lerp(this.m_Camera.orthographicSize, ZoomoutSize, ZoomSpeed * Time.deltaTime * (IsFocus ? 1f : 2f));
             }
 
         }

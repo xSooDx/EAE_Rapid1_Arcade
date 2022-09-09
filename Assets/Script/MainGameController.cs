@@ -26,6 +26,7 @@ public class MainGameController : MonoBehaviour
     public bool SetPostion;
     [Tooltip("The position where player start")]
     public Vector2 InitialPos;
+    public Transform InitialPos_Transform;
     [Tooltip("The velocity add when game start")]
     public Vector2 InitialForce;
     [Tooltip("The rotation of player when start")]
@@ -80,17 +81,24 @@ public class MainGameController : MonoBehaviour
     /// </summary>
     /// <param name="_ShowTxt"></param>
     /// <param name="_Desc"></param>
-    void GameOverFunc(string _ShowTxt, string _Desc, bool _continue, bool _resetPos)
+    //void GameOverFunc(string _ShowTxt, string _Desc, bool _continue, bool _resetPos)
+    //{
+    //    StopCoroutine(timecoroutine);
+    //    if (GameMsgTitleTxt != null) GameMsgTitleTxt.text = _ShowTxt;
+    //    if (GameMsgDESCTxt != null) GameMsgDESCTxt.text = _Desc;
+    //    if (_continue)
+    //    {
+    //        //AddScore(LandingScore);
+
+    //    }
+    //    StartCoroutine(RestartGameCounter(_continue, _resetPos));
+    //}
+
+    void GameOverFunc(string _ShowTxt, string _Desc,GameEndAction _action)
     {
-        StopCoroutine(timecoroutine);
-        if (GameMsgTitleTxt != null) GameMsgTitleTxt.text = _ShowTxt;
-        if (GameMsgDESCTxt != null) GameMsgDESCTxt.text = _Desc;
-        if (_continue)
-        {
-            //AddScore(LandingScore);
-            
-        }
-        StartCoroutine(RestartGameCounter(_continue, _resetPos));
+        SetGameTxt(_ShowTxt, _Desc);
+        _action.StartAction();
+        StartCoroutine(RestartGameCounter(_action));
     }
 
 
@@ -102,13 +110,23 @@ public class MainGameController : MonoBehaviour
 
     void iniSetup(bool _rstPos = true)
     {
-        if (playerShip != null && _rstPos && SetPostion) playerShip.InitialSetup(InitialPos, InitialForce, InitialRotate);
+        if (SetPostion && _rstPos) SetPlayerPos();
         if (!_rstPos) playerShip.SetCanMove();
-        if (GameMsgTitleTxt != null) GameMsgTitleTxt.text = "";
-        if (GameMsgDESCTxt != null) GameMsgDESCTxt.text = "";
+        SetGameTxt();
         if (ScoreTxt != null) ScoreTxt.text = PlayerScore.ToString();
         timecoroutine = StartCoroutine(TimeCounter());//start timer
         if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.CancelFocus.Invoke(true);
+    }
+
+    public void SetPlayerPos()
+    {
+        if (playerShip != null) playerShip.InitialSetup(InitialPos_Transform == null ? InitialPos : InitialPos_Transform.position, InitialForce, InitialRotate);
+    }
+
+    public void SetGameTxt(string _title="",string _msg="")
+    {
+        if (GameMsgTitleTxt != null) GameMsgTitleTxt.text = _title;
+        if (GameMsgDESCTxt != null) GameMsgDESCTxt.text = _msg;
     }
 
     /// <summary>
@@ -127,6 +145,25 @@ public class MainGameController : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
+    }
+
+    IEnumerator RestartGameCounter(GameEndAction _action)
+    {
+        yield return new WaitForSeconds(3f);
+        _action.EndAction();
+
+    }
+
+    public void TimerAction(bool _Start)
+    {
+        if (_Start)
+        {
+            timecoroutine = StartCoroutine(TimeCounter());
+        }
+        else
+        {
+            StopCoroutine(timecoroutine);
+        }
     }
 
     /// <summary>
