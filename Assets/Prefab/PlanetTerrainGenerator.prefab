@@ -4032,6 +4032,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4393764064603996209, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
+      propertyPath: morphInterval
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4393764064603996209, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
       propertyPath: planetTerrain
       value: 1
       objectReference: {fileID: 0}
@@ -7079,7 +7083,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gravitySource: {fileID: 0}
-  obstaclePrefabs: []
+  obstaclePrefabs:
+  - {fileID: 1034572280365111803, guid: e6d7b920f41feec418f143892051a7b3, type: 3}
+  - {fileID: 9050626005741347588, guid: 2bae1e255f3d7814e9839009e69543b6, type: 3}
+  - {fileID: 4405486337768179831, guid: 9db1366b416b2fc448196f5906901c57, type: 3}
+  - {fileID: 810380531763077044, guid: 4e9459a56d333994098571a9477d296e, type: 3}
+  - {fileID: 8878802891476915237, guid: 0693b42d8ba6f5a4ead5a1231d05e343, type: 3}
+  - {fileID: 2725786881998148392, guid: a136e54870795ac488f54786e0981008, type: 3}
+  - {fileID: 8720552486151405822, guid: f04d584c8863fe3439069d37acfba423, type: 3}
+  - {fileID: 3838401656192062206, guid: 454e6c5aeff7a1d449a8057a9e1210c6, type: 3}
   obstacleCount: 6
   minHeight: 8
   maxHeight: 9

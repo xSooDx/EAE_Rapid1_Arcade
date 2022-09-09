@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
 
+[RequireComponent(typeof(AudioSource))]
 public class ShipController : MonoBehaviour
 {
     /// <summary>
@@ -87,16 +88,22 @@ public class ShipController : MonoBehaviour
     [Tooltip("Text for showing fuel amount")]
     public TextMeshProUGUI FuelAmountTxt;
 
+    AudioSource thrustAudioSource;
+
     private void Awake()
     {
         Playerinput = new PlayerControl();
         this._rg = this.gameObject.GetComponent<Rigidbody2D>();
         if (emitParticle != null) emitParticle.Stop();
+        thrustAudioSource = this.gameObject.GetComponent<AudioSource>();
+        thrustAudioSource.loop = true;
     }
 
     private void OnEnable()
     {
         Playerinput.Enable();
+        thrustAudioSource.clip = AudioManager.instance.GetAudioClip("shipThrusters");
+
     }
     private void OnDisable()
     {
@@ -161,6 +168,7 @@ public class ShipController : MonoBehaviour
                 if (!emitParticle.isEmitting)
                 {
                     emitParticle.Play();
+                    thrustAudioSource.Play();
                 }
             }
         }
@@ -176,6 +184,7 @@ public class ShipController : MonoBehaviour
                 if (emitParticle.isEmitting)
                 {
                     emitParticle.Stop();
+                    thrustAudioSource.Stop();
                 }
 
             }
@@ -386,6 +395,7 @@ public class ShipController : MonoBehaviour
     void Crash(Vector2 _dir)
     {
         if (animationControl != null) animationControl.Explosion(_dir);
+        AudioManager.instance.PlayAudio("shipDestroy");
     }
 
 

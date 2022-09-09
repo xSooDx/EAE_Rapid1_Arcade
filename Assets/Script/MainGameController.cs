@@ -81,6 +81,7 @@ public class MainGameController : MonoBehaviour
     void GameOverFunc(string _ShowTxt, string _Desc, bool _continue, bool _resetPos)
     {
         StopCoroutine(timecoroutine);
+        AudioManager.instance.PlayAudio("gameOver");
         if (GameMsgTitleTxt != null) GameMsgTitleTxt.text = _ShowTxt;
         if (GameMsgDESCTxt != null) GameMsgDESCTxt.text = _Desc;
         if (_continue)

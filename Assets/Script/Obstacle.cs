@@ -50,6 +50,7 @@ public class Obstacle : MonoBehaviour
         ParticleSystem explodeParticles = Instantiate(explosionParticles, transform.position, transform.rotation);
         ParticleSystem.MainModule main = explodeParticles.main;
         main.startColor = trailParticles.main.startColor;
+        
         Destroy(this.gameObject);
     }
 }
