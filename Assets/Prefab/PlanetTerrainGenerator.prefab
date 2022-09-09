@@ -7079,7 +7079,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gravitySource: {fileID: 0}
-  obstaclePrefab: {fileID: 9050626005741347588, guid: 2bae1e255f3d7814e9839009e69543b6, type: 3}
+  obstaclePrefabs: []
   obstacleCount: 6
-  minHeight: 3.5
-  maxHeight: 4.5
+  minHeight: 8
+  maxHeight: 9
+  obstacleVelocity: 4
+  timeBetweenSpawns: 2
+  randomVelAngle: 15
