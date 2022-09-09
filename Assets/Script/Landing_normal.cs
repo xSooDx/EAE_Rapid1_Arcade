@@ -45,7 +45,8 @@ public class Landing_normal : LandingPointScript
     {
         if (GameEventManager.gameEvent != null)
         {
-            GameEventManager.gameEvent.GameOver.Invoke("Ship Crashed!!", _desc, false, true);
+            Continue_ResetPos _action = new Continue_ResetPos();
+            GameEventManager.gameEvent.GameOver.Invoke("Ship Crashed!!", _desc, _action);
             GameEventManager.gameEvent.PlayerCrash.Invoke(this.Direction);
         }
     }
@@ -56,7 +57,8 @@ public class Landing_normal : LandingPointScript
     {
         if (GameEventManager.gameEvent != null)
         {
-            GameEventManager.gameEvent.GameOver.Invoke("Success!!", _desc, true, true);
+            Continue_MaintainPos _action = new Continue_MaintainPos();
+            GameEventManager.gameEvent.GameOver.Invoke("Success!!", _desc, _action);
             GameEventManager.gameEvent.AddScore.Invoke(100);
         }
     }

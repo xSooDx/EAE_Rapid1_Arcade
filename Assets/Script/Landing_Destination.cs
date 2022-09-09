@@ -38,7 +38,7 @@ public class Landing_Destination : LandingPointScript
 
                 if (_col.gameObject.tag == "Prize" && _col.gameObject.GetComponent<Landing_Prize>() != null)
                 {
-                    LandingFunction(_col.gameObject.GetComponent<Landing_Prize>());
+                    LandingFunction(_col.gameObject.GetComponent<Landing_Prize>(),_ship);
                 }
             }
         }
@@ -53,13 +53,18 @@ public class Landing_Destination : LandingPointScript
     void CrashFunction(string _Title, string _desc)
     {
         Debug.Log(_Title + " " + _desc);
-        if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.GameOver.Invoke(_Title, _desc, false, true);
+        if (GameEventManager.gameEvent != null)
+        {
+            Continue_ResetPos _state = new Continue_ResetPos();
+            GameEventManager.gameEvent.GameOver.Invoke(_Title, _desc, _state);
+        }
     }
 
-    void LandingFunction(Landing_Prize _Prize)
+    void LandingFunction(Landing_Prize _Prize, ShipController _ship)
     {
+        _ship.gameObject.transform.SetParent(this.gameObject.transform);
+        _Prize.transform.SetParent(this.gameObject.transform);
         Debug.Log(_Prize.PrizeID + " Land");
-        //if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.GameOver.Invoke("Success!!", _desc, true);
         if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.PrizeLand.Invoke(_Prize.PrizeID);
     }
 }

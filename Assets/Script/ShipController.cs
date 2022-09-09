@@ -21,6 +21,9 @@ public class ShipController : MonoBehaviour
     [Tooltip("Speed of the ship")]
     [Range(0, 50)]
     public float Speed;
+
+    [Range(0, 50)]
+    public float MaxSpeed;
     [Tooltip("How fast will ship speed up")]
     [Range(0, 100)]
     public float SpeedUpMultiplier;
@@ -151,7 +154,8 @@ public class ShipController : MonoBehaviour
         }
         if (FuelAmount <= 0 && GameEventManager.gameEvent != null)
         {
-            GameEventManager.gameEvent.GameOver.Invoke("Game Over", "Out of fuel!!", false, true);
+            GameEnd _action = new GameEnd();
+            GameEventManager.gameEvent.GameOver.Invoke("Game Over", "Out of fuel!!", _action);
         }
         PushInput = Playerinput.PlayState.Push.ReadValue<float>();
         RotateInput = Playerinput.PlayState.Rotate.ReadValue<float>();
@@ -207,6 +211,7 @@ public class ShipController : MonoBehaviour
         }
         //this._rg.angularVelocity = 0;
         Collider2D[] GroundChk = Physics2D.OverlapCircleAll(this.gameObject.transform.position, SearchField, GroundLayer);
+        if (LocationPointer.navSystem != null) LocationPointer.navSystem.UpdatePointer(GroundChk);
         if (GroundChk.Length > 0)
         {
             Vector2 _pos = this.transform.position;
@@ -346,6 +351,7 @@ public class ShipController : MonoBehaviour
     public void SetCanMove()
     {
         Playerinput.Enable();
+        this.transform.parent = null;
         this._rg.isKinematic = false;
     }
 
@@ -373,7 +379,10 @@ public class ShipController : MonoBehaviour
 
 
         _rg.AddRelativeForce(Vector2.up * PushInput * _speed);//push the ship
-
+        if (_rg.velocity.magnitude > MaxSpeed)
+        {
+            _rg.velocity = _rg.velocity.normalized * MaxSpeed;
+        }
 
 
 
@@ -384,7 +393,7 @@ public class ShipController : MonoBehaviour
     /// </summary>
     /// <param name="_str1"></param>
     /// <param name="_str2"></param>
-    void GameOverAction(string _str1, string _str2, bool _continue,bool _rstPos)
+    void GameOverAction(string _str1, string _str2, GameEndAction gameState)
     {
         Playerinput.Disable();
         this._rg.velocity = Vector2.zero;
