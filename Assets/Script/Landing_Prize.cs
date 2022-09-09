@@ -104,6 +104,7 @@ public class Landing_Prize : LandingPointScript
             //this.transform.position = this._shipCtrl.GetGrabPoint().position;
             this.transform.DORotateQuaternion(Quaternion.Euler(0f, 0f, 0f), 1f);
             this.FollowTarget = true;
+            AudioManager.instance.PlayAudio("pickup");
             //if (this._Fjoint != null && _ship.GetRigidBody() != null) this._Fjoint.connectedBody = _ship.GetRigidBody();
             //this._Fjoint.enabled = true;
             foreach (Transform _child in gameObject.transform.GetComponentInChildren<Transform>())
@@ -125,6 +126,7 @@ public class Landing_Prize : LandingPointScript
         this.gameObject.layer = 6;
 
         this.FollowTarget = false;
+        AudioManager.instance.PlayAudio("dropoff");
         if (GameEventManager.gameEvent != null)
         {
             GameEventManager.gameEvent.AddScore.Invoke(this.PrizeScore);

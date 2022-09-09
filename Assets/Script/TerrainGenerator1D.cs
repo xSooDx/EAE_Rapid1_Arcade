@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(PolygonCollider2D), typeof(MeshFilter), typeof(MeshRenderer))]
-[RequireComponent(typeof(LineRenderer))]
+[RequireComponent(typeof(LineRenderer), typeof(AudioSource))]
 public class TerrainGenerator1D : MonoBehaviour
 {
     public UnityEvent<TerrainGenerator1D, Vector2[]> onTerrainGenerated;
@@ -63,7 +63,7 @@ public class TerrainGenerator1D : MonoBehaviour
     [SerializeField] MeshFilter meshFilter;
     [SerializeField] MeshRenderer meshRenderer;
     [SerializeField] LineRenderer lineRenderer;
-
+    [SerializeField] AudioSource audioSource;
     private void Start()
     {
         if (fullRandomize) noiseSampleSeed = Random.Range(0f, 1f);
@@ -93,6 +93,7 @@ public class TerrainGenerator1D : MonoBehaviour
         meshFilter.mesh = null;
         meshRenderer = GetComponent<MeshRenderer>();
         lineRenderer = GetComponent<LineRenderer>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     void DoPreCalculations()
@@ -565,6 +566,9 @@ public class TerrainGenerator1D : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(morphInterval);
+            audioSource.clip = AudioManager.instance.GetAudioClip("toyQuake");
+            audioSource.loop = true;
+            audioSource.Play();
             float timer = morphDuration;
             Vector3 startPosition = transform.position;
             while (timer > 0)
@@ -576,6 +580,7 @@ public class TerrainGenerator1D : MonoBehaviour
                 transform.position = startPosition + Random.insideUnitSphere * shakeIntensity;
             }
             transform.position = startPosition;
+            audioSource.Stop();
         }
     }
 

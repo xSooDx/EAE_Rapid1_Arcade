@@ -99,6 +99,7 @@ public class MainGameController : MonoBehaviour
         SetGameTxt(_ShowTxt, _Desc);
         _action.StartAction();
         StartCoroutine(RestartGameCounter(_action));
+        AudioManager.instance.PlayAudio("gameOver");
     }
 
 

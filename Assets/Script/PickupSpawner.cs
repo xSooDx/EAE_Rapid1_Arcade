@@ -51,7 +51,7 @@ public class PickupSpawner : MonoBehaviour
 
         CalculateTotalWeight();
         float currWeightVal = 0f;
-        Debug.Log($"Pickup spawner: pickupCount: {pickupCount}, potentialSpawnPoints: {potentialSpawnPoints.Count}, Range: {randRange}");
+        //Debug.Log($"Pickup spawner: pickupCount: {pickupCount}, potentialSpawnPoints: {potentialSpawnPoints.Count}, Range: {randRange}");
         for (int i = 0; i< pickupCount; i++)
         {
             int idx = Random.Range(currStart, currStart + randRange);
@@ -72,7 +72,7 @@ public class PickupSpawner : MonoBehaviour
 
                 currWeightVal += pickup.spawnWeight;
             }
-
+            currWeightVal = 0f;
             currStart += randRange;
         }
 
@@ -111,7 +111,7 @@ public class PickupSpawner : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(transform.position, transform.position + transform.up * (dropOffZoneHeight * transform.localScale.y));
+        Gizmos.DrawWireSphere(transform.position, dropOffZoneHeight * transform.localScale.y);
     }
 #endif
 }
