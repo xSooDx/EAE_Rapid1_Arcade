@@ -53,7 +53,7 @@ MonoBehaviour:
   Req_RotateAngleTor: 360
   Direction: {x: 0, y: 0}
   PrizeID: 
-  PrizeScore: 0
+  PrizeScore: 50
   FollowTarget: 0
   presentAnimation: {fileID: 5102714419046442152}
 --- !u!50 &4421404942157440305
