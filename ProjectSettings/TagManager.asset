@@ -9,15 +9,15 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
   - Terrain
   - Prize
-  - 
-  - 
-  - 
-  - 
+  - Gravity
+  - Prize_Grab
+  - Obstacle
+  - Platform
   - 
   - 
   - 
@@ -41,4 +41,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Claw
+    uniqueID: 3160715979
     locked: 0
