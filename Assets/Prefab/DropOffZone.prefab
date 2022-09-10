@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6271957569958696910}
   - component: {fileID: 3140554702484221055}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Hexagon Pointed-Top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 1283685428801262258}
   - component: {fileID: 1873196395104353094}
   - component: {fileID: 965104503806254191}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: DropOffZone
   m_TagString: Untagged
   m_Icon: {fileID: 0}

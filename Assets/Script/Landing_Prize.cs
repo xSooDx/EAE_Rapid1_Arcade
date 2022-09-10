@@ -83,8 +83,7 @@ public class Landing_Prize : LandingPointScript
     {
         if (GameEventManager.gameEvent != null)
         {
-            Continue_ResetPos _action = new Continue_ResetPos();
-            GameEventManager.gameEvent.GameOver.Invoke("Ship Crashed!!", _desc, _action);
+            GameEventManager.gameEvent.GameOver.Invoke("Ship Crashed!!", _desc, GameEndActionsLib.continue_ResetPos);
             GameEventManager.gameEvent.PlayerCrash.Invoke(this.Direction);
         }
     }
@@ -130,13 +129,31 @@ public class Landing_Prize : LandingPointScript
         if (GameEventManager.gameEvent != null)
         {
             GameEventManager.gameEvent.AddScore.Invoke(this.PrizeScore);
-            Continue_MaintainPos _action = new Continue_MaintainPos();
-            GameEventManager.gameEvent.GameOver.Invoke("Success!!", "The prize is delivered", _action);
+            //GameEventManager.gameEvent.GameOver.Invoke("Success!!", "The prize is delivered", GameEndActionsLib.continue_MaintainPos);
             GameEventManager.gameEvent.PrizeLand.RemoveListener(DropPrize);
         }
         if (presentAnimation != null) presentAnimation.OpenPresent();
         Destroy(this.gameObject,3f);
         //this._IsGrabbing = false;
+    }
+
+    void CrashPrize(string _prizeid)
+    {
+        if (!PrizeID.Equals(_prizeid) || !_IsGrabbing) return;
+
+        this.transform.SetParent(null);
+        this._shipCtrl = null;
+
+        this.FollowTarget = false;
+        AudioManager.instance.PlayAudio("dropoff");
+        if (GameEventManager.gameEvent != null)
+        {
+            GameEventManager.gameEvent.AddScore.Invoke(this.PrizeScore);
+            GameEventManager.gameEvent.GameOver.Invoke("Ah!!", "The prize is crashed", GameEndActionsLib.continue_MaintainPos);
+            GameEventManager.gameEvent.PrizeLand.RemoveListener(DropPrize);
+        }
+        
+        Destroy(this.gameObject, 3f);
     }
 
     public ShipController GetShipController()

@@ -55,8 +55,7 @@ public class Landing_Destination : LandingPointScript
         Debug.Log(_Title + " " + _desc);
         if (GameEventManager.gameEvent != null)
         {
-            Continue_ResetPos _state = new Continue_ResetPos();
-            GameEventManager.gameEvent.GameOver.Invoke(_Title, _desc, _state);
+            GameEventManager.gameEvent.GameOver.Invoke(_Title, _desc, GameEndActionsLib.continue_ResetPos);
         }
     }
 

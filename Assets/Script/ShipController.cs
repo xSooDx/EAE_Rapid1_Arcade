@@ -58,6 +58,7 @@ public class ShipController : MonoBehaviour
 
     [Tooltip("The layer of ground")]
     public LayerMask GroundLayer;
+    public LayerMask PlatformLayer;
     [Tooltip("The offset of height detection(for altitude)")]
     public Vector2 HeightOffest;
 
@@ -154,8 +155,7 @@ public class ShipController : MonoBehaviour
         }
         if (FuelAmount <= 0 && GameEventManager.gameEvent != null)
         {
-            GameEnd _action = new GameEnd();
-            GameEventManager.gameEvent.GameOver.Invoke("Game Over", "Out of fuel!!", _action);
+            GameEventManager.gameEvent.GameOver.Invoke("Game Over", "Out of fuel!!", GameEndActionsLib.gameEnd);
         }
         PushInput = Playerinput.PlayState.Push.ReadValue<float>();
         RotateInput = Playerinput.PlayState.Rotate.ReadValue<float>();
@@ -254,19 +254,11 @@ public class ShipController : MonoBehaviour
                             GameEventManager.gameEvent.CancelFocus.Invoke(false);
                         }
                     }
-                    else if (cameraControl != null)
-                    {
-                        if (Altitude < FocusHeight)
-                        {
-                            cameraControl.FocusObject();
-                        }
-                        else
-                        {
-                            cameraControl.CancelFocus(false);
-                        }
-                    }
 
                 }
+
+                Collider2D[] PlatformChk = Physics2D.OverlapCircleAll(this.gameObject.transform.position, 2f, PlatformLayer);
+                GameEventManager.gameEvent.FocusPlayer.Invoke(PlatformChk.Length > 0);
             }
 
         }
@@ -278,50 +270,6 @@ public class ShipController : MonoBehaviour
                 GameEventManager.gameEvent.LeavePlanet.Invoke();
             }
         }
-
-
-
-
-
-
-
-
-        //if (Altitude >= 0)
-        //{
-        //    if (GameEventManager.gameEvent != null)
-        //    {
-        //        if (Altitude < FocusHeight)
-        //        {
-        //            GameEventManager.gameEvent.StartFocus.Invoke();
-        //        }
-        //        else
-        //        {
-        //            GameEventManager.gameEvent.CancelFocus.Invoke(false);
-        //        }
-        //    }
-        //    else if (cameraControl != null)
-        //    {
-        //        if (Altitude < FocusHeight)
-        //        {
-        //            cameraControl.FocusObject();
-        //        }
-        //        else
-        //        {
-        //            cameraControl.CancelFocus(false);
-        //        }
-        //    }
-        //}
-        //else
-        //{
-        //    if (GameEventManager.gameEvent != null)
-        //    {
-        //        GameEventManager.gameEvent.CancelFocus.Invoke(false);
-        //    }
-        //    else if (cameraControl != null)
-        //    {
-        //        cameraControl.CancelFocus(false);
-        //    }
-        //}
 
         RotateAngle = this.transform.rotation.eulerAngles.z;
 

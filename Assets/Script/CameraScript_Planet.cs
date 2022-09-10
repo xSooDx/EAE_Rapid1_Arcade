@@ -99,8 +99,9 @@ public class CameraScript_Planet : MonoBehaviour
             GameEventManager.gameEvent.ClosePlanet.AddListener(InPlanet);
             GameEventManager.gameEvent.LeavePlanet.AddListener(OutPlanet);
             GameEventManager.gameEvent.PlayerCrash.AddListener(Crash);
+            GameEventManager.gameEvent.FocusPlayer.AddListener(FocusPlayerSet);
         }
-       
+
     }
 
     private void FixedUpdate()
@@ -111,16 +112,20 @@ public class CameraScript_Planet : MonoBehaviour
             {
                 Vector3 _Fpos = this.Planet.position + (Target.position - this.Planet.position) / 100f * (IsFocus ? FocusRatio : UnFocusRatio);
                 _Fpos.z = offset.z;
-                float _dis = Vector2.Distance(_Fpos, Target.position) ;
+                float _dis = Vector2.Distance(_Fpos, Target.position);
                 float newZoom = Mathf.Lerp(minZoom, MaxZoom, _dis / ZoomLimit);
                 this.m_Camera.fieldOfView = Mathf.Lerp(m_Camera.fieldOfView, newZoom, Time.deltaTime * ZoomSpeed);
                 this.transform.position = Vector3.Lerp(this.transform.position, _Fpos, MoveSpeed);
-                RotateCamera(this.Planet.position);
+                
             }
             else
             {
                 this.transform.position = Vector3.Lerp(this.transform.position, Target.position + offset, MoveSpeed);
-                this.m_Camera.fieldOfView = Mathf.Lerp(m_Camera.fieldOfView, FocusOnPlayer? 50 : ZoomoutSize, Time.deltaTime * ZoomSpeed);
+                this.m_Camera.fieldOfView = Mathf.Lerp(m_Camera.fieldOfView, FocusOnPlayer ? 50 : ZoomoutSize, Time.deltaTime * ZoomSpeed);
+            }
+            if (ClosePlanet)
+            {
+                RotateCamera(this.Planet.position);
             }
 
         }
@@ -151,7 +156,12 @@ public class CameraScript_Planet : MonoBehaviour
 
     void Crash(Vector2 _dir)
     {
-        FocusOnPlayer = true;
+        FocusPlayerSet(true);
+    }
+
+    public void FocusPlayerSet(bool _set)
+    {
+        FocusOnPlayer = _set;
     }
     public void InPlanet(Transform _planet)
     {
