@@ -62,7 +62,7 @@ public class Landing_Destination : LandingPointScript
 
     void LandingFunction(Landing_Prize _Prize, ShipController _ship)
     {
-        _ship.gameObject.transform.SetParent(this.gameObject.transform);
+        //_ship.gameObject.transform.SetParent(this.gameObject.transform);
         _Prize.transform.SetParent(this.gameObject.transform);
         Debug.Log(_Prize.PrizeID + " Land");
         if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.PrizeLand.Invoke(_Prize.PrizeID);

@@ -22,10 +22,10 @@ public class ShipController : MonoBehaviour
     [Range(0, 50)]
     public float Speed;
 
-    [Range(0, 50)]
+    [Range(0, 100)]
     public float MaxSpeed;
     [Tooltip("How fast will ship speed up")]
-    [Range(0, 100)]
+    [Range(0, 200)]
     public float SpeedUpMultiplier;
 
     [Tooltip("Amount of fuel")]
@@ -34,7 +34,10 @@ public class ShipController : MonoBehaviour
     private float _speed;
 
     private float PushInput;
+
     private float RotateInput;
+
+    public bool IsGrabbing;
 
     [Tooltip("Rotation Speed")]
     [Range(0, 20)]

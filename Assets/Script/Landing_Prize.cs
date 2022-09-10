@@ -90,16 +90,14 @@ public class Landing_Prize : LandingPointScript
 
     void LandingFunction(ShipController _ship)
     {
-        //if (this._Fjoint != null && _ship.GetRigidBody() != null) this._Fjoint.connectedBody = _ship.GetRigidBody();
-        //this._Fjoint.enabled = true;
-        //this._Fjoint.connectedAnchor = new Vector2(0, 0.1f);
-        if (_ship != null)
+        if (_ship != null && !_ship.IsGrabbing)
         {
             this._shipCtrl = _ship;
             this._IsGrabbing = true;
             this.gameObject.layer = LayerMask.NameToLayer("Prize_Grab");
             this.transform.SetParent(this._shipCtrl.GetGrabPoint());
             this.transform.localPosition = Vector2.zero;
+            _ship.IsGrabbing = true;
             //this.transform.position = this._shipCtrl.GetGrabPoint().position;
             this.transform.DORotateQuaternion(Quaternion.Euler(0f, 0f, 0f), 1f);
             this.FollowTarget = true;
@@ -121,9 +119,12 @@ public class Landing_Prize : LandingPointScript
         this._Fjoint.connectedBody = null;
         this._Fjoint.enabled = false;
         //this.transform.SetParent(null);
+        this._shipCtrl.IsGrabbing = false;
         this._shipCtrl = null;
         this.gameObject.layer = 6;
-
+        this._rg.velocity = Vector2.zero;
+        this._rg.freezeRotation = true;
+        this._rg.isKinematic = true;
         this.FollowTarget = false;
         AudioManager.instance.PlayAudio("dropoff");
         if (GameEventManager.gameEvent != null)
@@ -133,7 +134,7 @@ public class Landing_Prize : LandingPointScript
             GameEventManager.gameEvent.PrizeLand.RemoveListener(DropPrize);
         }
         if (presentAnimation != null) presentAnimation.OpenPresent();
-        Destroy(this.gameObject,3f);
+        Destroy(this.gameObject,2f);
         //this._IsGrabbing = false;
     }
 
@@ -145,15 +146,14 @@ public class Landing_Prize : LandingPointScript
         this._shipCtrl = null;
 
         this.FollowTarget = false;
-        AudioManager.instance.PlayAudio("dropoff");
+        //AudioManager.instance.PlayAudio("dropoff");
         if (GameEventManager.gameEvent != null)
         {
-            GameEventManager.gameEvent.AddScore.Invoke(this.PrizeScore);
-            GameEventManager.gameEvent.GameOver.Invoke("Ah!!", "The prize is crashed", GameEndActionsLib.continue_MaintainPos);
+            //GameEventManager.gameEvent.GameOver.Invoke("Ah!!", "The prize is crashed", GameEndActionsLib.continue_MaintainPos);
             GameEventManager.gameEvent.PrizeLand.RemoveListener(DropPrize);
         }
         
-        Destroy(this.gameObject, 3f);
+        Destroy(this.gameObject, 2f);
     }
 
     public ShipController GetShipController()
