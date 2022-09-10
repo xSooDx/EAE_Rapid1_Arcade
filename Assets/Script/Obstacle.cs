@@ -36,7 +36,11 @@ public class Obstacle : MonoBehaviour
         if (collision.transform.CompareTag("Player"))
         {
             Continue_ResetPos _action = new Continue_ResetPos();
-			if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.GameOver.Invoke("Ship Crashed!!", description, _action);
+            if (GameEventManager.gameEvent != null)
+            {
+                GameEventManager.gameEvent.GameOver.Invoke("Ship Crashed!!", description, _action);
+                GameEventManager.gameEvent.PlayerCrash.Invoke(myRigidbody.velocity);
+            }
         }
 
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, explosionRadius);

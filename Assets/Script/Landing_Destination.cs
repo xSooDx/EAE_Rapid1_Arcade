@@ -56,6 +56,7 @@ public class Landing_Destination : LandingPointScript
         if (GameEventManager.gameEvent != null)
         {
             GameEventManager.gameEvent.GameOver.Invoke(_Title, _desc, GameEndActionsLib.continue_ResetPos);
+            GameEventManager.gameEvent.PlayerCrash.Invoke(this.Direction);
         }
     }
 
