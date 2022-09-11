@@ -3,6 +3,7 @@ public class Continue_MaintainPos : GameEndAction
 {
     public override void StartAction()
     {
+        base.StartAction();
         if (gameController != null)
         {
             gameController.TimerAction(false);
@@ -12,6 +13,7 @@ public class Continue_MaintainPos : GameEndAction
 
     public override void EndAction()
     {
+        base.EndAction();
         if (gameController != null)
         {
             gameController.TimerAction(true);

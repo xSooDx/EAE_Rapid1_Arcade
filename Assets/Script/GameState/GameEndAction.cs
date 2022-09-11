@@ -14,11 +14,13 @@ public class GameEndAction
 
     public virtual void StartAction()
     {
-        Debug.Log("I love Disgaea");
+        if (gameController == null && MainGameController.gameController != null) gameController = MainGameController.gameController;
+        //Debug.Log("I love Disgaea");
     }
 
     public virtual void EndAction()
     {
-        Debug.Log("Yee");
+        if (gameController == null && MainGameController.gameController != null) gameController = MainGameController.gameController;
+        //Debug.Log("Yee");
     }
 }

@@ -94,7 +94,7 @@ public class MainGameController : MonoBehaviour
     //    StartCoroutine(RestartGameCounter(_continue, _resetPos));
     //}
 
-    void GameOverFunc(string _ShowTxt, string _Desc,GameEndAction _action)
+    void GameOverFunc(string _ShowTxt, string _Desc, GameEndAction _action)
     {
         SetGameTxt(_ShowTxt, _Desc);
         _action.StartAction();
@@ -104,8 +104,12 @@ public class MainGameController : MonoBehaviour
 
 
 
-    void AddScore(int _score)
+    public void AddScore(string _desc, int _score)
     {
+        if (UIController.uiController != null)
+        {
+            UIController.uiController.GetScore(_desc,_score,playerShip.transform.position);
+        }
         PlayerScore += _score;
     }
 
@@ -124,7 +128,7 @@ public class MainGameController : MonoBehaviour
         if (playerShip != null) playerShip.InitialSetup(InitialPos_Transform == null ? InitialPos : InitialPos_Transform.position, InitialForce, InitialRotate);
     }
 
-    public void SetGameTxt(string _title="",string _msg="")
+    public void SetGameTxt(string _title = "", string _msg = "")
     {
         if (GameMsgTitleTxt != null) GameMsgTitleTxt.text = _title;
         if (GameMsgDESCTxt != null) GameMsgDESCTxt.text = _msg;

@@ -36,10 +36,12 @@ public class GameEventManager : MonoBehaviour
     /// </summary>
     public UnityEvent<string> PrizeLand;
 
+    public UnityEvent<string> PrizeCrash;
+
     /// <summary>
     /// add score
     /// </summary>
-    public UnityEvent<int> AddScore;
+    public UnityEvent<string,int> AddScore;
 
     public UnityEvent<Transform> ClosePlanet;
 
