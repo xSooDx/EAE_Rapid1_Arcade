@@ -39,8 +39,9 @@ public class PickupSpawner : MonoBehaviour
             //}
         }
 
+        potentialSpawnPoints.Add((terrainPointsLocal[terrainPointsLocal.Length - 1] + terrainPointsLocal[0]) / 2);
+
         int dropOffPointIdx = potentialSpawnPoints.Count / 2;
-        Vector2 dropOffPosition = potentialSpawnPoints[dropOffPointIdx] + (Vector2)terrainGenerator.transform.position;
 
         potentialSpawnPoints.RemoveAt(dropOffPointIdx);
 
