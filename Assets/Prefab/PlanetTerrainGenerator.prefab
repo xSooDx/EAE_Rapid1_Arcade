@@ -24,10 +24,6 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
-      propertyPath: pickupSettings.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
       propertyPath: pickupSettings.Array.data[0].spawnPrefab
       value: 
       objectReference: {fileID: 7466057740846821881, guid: 16054d60567ecb249b92c9093aa0e5e0, type: 3}
@@ -56,27 +52,7 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
-      propertyPath: pickupSettings.Array.data[4].spawnPrefab
-      value: 
-      objectReference: {fileID: 7466057740846821881, guid: 4cd34e6ac0f521a48b237242b3ce5474, type: 3}
-    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
       propertyPath: pickupSettings.Array.data[4].spawnWeight
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
-      propertyPath: pickupSettings.Array.data[5].spawnPrefab
-      value: 
-      objectReference: {fileID: 7466057740846821881, guid: 11762d6cd4e0fa846bbcc4c164df182f, type: 3}
-    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
-      propertyPath: pickupSettings.Array.data[5].spawnWeight
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
-      propertyPath: pickupSettings.Array.data[6].spawnPrefab
-      value: 
-      objectReference: {fileID: 7466057740846821881, guid: 11762d6cd4e0fa846bbcc4c164df182f, type: 3}
-    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
-      propertyPath: pickupSettings.Array.data[6].spawnWeight
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
@@ -93,14 +69,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
       propertyPath: pickupSettings.Array.data[4].scoreMultiplier
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
-      propertyPath: pickupSettings.Array.data[5].scoreMultiplier
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 997335025686004570, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
-      propertyPath: pickupSettings.Array.data[6].scoreMultiplier
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1471695200977483964, guid: f2bb9bf12155bfa469db8b129764f7c0, type: 3}
