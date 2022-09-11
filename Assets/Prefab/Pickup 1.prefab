@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 987168531435954041}
   - component: {fileID: 3149521118296302230}
   - component: {fileID: 2024161398460739993}
+  - component: {fileID: 1441062011}
+  - component: {fileID: 1441062012}
   m_Layer: 7
   m_Name: PickupBody
   m_TagString: Untagged
@@ -74,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 0f1604845fd271146ac4177001a981f4, type: 3}
+  m_Sprite: {fileID: -1131714153, guid: 0d042a56f416a8848904603d1d348afc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -102,7 +104,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.35, y: 0.36666667}
+    oldSize: {x: 0.5, y: 0.56666666}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -111,6 +113,46 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.35, y: 0.32046348}
   m_EdgeRadius: 0
+--- !u!95 &1441062011
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1132822357642533879}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 25134c521cb5d624d8d719dd7b571bab, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1441062012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1132822357642533879}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 518bdd4a9b8ab9d45ae26b34d79b65d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prizeImgs:
+  - {fileID: -376982338, guid: b514a7de782152c4b8ebaabd70813157, type: 3}
+  - {fileID: -941987830, guid: b514a7de782152c4b8ebaabd70813157, type: 3}
+  - {fileID: -1092389034, guid: b514a7de782152c4b8ebaabd70813157, type: 3}
+  - {fileID: -1193028206, guid: b514a7de782152c4b8ebaabd70813157, type: 3}
+  - {fileID: -167052950, guid: b514a7de782152c4b8ebaabd70813157, type: 3}
+  - {fileID: -1058386050, guid: b514a7de782152c4b8ebaabd70813157, type: 3}
+  - {fileID: -1469352732, guid: b514a7de782152c4b8ebaabd70813157, type: 3}
 --- !u!1 &7466057740846821881
 GameObject:
   m_ObjectHideFlags: 0
@@ -122,7 +164,6 @@ GameObject:
   - component: {fileID: 7466057740846821887}
   - component: {fileID: 7466057740846821885}
   - component: {fileID: 7466057740846821378}
-  - component: {fileID: 7466057740846821376}
   m_Layer: 7
   m_Name: Pickup 1
   m_TagString: Prize
@@ -166,7 +207,7 @@ MonoBehaviour:
   PrizeID: 
   PrizeScore: 100
   FollowTarget: 0
-  presentAnimation: {fileID: 0}
+  presentAnimation: {fileID: 1441062012}
 --- !u!50 &7466057740846821378
 Rigidbody2D:
   serializedVersion: 4
@@ -188,21 +229,3 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!255 &7466057740846821376
-FixedJoint2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7466057740846821881}
-  m_Enabled: 1
-  serializedVersion: 4
-  m_EnableCollision: 0
-  m_ConnectedRigidBody: {fileID: 0}
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_AutoConfigureConnectedAnchor: 0
-  m_Anchor: {x: 0, y: 0.5}
-  m_ConnectedAnchor: {x: 0, y: 0}
-  m_DampingRatio: 0
-  m_Frequency: 0

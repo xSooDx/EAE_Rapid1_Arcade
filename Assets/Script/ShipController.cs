@@ -268,7 +268,7 @@ public class ShipController : MonoBehaviour
 
                 }
 
-                Collider2D[] PlatformChk = Physics2D.OverlapCircleAll(this.gameObject.transform.position, 2f, PlatformLayer);
+                Collider2D[] PlatformChk = Physics2D.OverlapCircleAll(this.gameObject.transform.position, 3f, PlatformLayer);
                 GameEventManager.gameEvent.FocusPlayer.Invoke(PlatformChk.Length > 0);
             }
 

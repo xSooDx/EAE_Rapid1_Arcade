@@ -10,8 +10,6 @@ public class Landing_Prize : LandingPointScript
 {
     private Rigidbody2D _rg;
 
-    private FixedJoint2D _Fjoint;
-
     private ShipController _shipCtrl;
 
     public string PrizeID;
@@ -24,11 +22,10 @@ public class Landing_Prize : LandingPointScript
 
     public PresentAnimationControl presentAnimation;
 
+
     private void Awake()
     {
         this._rg = GetComponent<Rigidbody2D>();
-        this._Fjoint = GetComponent<FixedJoint2D>();
-        if (this._Fjoint != null) this._Fjoint.enabled = false;
         this._IsGrabbing = false;
     }
 
@@ -121,9 +118,6 @@ public class Landing_Prize : LandingPointScript
     void DropPrize(string _prizeid)
     {
         if (!PrizeID.Equals(_prizeid) || !_IsGrabbing) return;
-
-        this._Fjoint.connectedBody = null;
-        this._Fjoint.enabled = false;
         //this.transform.SetParent(null);
         this._shipCtrl.IsGrabbing = false;
         this._shipCtrl.GrabbingPrizeID = "";
@@ -160,8 +154,10 @@ public class Landing_Prize : LandingPointScript
             GameEventManager.gameEvent.PrizeLand.RemoveListener(DropPrize);
         }
         this._rg.AddForce(new Vector2(Random.Range(-5,5),1)*1000f);
+        this._rg.AddTorque(Random.Range(-1, 2) * 500f);
         Destroy(this.gameObject, 2f);
     }
+
 
     public ShipController GetShipController()
     {

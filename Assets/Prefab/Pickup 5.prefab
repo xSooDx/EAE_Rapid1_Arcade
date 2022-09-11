@@ -126,7 +126,6 @@ GameObject:
   - component: {fileID: 7466057740846821887}
   - component: {fileID: 7466057740846821885}
   - component: {fileID: 7466057740846821378}
-  - component: {fileID: 7466057740846821376}
   m_Layer: 7
   m_Name: Pickup 5
   m_TagString: Prize
@@ -192,21 +191,3 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!255 &7466057740846821376
-FixedJoint2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7466057740846821881}
-  m_Enabled: 1
-  serializedVersion: 4
-  m_EnableCollision: 0
-  m_ConnectedRigidBody: {fileID: 0}
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_AutoConfigureConnectedAnchor: 0
-  m_Anchor: {x: 0, y: 1}
-  m_ConnectedAnchor: {x: 0, y: 0}
-  m_DampingRatio: 0
-  m_Frequency: 0
