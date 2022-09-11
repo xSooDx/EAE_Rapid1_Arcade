@@ -23,8 +23,10 @@ public class MainGameController : MonoBehaviour
 
     [Space(5)]
     [Header("Ship Initial Setup:")]
+    public bool SetPostion;
     [Tooltip("The position where player start")]
     public Vector2 InitialPos;
+    public Transform InitialPos_Transform;
     [Tooltip("The velocity add when game start")]
     public Vector2 InitialForce;
     [Tooltip("The rotation of player when start")]
@@ -65,61 +67,104 @@ public class MainGameController : MonoBehaviour
         if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.AddScore.AddListener(AddScore);
     }
 
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.R))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+        if (ScoreTxt != null) ScoreTxt.text = PlayerScore.ToString();
+    }
+
     /// <summary>
     /// thing do when game's over
     /// </summary>
     /// <param name="_ShowTxt"></param>
     /// <param name="_Desc"></param>
-    void GameOverFunc(string _ShowTxt, string _Desc, bool _continue)
+    //void GameOverFunc(string _ShowTxt, string _Desc, bool _continue, bool _resetPos)
+    //{
+    //    StopCoroutine(timecoroutine);
+    //    if (GameMsgTitleTxt != null) GameMsgTitleTxt.text = _ShowTxt;
+    //    if (GameMsgDESCTxt != null) GameMsgDESCTxt.text = _Desc;
+    //    if (_continue)
+    //    {
+    //        //AddScore(LandingScore);
+
+    //    }
+    //    StartCoroutine(RestartGameCounter(_continue, _resetPos));
+    //}
+
+    void GameOverFunc(string _ShowTxt, string _Desc,GameEndAction _action)
     {
-        StopCoroutine(timecoroutine);
-        if (GameMsgTitleTxt != null) GameMsgTitleTxt.text = _ShowTxt;
-        if (GameMsgDESCTxt != null) GameMsgDESCTxt.text = _Desc;
-        if (_continue)
-        {
-            AddScore(LandingScore);
-            if (ScoreTxt != null) ScoreTxt.text = PlayerScore.ToString();
-        }
-        StartCoroutine(RestartGameCounter(_continue));
+        SetGameTxt(_ShowTxt, _Desc);
+        _action.StartAction();
+        StartCoroutine(RestartGameCounter(_action));
+        AudioManager.instance.PlayAudio("gameOver");
     }
+
+
 
     void AddScore(int _score)
     {
         PlayerScore += _score;
     }
 
-    void NewRound()
+    void iniSetup(bool _rstPos = true)
     {
-        iniSetup();
-    }
-
-    void iniSetup()
-    {
-        if (playerShip != null) playerShip.InitialSetup(InitialPos, InitialForce, InitialRotate);
-        if (GameMsgTitleTxt != null) GameMsgTitleTxt.text = "";
-        if (GameMsgDESCTxt != null) GameMsgDESCTxt.text = "";
+        if (SetPostion && _rstPos) SetPlayerPos();
+        if (!_rstPos) playerShip.SetCanMove();
+        SetGameTxt();
         if (ScoreTxt != null) ScoreTxt.text = PlayerScore.ToString();
-        if (playerShip != null) playerShip.InitialSetup(InitialPos, InitialForce, InitialRotate);
         timecoroutine = StartCoroutine(TimeCounter());//start timer
         if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.CancelFocus.Invoke(true);
+    }
+
+    public void SetPlayerPos()
+    {
+        if (playerShip != null) playerShip.InitialSetup(InitialPos_Transform == null ? InitialPos : InitialPos_Transform.position, InitialForce, InitialRotate);
+    }
+
+    public void SetGameTxt(string _title="",string _msg="")
+    {
+        if (GameMsgTitleTxt != null) GameMsgTitleTxt.text = _title;
+        if (GameMsgDESCTxt != null) GameMsgDESCTxt.text = _msg;
     }
 
     /// <summary>
     /// the count down for reload scene
     /// </summary>
     /// <returns></returns>
-    IEnumerator RestartGameCounter(bool _continue)
+    IEnumerator RestartGameCounter(bool _continue, bool _resetPos)
     {
         yield return new WaitForSeconds(3f);
         if (_continue)
         {
-            NewRound();
+            iniSetup(_resetPos);
         }
         else
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
+    }
+
+    IEnumerator RestartGameCounter(GameEndAction _action)
+    {
+        yield return new WaitForSeconds(3f);
+        _action.EndAction();
+
+    }
+
+    public void TimerAction(bool _Start)
+    {
+        if (_Start)
+        {
+            timecoroutine = StartCoroutine(TimeCounter());
+        }
+        else
+        {
+            StopCoroutine(timecoroutine);
+        }
     }
 
     /// <summary>

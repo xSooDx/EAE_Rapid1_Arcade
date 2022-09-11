@@ -17,7 +17,7 @@ public class GameEventManager : MonoBehaviour
     /// Event of game over
     /// </summary>
     [HideInInspector]
-    public UnityEvent<string, string, bool> GameOver;
+    public UnityEvent<string, string, GameEndAction> GameOver;
 
     /// <summary>
     /// Event of camera focus on ship when it is low altitude
@@ -40,4 +40,12 @@ public class GameEventManager : MonoBehaviour
     /// add score
     /// </summary>
     public UnityEvent<int> AddScore;
+
+    public UnityEvent<Transform> ClosePlanet;
+
+    public UnityEvent LeavePlanet;
+
+    public UnityEvent<Vector2> PlayerCrash;
+
+    public UnityEvent<bool> FocusPlayer;
 }

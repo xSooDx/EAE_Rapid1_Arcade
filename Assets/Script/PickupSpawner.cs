@@ -5,14 +5,19 @@ using UnityEngine;
 public class PickupSpawner : MonoBehaviour
 {
     public float maxHeightDelta = 0.05f;
+    public float dropOffZoneHeight = 10f;
+    public float dropOffZoneCount = 10f;
+    public float spawnOffsetAngle = 30f;
     public PickupSpawnSettings[] pickupSettings;
 
-    public GameObject dropOffPrefab;
+    public DropOffZoneMovementScript dropOffPrefab;
 
     public int minPickups = 3;
     public int maxPickups = 6;
 
     float totalWeight = 0;
+
+    public bool off;
 
     void Awake()
     {
@@ -21,22 +26,21 @@ public class PickupSpawner : MonoBehaviour
 
     public void OnTerrainGeneratedCallback(TerrainGenerator1D terrainGenerator, Vector2[] terrainPointsLocal)
     {
+        if (off) return;
         List<Vector2> potentialSpawnPoints = new List<Vector2>();
-        for(int i = 0; i < terrainPointsLocal.Length-1; i++)
+        float sqMaxHeightDelta = maxHeightDelta * maxHeightDelta;
+        for (int i = 0; i < terrainPointsLocal.Length-1; i++)
         {
-            if (Mathf.Abs(terrainPointsLocal[i].y - terrainPointsLocal[i+1].y) < maxHeightDelta)
-            {
+            //if (Mathf.Abs(terrainPointsLocal[i].sqrMagnitude - terrainPointsLocal[i+1].sqrMagnitude) < maxHeightDelta)
+            //{
                 Vector2 newPos = (terrainPointsLocal[i] + terrainPointsLocal[i + 1]) / 2;
-                newPos.y += 0.01f;
                 potentialSpawnPoints.Add(newPos);
-                Debug.DrawRay(newPos, Vector2.up, Color.yellow);
-            }
+                //Debug.DrawRay(newPos, Vector2.up, Color.yellow);
+            //}
         }
 
         int dropOffPointIdx = potentialSpawnPoints.Count / 2;
         Vector2 dropOffPosition = potentialSpawnPoints[dropOffPointIdx] + (Vector2)terrainGenerator.transform.position;
-        // ToDo - Store and destroy
-        Instantiate(dropOffPrefab, dropOffPosition, Quaternion.identity);
 
         potentialSpawnPoints.RemoveAt(dropOffPointIdx);
 
@@ -47,12 +51,14 @@ public class PickupSpawner : MonoBehaviour
 
         CalculateTotalWeight();
         float currWeightVal = 0f;
-        Debug.Log($"Pickup spawner: pickupCount: {pickupCount}, potentialSpawnPoints: {potentialSpawnPoints.Count}, Range: {randRange}");
+        //Debug.Log($"Pickup spawner: pickupCount: {pickupCount}, potentialSpawnPoints: {potentialSpawnPoints.Count}, Range: {randRange}");
         for (int i = 0; i< pickupCount; i++)
         {
             int idx = Random.Range(currStart, currStart + randRange);
+            Vector2 dir = terrainGenerator.planetTerrain? (potentialSpawnPoints[idx]).normalized : transform.up;
 
-            Vector2 spawnPoint = potentialSpawnPoints[idx] +  (Vector2)terrainGenerator.transform.position;
+            Vector2 spawnPoint = ((potentialSpawnPoints[idx] + dir * 0.2f) * transform.localScale) + (Vector2)transform.position;
+            Debug.DrawRay(spawnPoint, dir, Color.red, 10f);
             float randRoll = Random.Range(0, totalWeight);
             //Debug.Log($"SOOD: 4 {spawnPoint} {randRoll}");
             foreach (PickupSpawnSettings pickup in pickupSettings)
@@ -63,10 +69,27 @@ public class PickupSpawner : MonoBehaviour
                     Instantiate(pickup.spawnPrefab, spawnPoint, Quaternion.identity);
                     break;
                 }
+
                 currWeightVal += pickup.spawnWeight;
             }
-
+            currWeightVal = 0f;
             currStart += randRange;
+        }
+
+        SpawnDropOffZone();
+    }
+
+    void SpawnDropOffZone()
+    {
+        float angleBetweenSpawns = 360f / dropOffZoneCount;
+        for(int i = 0; i< dropOffZoneCount; i++)
+        {
+            Quaternion spawnAngle = Quaternion.Euler(0, 0, spawnOffsetAngle + angleBetweenSpawns * i);
+            Vector3 spawnPos = transform.position + spawnAngle * new Vector2(0, dropOffZoneHeight * transform.localScale.y);
+
+            DropOffZoneMovementScript dropoff = Instantiate(dropOffPrefab, spawnPos, spawnAngle);
+
+            dropoff.orbitTarget = transform;
         }
     }
 
@@ -79,10 +102,18 @@ public class PickupSpawner : MonoBehaviour
         }
     }
 
+#if UNITY_EDITOR
     private void OnValidate()
     {
         CalculateTotalWeight();
     }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, dropOffZoneHeight * transform.localScale.y);
+    }
+#endif
 }
 
 [System.Serializable]

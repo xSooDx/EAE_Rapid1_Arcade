@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
 
+[RequireComponent(typeof(AudioSource))]
 public class ShipController : MonoBehaviour
 {
     /// <summary>
@@ -20,8 +21,11 @@ public class ShipController : MonoBehaviour
     [Tooltip("Speed of the ship")]
     [Range(0, 50)]
     public float Speed;
+
+    [Range(0, 50)]
+    public float MaxSpeed;
     [Tooltip("How fast will ship speed up")]
-    [Range(0, 20)]
+    [Range(0, 100)]
     public float SpeedUpMultiplier;
 
     [Tooltip("Amount of fuel")]
@@ -40,18 +44,31 @@ public class ShipController : MonoBehaviour
     [Range(0, 10)]
     public float RotSpeedUpMultiplier;
 
+    public bool RotateLock;
+
+    [SerializeField]
     private float _RotateSpd;
 
     [Tooltip("The height that need to be focus on")]
     [Range(0, 100)]
     public float FocusHeight;
 
+    [Range(1, 20)]
+    public float SearchField;
+
     [Tooltip("The layer of ground")]
     public LayerMask GroundLayer;
+    public LayerMask PlatformLayer;
     [Tooltip("The offset of height detection(for altitude)")]
     public Vector2 HeightOffest;
 
+    public Transform GrabPoint;
+
     public CameraScript cameraControl;
+
+    public ParticleSystem emitParticle;
+
+    public ClawAnimationControl animationControl;
 
     [Space(5)]
     [Header("Movement Info:")]
@@ -75,15 +92,22 @@ public class ShipController : MonoBehaviour
     [Tooltip("Text for showing fuel amount")]
     public TextMeshProUGUI FuelAmountTxt;
 
+    AudioSource thrustAudioSource;
+
     private void Awake()
     {
         Playerinput = new PlayerControl();
         this._rg = this.gameObject.GetComponent<Rigidbody2D>();
+        if (emitParticle != null) emitParticle.Stop();
+        thrustAudioSource = this.gameObject.GetComponent<AudioSource>();
+        thrustAudioSource.loop = true;
     }
 
     private void OnEnable()
     {
         Playerinput.Enable();
+        thrustAudioSource.clip = AudioManager.instance.GetAudioClip("shipThrusters");
+
     }
     private void OnDisable()
     {
@@ -93,7 +117,11 @@ public class ShipController : MonoBehaviour
     void Start()
     {
         //this._rg = this.gameObject.GetComponent<Rigidbody2D>();
-        if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.GameOver.AddListener(GameOverAction);
+        if (GameEventManager.gameEvent != null)
+        {
+            GameEventManager.gameEvent.GameOver.AddListener(GameOverAction);
+            GameEventManager.gameEvent.PlayerCrash.AddListener(Crash);
+        }
     }
 
     void Update()
@@ -110,7 +138,15 @@ public class ShipController : MonoBehaviour
 
         if (this.AltitudeTxt != null)//set the value text
         {
-            this.AltitudeTxt.text = Altitude.ToString("0");
+            if (Altitude >= 0)
+            {
+                this.AltitudeTxt.text = Altitude.ToString("0");
+            }
+            else
+            {
+                this.AltitudeTxt.text = "N/A";
+            }
+
         }
 
         if (this.FuelAmountTxt != null)//set the value text
@@ -119,7 +155,7 @@ public class ShipController : MonoBehaviour
         }
         if (FuelAmount <= 0 && GameEventManager.gameEvent != null)
         {
-            GameEventManager.gameEvent.GameOver.Invoke("Game Over", "Out of fuel!!", false);
+            GameEventManager.gameEvent.GameOver.Invoke("Game Over", "Out of fuel!!", GameEndActionsLib.gameEnd);
         }
         PushInput = Playerinput.PlayState.Push.ReadValue<float>();
         RotateInput = Playerinput.PlayState.Rotate.ReadValue<float>();
@@ -131,6 +167,14 @@ public class ShipController : MonoBehaviour
                 _speed += (_speed + SpeedUpMultiplier) * Time.deltaTime;
             }
             FuelAmount -= Time.deltaTime * 3;
+            if (emitParticle != null)
+            {
+                if (!emitParticle.isEmitting)
+                {
+                    emitParticle.Play();
+                    thrustAudioSource.Play();
+                }
+            }
         }
         else
         {
@@ -138,6 +182,15 @@ public class ShipController : MonoBehaviour
             if (_speed <= 0)
             {
                 _speed = 0;
+            }
+            if (emitParticle != null)
+            {
+                if (emitParticle.isEmitting)
+                {
+                    emitParticle.Stop();
+                    thrustAudioSource.Stop();
+                }
+
             }
         }
 
@@ -156,36 +209,75 @@ public class ShipController : MonoBehaviour
                 _RotateSpd = 0;
             }
         }
-
-        RaycastHit2D hit = Physics2D.Raycast((Vector2)transform.position, -Vector2.up, 1000f, GroundLayer);
-        if (hit.collider != null)
+        //this._rg.angularVelocity = 0;
+        Collider2D[] GroundChk = Physics2D.OverlapCircleAll(this.gameObject.transform.position, SearchField, GroundLayer);
+        if (LocationPointer.navSystem != null) LocationPointer.navSystem.UpdatePointer(GroundChk);
+        if (GroundChk.Length > 0)
         {
-            Altitude = Vector2.Distance(hit.point, (Vector2)this.gameObject.transform.position + HeightOffest) * 20f;
+            Vector2 _pos = this.transform.position;
+            Transform _planet = null;
+            float _distance = -99f;
+            foreach (var item in GroundChk)
+            {
+                _pos = item.gameObject.transform.position;
 
-            if (GameEventManager.gameEvent != null) 
-            {
-                if (Altitude < FocusHeight)
+                float _dis = Vector2.Distance(_pos, (Vector2)this.gameObject.transform.position);
+
+                if (_distance < 0 || _distance >= _dis)
                 {
-                    GameEventManager.gameEvent.StartFocus.Invoke();
+                    _distance = _dis;
+                    _planet = item.gameObject.transform;
                 }
-                else
-                {
-                    GameEventManager.gameEvent.CancelFocus.Invoke(false);
-                }
+
             }
-            else if (cameraControl != null)
+            if (GameEventManager.gameEvent != null)
             {
-                if (Altitude < FocusHeight)
+                GameEventManager.gameEvent.ClosePlanet.Invoke(_planet);
+            }
+
+            //Altitude = _distance * 20f;
+            if (_distance >= 0)
+            {
+                RaycastHit2D hit = Physics2D.Raycast((Vector2)transform.position, _pos - (Vector2)this.gameObject.transform.position, 1000f, GroundLayer);
+                if (hit.collider != null)
                 {
-                    cameraControl.FocusObject();
+                    Altitude = Vector2.Distance(hit.point, (Vector2)this.gameObject.transform.position + HeightOffest) * 10f;
+
+                    if (GameEventManager.gameEvent != null)
+                    {
+                        if (Altitude < FocusHeight)
+                        {
+                            GameEventManager.gameEvent.StartFocus.Invoke();
+                        }
+                        else
+                        {
+                            GameEventManager.gameEvent.CancelFocus.Invoke(false);
+                        }
+                    }
+
                 }
-                else
-                {
-                    cameraControl.CancelFocus(false);
-                }
+
+                Collider2D[] PlatformChk = Physics2D.OverlapCircleAll(this.gameObject.transform.position, 2f, PlatformLayer);
+                GameEventManager.gameEvent.FocusPlayer.Invoke(PlatformChk.Length > 0);
             }
 
         }
+        else
+        {
+            Altitude = -1f;
+            if (GameEventManager.gameEvent != null)
+            {
+                GameEventManager.gameEvent.LeavePlanet.Invoke();
+            }
+        }
+
+        RotateAngle = this.transform.rotation.eulerAngles.z;
+
+        // calculate the speed
+        VerticalSpd = Mathf.Abs(this._rg.velocity.y * -20f);
+        HorizontalSpd = (this._rg.velocity.x * 20f);
+
+
     }
 
     /// <summary>
@@ -196,38 +288,52 @@ public class ShipController : MonoBehaviour
     /// <param name="_rot"></param>
     public void InitialSetup(Vector2 _pos, Vector2 _force, float _rot)
     {
-        Playerinput.Enable();
+        SetCanMove();
         //if(this._rg==null) this.gameObject.GetComponent<Rigidbody2D>();
-        this._rg.isKinematic = false;
         this._rg.rotation = _rot;
         this._rg.position = _pos;
         this._rg.AddForce(_force);
+        if (animationControl != null) animationControl.Resetitem();
+    }
+
+    public void SetCanMove()
+    {
+        Playerinput.Enable();
+        this.transform.parent = null;
+        this._rg.isKinematic = false;
     }
 
     private void FixedUpdate()
     {
 
 
-        this._rg.AddTorque(RotateInput * _RotateSpd);//rotate the ship
+        //this._rg.AddTorque(RotateInput * _RotateSpd);//rotate the ship
+        this._rg.rotation += RotateInput * _RotateSpd;
 
         //set the maximum of angle
-        if (this._rg.rotation < 0 && this._rg.rotation <= -90)
+        if (RotateLock)
         {
-            this._rg.rotation = -90;
+            if (this._rg.rotation < 0 && this._rg.rotation <= -90)
+            {
+                this._rg.rotation = -90;
+            }
+            if (this._rg.rotation > 0 && this._rg.rotation >= 90)
+            {
+                this._rg.rotation = 90;
+            }
         }
-        if (this._rg.rotation > 0 && this._rg.rotation >= 90)
-        {
-            this._rg.rotation = 90;
-        }
-        RotateAngle = this._rg.rotation;//set the value(for viewing)
+
+        // RotateAngle = this._rg.rotation;//set the value(for viewing)
+
 
         _rg.AddRelativeForce(Vector2.up * PushInput * _speed);//push the ship
+        if (_rg.velocity.magnitude > MaxSpeed)
+        {
+            _rg.velocity = _rg.velocity.normalized * MaxSpeed;
+        }
 
 
 
-        // calculate the speed
-        VerticalSpd = (this._rg.velocity.y * -20f);
-        HorizontalSpd = (this._rg.velocity.x * 20f);
     }
 
     /// <summary>
@@ -235,13 +341,20 @@ public class ShipController : MonoBehaviour
     /// </summary>
     /// <param name="_str1"></param>
     /// <param name="_str2"></param>
-    void GameOverAction(string _str1, string _str2, bool _continue)
+    void GameOverAction(string _str1, string _str2, GameEndAction gameState)
     {
         Playerinput.Disable();
         this._rg.velocity = Vector2.zero;
         this._rg.angularVelocity = 0;
         this._rg.isKinematic = true;
     }
+
+    void Crash(Vector2 _dir)
+    {
+        if (animationControl != null) animationControl.Explosion(_dir);
+        AudioManager.instance.PlayAudio("shipDestroy");
+    }
+
 
     public float GetVerticalSpd()
     {
@@ -263,5 +376,15 @@ public class ShipController : MonoBehaviour
         return this._rg;
     }
 
+    public Transform GetGrabPoint()
+    {
+        return GrabPoint;
+    }
+#if UNITY_EDITOR
+    void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(this.gameObject.transform.position, SearchField);
+    }
+#endif
 }
 
