@@ -54,4 +54,9 @@ public class GameResultScript : MonoBehaviour
     {
         SceneManager.LoadScene(0);
     }
+
+    public void RetryBtn()
+    {
+        SceneManager.LoadScene(1);
+    }
 }

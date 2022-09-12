@@ -117,8 +117,6 @@ public class ShipController : MonoBehaviour
     private void OnEnable()
     {
         Playerinput.Enable();
-
-
     }
     private void OnDisable()
     {
@@ -266,10 +264,19 @@ public class ShipController : MonoBehaviour
                     {
                         if (Altitude < FocusHeight)
                         {
+                            if (!IsGrabbing)
+                            {
+                                if (animationControl != null) animationControl.SetClawOpen(true);
+                            }
+                            else
+                            {
+                                if (animationControl != null) animationControl.SetClawOpen(false);
+                            }
                             GameEventManager.gameEvent.StartFocus.Invoke();
                         }
                         else
                         {
+                            if (animationControl != null) animationControl.SetClawOpen(false);
                             GameEventManager.gameEvent.CancelFocus.Invoke(false);
                         }
                     }

@@ -9,7 +9,8 @@ public class Ui_menu : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        this.GetComponent<Button>().onClick.AddListener(QuitButton);
+        if (this.GetComponent<Button>() != null)
+            this.GetComponent<Button>().onClick.AddListener(QuitButton);
     }
 
     public void StartButton()
