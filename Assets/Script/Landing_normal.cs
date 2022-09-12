@@ -36,7 +36,7 @@ public class Landing_normal : LandingPointScript
                     return;
                 }
 
-                LandingFunction("Perfect Landing");
+                //LandingFunction("Perfect Landing");
             }
         }
     }
@@ -57,7 +57,7 @@ public class Landing_normal : LandingPointScript
         if (GameEventManager.gameEvent != null)
         {
             GameEventManager.gameEvent.GameOver.Invoke("Success!!", _desc, GameEndActionsLib.continue_MaintainPos);
-            GameEventManager.gameEvent.AddScore.Invoke(100);
+            GameEventManager.gameEvent.AddScore.Invoke("Perfect Landing!!",100);
         }
     }
 }

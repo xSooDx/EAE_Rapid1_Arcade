@@ -33,6 +33,9 @@ public class MainGameController : MonoBehaviour
     [Range(-90, 90)]
     public float InitialRotate;
 
+    [SerializeField]
+    private List<Sprite> PrizeImgs;
+
     [Space(5)]
     [Header("UI Setup:")]
     [SerializeField]
@@ -62,6 +65,7 @@ public class MainGameController : MonoBehaviour
     {
         this.PlayerScore = 0;
         this.GameTime = 0;
+        this.PrizeImgs = new List<Sprite>();
         iniSetup();
         if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.GameOver.AddListener(GameOverFunc);//add function that will be trigger when game over
         if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.AddScore.AddListener(AddScore);
@@ -94,7 +98,7 @@ public class MainGameController : MonoBehaviour
     //    StartCoroutine(RestartGameCounter(_continue, _resetPos));
     //}
 
-    void GameOverFunc(string _ShowTxt, string _Desc,GameEndAction _action)
+    void GameOverFunc(string _ShowTxt, string _Desc, GameEndAction _action)
     {
         SetGameTxt(_ShowTxt, _Desc);
         _action.StartAction();
@@ -104,8 +108,12 @@ public class MainGameController : MonoBehaviour
 
 
 
-    void AddScore(int _score)
+    public void AddScore(string _desc, int _score)
     {
+        if (UIController.uiController != null)
+        {
+            UIController.uiController.GetScore(_desc, _score, playerShip.transform.position);
+        }
         PlayerScore += _score;
     }
 
@@ -119,15 +127,30 @@ public class MainGameController : MonoBehaviour
         if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.CancelFocus.Invoke(true);
     }
 
+    public void SetScore()
+    {
+        if (ScoreManager.scoreManager != null)
+        {
+            ScoreManager.scoreManager.Score = gameController.PlayerScore;
+            ScoreManager.scoreManager.GameTime = gameController.GameTime;
+            ScoreManager.scoreManager.SetImg(PrizeImgs);
+        }
+    }
+
     public void SetPlayerPos()
     {
         if (playerShip != null) playerShip.InitialSetup(InitialPos_Transform == null ? InitialPos : InitialPos_Transform.position, InitialForce, InitialRotate);
     }
 
-    public void SetGameTxt(string _title="",string _msg="")
+    public void SetGameTxt(string _title = "", string _msg = "")
     {
         if (GameMsgTitleTxt != null) GameMsgTitleTxt.text = _title;
         if (GameMsgDESCTxt != null) GameMsgDESCTxt.text = _msg;
+    }
+
+    public void AddPrizeImg(Sprite _img)
+    {
+        PrizeImgs.Add(_img);
     }
 
     /// <summary>
@@ -147,6 +170,8 @@ public class MainGameController : MonoBehaviour
         }
 
     }
+
+
 
     IEnumerator RestartGameCounter(GameEndAction _action)
     {

@@ -108,7 +108,7 @@ public class CameraScript_Planet : MonoBehaviour
     {
         if (Target != null)
         {
-            if (ClosePlanet && !FocusOnPlayer)
+            if (ClosePlanet && !FocusOnPlayer && this.Planet != null)
             {
                 Vector3 diff = (Target.position - this.Planet.position);
                 Vector3 _Fpos = this.Planet.position + diff / 100f * (IsFocus ? FocusRatio : UnFocusRatio);
@@ -118,14 +118,14 @@ public class CameraScript_Planet : MonoBehaviour
                 float newZoom = Mathf.Lerp(minZoom, MaxZoom, _dis / ZoomLimit);
                 this.m_Camera.fieldOfView = Mathf.Lerp(m_Camera.fieldOfView, newZoom, Time.deltaTime * ZoomSpeed);
                 this.transform.position = Vector3.Lerp(this.transform.position, _Fpos, MoveSpeed);
-                
+
             }
             else
             {
                 this.transform.position = Vector3.Lerp(this.transform.position, Target.position + offset, MoveSpeed);
                 this.m_Camera.fieldOfView = Mathf.Lerp(m_Camera.fieldOfView, FocusOnPlayer ? 50 : ZoomoutSize, Time.deltaTime * ZoomSpeed);
             }
-            if (ClosePlanet)
+            if (ClosePlanet && this.Planet != null)
             {
                 RotateCamera(this.Planet.position);
             }

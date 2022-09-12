@@ -22,10 +22,10 @@ public class ShipController : MonoBehaviour
     [Range(0, 50)]
     public float Speed;
 
-    [Range(0, 50)]
+    [Range(0, 100)]
     public float MaxSpeed;
     [Tooltip("How fast will ship speed up")]
-    [Range(0, 100)]
+    [Range(0, 200)]
     public float SpeedUpMultiplier;
 
     [Tooltip("Amount of fuel")]
@@ -34,7 +34,15 @@ public class ShipController : MonoBehaviour
     private float _speed;
 
     private float PushInput;
+
     private float RotateInput;
+
+    public bool IsGrabbing;
+    public string GrabbingPrizeID;
+
+    private bool ShowInfo;
+
+    private bool GameEnd;
 
     [Tooltip("Rotation Speed")]
     [Range(0, 20)]
@@ -106,7 +114,7 @@ public class ShipController : MonoBehaviour
     private void OnEnable()
     {
         Playerinput.Enable();
-        thrustAudioSource.clip = AudioManager.instance.GetAudioClip("shipThrusters");
+       
 
     }
     private void OnDisable()
@@ -122,21 +130,22 @@ public class ShipController : MonoBehaviour
             GameEventManager.gameEvent.GameOver.AddListener(GameOverAction);
             GameEventManager.gameEvent.PlayerCrash.AddListener(Crash);
         }
+        thrustAudioSource.clip = AudioManager.instance.GetAudioClip("shipThrusters");
     }
 
     void Update()
     {
-        if (this.VerticalSpeedTxt != null)//set the value text
+        if (this.VerticalSpeedTxt != null && ShowInfo)//set the value text
         {
             this.VerticalSpeedTxt.text = VerticalSpd.ToString("0");
         }
 
-        if (this.HorizontalSpeedTxt != null)//set the value text
+        if (this.HorizontalSpeedTxt != null && ShowInfo)//set the value text
         {
             this.HorizontalSpeedTxt.text = HorizontalSpd.ToString("0");
         }
 
-        if (this.AltitudeTxt != null)//set the value text
+        if (this.AltitudeTxt != null && ShowInfo)//set the value text
         {
             if (Altitude >= 0)
             {
@@ -153,9 +162,11 @@ public class ShipController : MonoBehaviour
         {
             this.FuelAmountTxt.text = FuelAmount.ToString("0");
         }
-        if (FuelAmount <= 0 && GameEventManager.gameEvent != null)
+        if (FuelAmount <= 0 && GameEventManager.gameEvent != null && !GameEnd)
         {
             GameEventManager.gameEvent.GameOver.Invoke("Game Over", "Out of fuel!!", GameEndActionsLib.gameEnd);
+            GameEnd = true;
+            return;
         }
         PushInput = Playerinput.PlayState.Push.ReadValue<float>();
         RotateInput = Playerinput.PlayState.Rotate.ReadValue<float>();
@@ -257,7 +268,7 @@ public class ShipController : MonoBehaviour
 
                 }
 
-                Collider2D[] PlatformChk = Physics2D.OverlapCircleAll(this.gameObject.transform.position, 2f, PlatformLayer);
+                Collider2D[] PlatformChk = Physics2D.OverlapCircleAll(this.gameObject.transform.position, 3f, PlatformLayer);
                 GameEventManager.gameEvent.FocusPlayer.Invoke(PlatformChk.Length > 0);
             }
 
@@ -298,6 +309,7 @@ public class ShipController : MonoBehaviour
 
     public void SetCanMove()
     {
+        ShowInfo = true;
         Playerinput.Enable();
         this.transform.parent = null;
         this._rg.isKinematic = false;
@@ -347,12 +359,17 @@ public class ShipController : MonoBehaviour
         this._rg.velocity = Vector2.zero;
         this._rg.angularVelocity = 0;
         this._rg.isKinematic = true;
+        ShowInfo = false;
     }
 
     void Crash(Vector2 _dir)
     {
         if (animationControl != null) animationControl.Explosion(_dir);
         AudioManager.instance.PlayAudio("shipDestroy");
+        if(GameEventManager.gameEvent!=null)
+        {
+            GameEventManager.gameEvent.PrizeCrash.Invoke(this.GrabbingPrizeID);
+                }
     }
 
 

@@ -541,6 +541,27 @@ MonoBehaviour:
   - spawnWeight: 1
     scoreMultiplier: 1
     spawnPrefab: {fileID: 7466057740846821881, guid: 11762d6cd4e0fa846bbcc4c164df182f, type: 3}
+  - spawnWeight: 1
+    scoreMultiplier: 1
+    spawnPrefab: {fileID: 7466057740846821881, guid: 11762d6cd4e0fa846bbcc4c164df182f, type: 3}
+  - spawnWeight: 1
+    scoreMultiplier: 1
+    spawnPrefab: {fileID: 7466057740846821881, guid: 11762d6cd4e0fa846bbcc4c164df182f, type: 3}
+  - spawnWeight: 1
+    scoreMultiplier: 1
+    spawnPrefab: {fileID: 7466057740846821881, guid: 11762d6cd4e0fa846bbcc4c164df182f, type: 3}
+  - spawnWeight: 1
+    scoreMultiplier: 1
+    spawnPrefab: {fileID: 7466057740846821881, guid: 24c30ac7e78cce245adce150a02a7df3, type: 3}
+  - spawnWeight: 1
+    scoreMultiplier: 1
+    spawnPrefab: {fileID: 7466057740846821881, guid: c53189696276ec34f81c9fbd272def57, type: 3}
+  - spawnWeight: 1
+    scoreMultiplier: 1
+    spawnPrefab: {fileID: 7466057740846821881, guid: 8e9b0ec75cf0eb1459107fa052da828d, type: 3}
+  - spawnWeight: 1
+    scoreMultiplier: 1
+    spawnPrefab: {fileID: 7466057740846821881, guid: 4cd34e6ac0f521a48b237242b3ce5474, type: 3}
   dropOffPrefab: {fileID: 1283685428801262258, guid: e12f9ed93e6ded041a6c883da3b96cfe, type: 3}
   minPickups: 10000
   maxPickups: 10000

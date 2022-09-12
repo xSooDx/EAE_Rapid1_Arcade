@@ -12,33 +12,34 @@ public class Landing_Destination : LandingPointScript
     // Start is called before the first frame update
     public override void TouchAction(Collision2D _col)
     {
-        if (_col.gameObject.tag == "Player" || _col.gameObject.tag == "Prize")
+        if (_col.gameObject.tag == "Prize")
         {
-            ShipController _ship = _col.gameObject.tag == "Player" ? _col.gameObject.GetComponent<ShipController>() : _col.gameObject.GetComponent<Landing_Prize>().GetShipController();
-            if (_ship != null)
+            Landing_Prize _prize = _col.gameObject.GetComponent<Landing_Prize>();
+            ShipController _ship = _prize.GetShipController();
+            if (_ship != null && _prize!= null)
             {
                 Debug.Log("Touch");
                 if (_ship.GetVerticalSpd() > this.Req_MAXVerticalSpeed)
                 {
-                    CrashFunction(_col.gameObject.tag == "Player" ? "Ship" : "Prize" + " Crashed!!", "Too fast on vertical speed!");
+                    CrashFunction("Prize Crashed!!", "Too fast on vertical speed!", _prize.PrizeID);
                     return;
                 }
 
                 if (Mathf.Abs(_ship.GetHorizontalSpd()) > this.Req_MAXHorizonSpeed)
                 {
-                    CrashFunction(_col.gameObject.tag == "Player" ? "Ship" : "Prize" + " Crashed!!", "Too fast on horizontal speed!");
+                    CrashFunction("Prize Crashed!!", "Too fast on horizontal speed!", _prize.PrizeID);
                     return;
                 }
 
                 if (!RotationChk(_ship.GetRotateAngle()))
                 {
-                    CrashFunction(_col.gameObject.tag == "Player" ? "Ship" : "Prize" + " Crashed!!", "Landing angle incorrect!");
+                    CrashFunction("Prize Crashed!!", "Landing angle incorrect!", _prize.PrizeID);
                     return;
                 }
 
                 if (_col.gameObject.tag == "Prize" && _col.gameObject.GetComponent<Landing_Prize>() != null)
                 {
-                    LandingFunction(_col.gameObject.GetComponent<Landing_Prize>(),_ship);
+                    LandingFunction(_prize);
                 }
             }
         }
@@ -50,19 +51,18 @@ public class Landing_Destination : LandingPointScript
         Angle = this.transform.rotation.eulerAngles.z;
     }
 
-    void CrashFunction(string _Title, string _desc)
+    void CrashFunction(string _Title, string _desc,string _PrizeID)
     {
         Debug.Log(_Title + " " + _desc);
         if (GameEventManager.gameEvent != null)
         {
-            GameEventManager.gameEvent.GameOver.Invoke(_Title, _desc, GameEndActionsLib.continue_ResetPos);
-            GameEventManager.gameEvent.PlayerCrash.Invoke(this.Direction);
+            //GameEventManager.gameEvent.GameOver.Invoke(_Title, _desc, GameEndActionsLib.continue_ResetPos);
+            GameEventManager.gameEvent.PrizeCrash.Invoke(_PrizeID);
         }
     }
 
-    void LandingFunction(Landing_Prize _Prize, ShipController _ship)
+    void LandingFunction(Landing_Prize _Prize)
     {
-        _ship.gameObject.transform.SetParent(this.gameObject.transform);
         _Prize.transform.SetParent(this.gameObject.transform);
         Debug.Log(_Prize.PrizeID + " Land");
         if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.PrizeLand.Invoke(_Prize.PrizeID);
