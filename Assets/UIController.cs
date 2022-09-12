@@ -32,10 +32,20 @@ public class UIController : MonoBehaviour
 
     public GameObject AddScoreUI;
 
+    public GameObject WarningSign;
+
     private void Awake()
     {
         uiController = this;
         CanvasRect = MainCanvas.GetComponent<RectTransform>();
+    }
+    private void Start()
+    {
+        if (GameEventManager.gameEvent != null)
+        {
+            GameEventManager.gameEvent.SetWarning.AddListener(SetWarning);
+        }
+        WarningSign.SetActive(false);
     }
 
     public void GetScore(string _desc, int _score, Vector2 _pos)
@@ -67,6 +77,14 @@ public class UIController : MonoBehaviour
         float Xpos = (_VP.x * CanvasRect.sizeDelta.x) - (CanvasRect.sizeDelta.x * 0.5f);
         float YPos = (_VP.y * CanvasRect.sizeDelta.y) - (CanvasRect.sizeDelta.y * 0.5f);
         return new Vector2(Xpos, YPos);
+    }
+
+    void SetWarning(string _tag, bool _Warning)
+    {
+        if (WarningSign != null)
+        {
+            WarningSign.SetActive(_Warning);
+        }
     }
 
     private bool CheckIsOut(Vector2 _pos)
