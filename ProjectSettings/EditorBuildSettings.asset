@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/N_GravityTest.unity
     guid: f4153c19073f8bf44a8455d7e2a42937
+  - enabled: 1
+    path: Assets/Scenes/GameResult.unity
+    guid: ae5830211cc3fc34cbdbdd44a974a0ec
   m_configObjects: {}

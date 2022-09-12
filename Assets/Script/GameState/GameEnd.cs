@@ -19,7 +19,9 @@ public class GameEnd : GameEndAction
         if (gameController != null)
         {
             //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            SceneManager.LoadScene(0);
+            //SceneManager.LoadScene(0);
+            gameController.SetScore();
+            SceneManager.LoadScene("GameResult");
         }
     }
 }

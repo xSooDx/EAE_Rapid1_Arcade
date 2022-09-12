@@ -134,7 +134,18 @@ public class Landing_Prize : LandingPointScript
             //GameEventManager.gameEvent.GameOver.Invoke("Success!!", "The prize is delivered", GameEndActionsLib.continue_MaintainPos);
             GameEventManager.gameEvent.PrizeLand.RemoveListener(DropPrize);
         }
-        if (presentAnimation != null) presentAnimation.OpenPresent();
+        if (presentAnimation != null)
+        {
+            presentAnimation.OpenPresent();
+        }
+        else
+        {
+            if (gameObject.GetComponentInChildren<SpriteRenderer>() != null && MainGameController.gameController != null)
+            {
+                MainGameController.gameController.AddPrizeImg(gameObject.GetComponentInChildren<SpriteRenderer>().sprite);
+            }
+            StartCoroutine(PrizeDisappear());
+        }
         Destroy(this.gameObject,2f);
         //this._IsGrabbing = false;
     }
@@ -158,6 +169,13 @@ public class Landing_Prize : LandingPointScript
         Destroy(this.gameObject, 2f);
     }
 
+    IEnumerator PrizeDisappear()
+    {
+        yield return new WaitForSeconds(0.5f);
+        this.transform.DOScale(this.transform.localScale * 1.3f, 0.5f);
+        yield return new WaitForSeconds(0.5f);
+        this.transform.DOScale(Vector2.zero, 0.3f);
+    }
 
     public ShipController GetShipController()
     {

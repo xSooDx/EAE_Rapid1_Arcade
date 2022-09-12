@@ -36,7 +36,7 @@ public class Landing_normal : LandingPointScript
                     return;
                 }
 
-                LandingFunction("Perfect Landing");
+                //LandingFunction("Perfect Landing");
             }
         }
     }

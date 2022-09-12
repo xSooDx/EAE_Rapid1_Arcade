@@ -33,6 +33,7 @@ public class PresentAnimationControl : MonoBehaviour
             animator.enabled = false;
             Debug.Log("SET");
             spriteRenderer.sprite = this.prizeImgs[Random.Range(0, prizeImgs.Count)];
+            if (MainGameController.gameController != null) MainGameController.gameController.AddPrizeImg(spriteRenderer.sprite);
             StartCoroutine(PrizeDisappear());
         }
     }
