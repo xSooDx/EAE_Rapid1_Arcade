@@ -44,6 +44,8 @@ public class MainGameController : MonoBehaviour
 
     private Coroutine timecoroutine;
 
+    private Coroutine ResetTimeCoroutine;
+
     [Tooltip("Text for showing time")]
     public TextMeshProUGUI TimeTxt;
 
@@ -55,6 +57,11 @@ public class MainGameController : MonoBehaviour
 
     [Tooltip("Text for score")]
     public TextMeshProUGUI ScoreTxt;
+
+    private bool OutPlanet;
+
+    public float ResetTime;
+    private float _RstTimer;
 
     private void Awake()
     {
@@ -69,6 +76,7 @@ public class MainGameController : MonoBehaviour
         iniSetup();
         if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.GameOver.AddListener(GameOverFunc);//add function that will be trigger when game over
         if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.AddScore.AddListener(AddScore);
+        _RstTimer = this.ResetTime;
     }
 
     private void Update()
@@ -106,7 +114,37 @@ public class MainGameController : MonoBehaviour
         AudioManager.instance.PlayAudio("gameOver");
     }
 
+    public void StartRestart(bool _start)
+    {
+        if (_start)
+        {
 
+                _RstTimer = this.ResetTime;
+                ResetTimeCoroutine = StartCoroutine(ResetTimer());
+        }
+        else
+        {
+            if (ResetTimeCoroutine != null)
+            {
+                StopCoroutine(ResetTimeCoroutine);
+            }
+        }
+    }
+
+    IEnumerator ResetTimer()
+    {
+        while (true)
+        {
+
+            yield return new WaitForSeconds(1);
+            _RstTimer -= 1f;
+            if (_RstTimer <= 0)
+            {
+                GameEventManager.gameEvent.GameOver.Invoke("Ship Lost", "Too far from planet", GameEndActionsLib.continue_ResetPos);
+                break;
+            }
+        }
+    }
 
     public void AddScore(string _desc, int _score)
     {

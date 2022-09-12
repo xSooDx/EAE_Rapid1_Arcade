@@ -129,7 +129,6 @@ public class CameraScript_Planet : MonoBehaviour
             {
                 RotateCamera(this.Planet.position);
             }
-
         }
 
     }
@@ -177,6 +176,10 @@ public class CameraScript_Planet : MonoBehaviour
                     this.Planet = _planet;
                     ClosePlanet = true;
                     PlanetCoolDownCnt = 0;
+                    if (MainGameController.gameController != null)
+                    {
+                        MainGameController.gameController.StartRestart(false);
+                    }
                 }
             }
             else
@@ -195,6 +198,10 @@ public class CameraScript_Planet : MonoBehaviour
             {
                 this.Planet = null;
                 ClosePlanet = false;
+                if (MainGameController.gameController != null)
+                {
+                    MainGameController.gameController.StartRestart(true);
+                }
             }
         }
         else
