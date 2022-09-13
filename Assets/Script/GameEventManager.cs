@@ -36,6 +36,9 @@ public class GameEventManager : MonoBehaviour
     /// </summary>
     public UnityEvent<string> PrizeLand;
 
+    /// <summary>
+    /// Trigger when you need to crash a prize
+    /// </summary>
     public UnityEvent<string> PrizeCrash;
 
     /// <summary>
@@ -43,13 +46,28 @@ public class GameEventManager : MonoBehaviour
     /// </summary>
     public UnityEvent<string,int> AddScore;
 
+    /// <summary>
+    /// Trigger when player close to a planet
+    /// </summary>
     public UnityEvent<Transform> ClosePlanet;
 
+    /// <summary>
+    /// Trigger when player leave the planet
+    /// </summary>
     public UnityEvent LeavePlanet;
 
+    /// <summary>
+    /// trigger when you want to crash player
+    /// </summary>
     public UnityEvent<Vector2> PlayerCrash;
 
+    /// <summary>
+    /// trigger when you want camera focus on player
+    /// </summary>
     public UnityEvent<bool> FocusPlayer;
 
+    /// <summary>
+    /// trigger to show warning
+    /// </summary>
     public UnityEvent<string,bool> SetWarning;
 }

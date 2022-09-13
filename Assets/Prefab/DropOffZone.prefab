@@ -146,7 +146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 874b165b549f7c94bb9035c10386a8a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Req_MAXVerticalSpeed: 20
+  Req_MAXVerticalSpeed: 30
   Req_MAXHorizonSpeed: 30
   Req_RotateAngle: 0
   Req_RotateAngleTor: 20

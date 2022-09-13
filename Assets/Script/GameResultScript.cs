@@ -7,19 +7,22 @@ using UnityEngine.SceneManagement;
 
 public class GameResultScript : MonoBehaviour
 {
+    [Tooltip("The panel contains result")]
     public RectTransform ResultPanel;
+    [Tooltip("The panel showing speed")]
     public float PanelShowingSpeed;
-
-    public GameObject TimeLabel;
+    [Tooltip("The Text shows the play time")]
     public TextMeshProUGUI TimeTxt;
-
-    public GameObject ScoreLabel;
+    [Tooltip("The Text shows the score")]
     public TextMeshProUGUI ScoreTxt;
-
+    [Tooltip("The spawn point of the prize")]
     public Transform SpawnPoint;
+    [Tooltip("The range of spawning")]
     [Range(0, 10)]
     public float SpawnRange;
+    [Tooltip("The frequent spawing prize")]
     public float SpawnFreq;
+    [Tooltip("Spawning Item")]
     public GameObject PrizeItem;
 
     private void Start()
@@ -31,6 +34,9 @@ public class GameResultScript : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// shows the panel
+    /// </summary>
     public void ShowResult()
     {
         ResultPanel.DOScale(Vector2.one, PanelShowingSpeed);
@@ -39,6 +45,10 @@ public class GameResultScript : MonoBehaviour
         StartCoroutine(SpawnPrize());
     }
 
+    /// <summary>
+    /// spawning prize
+    /// </summary>
+    /// <returns></returns>
     IEnumerator SpawnPrize()
     {
         foreach (var prize in ScoreManager.scoreManager.PrizeImg)
@@ -50,11 +60,16 @@ public class GameResultScript : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// The function when return button press
+    /// </summary>
     public void ReturnTitle()
     {
         SceneManager.LoadScene(0);
     }
-
+    /// <summary>
+    /// The function when retry button press
+    /// </summary>
     public void RetryBtn()
     {
         SceneManager.LoadScene(1);

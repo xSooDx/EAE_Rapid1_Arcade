@@ -24,12 +24,13 @@ public class UIController : MonoBehaviour
 {
     public static UIController uiController;
 
+    [Tooltip("The camera which you want to show on the UI")]
     public Camera m_Camera;
-
+    [Tooltip("The canvas of UI")]
     public Canvas MainCanvas;
-
+    [Tooltip("The canvas RectTransform of UI")]
     private RectTransform CanvasRect;
-
+    [Tooltip("The adding score popup UI")]
     public GameObject AddScoreUI;
 
     public GameObject WarningSign;
@@ -80,7 +81,9 @@ public class UIController : MonoBehaviour
             }
         }
     }
-
+    /// <summary>
+    /// set the pointer position and rotation
+    /// </summary>
     private void SetPointer()
     {
         if (targetPointers.Count <= 0)
@@ -111,6 +114,9 @@ public class UIController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// get the platform in scene and spawn pointer for them
+    /// </summary>
     void GetPlatform()
     {
         if (PointerObj == null) return;
@@ -134,6 +140,12 @@ public class UIController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// show score text function
+    /// </summary>
+    /// <param name="_desc"></param>
+    /// <param name="_score"></param>
+    /// <param name="_pos"></param>
     public void GetScore(string _desc, int _score, Vector2 _pos)
     {
         if (CanvasRect != null)
@@ -144,6 +156,11 @@ public class UIController : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// spawn text gameobject
+    /// </summary>
+    /// <param name="_desc"></param>
+    /// <param name="_pos"></param>
     void SpawnTxt(string _desc, Vector2 _pos)
     {
         Vector2 ViewportPosition = m_Camera.WorldToViewportPoint(_pos);
@@ -174,6 +191,11 @@ public class UIController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// calculate the position on canvas
+    /// </summary>
+    /// <param name="_VP"></param>
+    /// <returns></returns>
     private Vector2 WorldtoScreenPos(Vector2 _VP)
     {
         float Xpos = (_VP.x * CanvasRect.sizeDelta.x) - (CanvasRect.sizeDelta.x * 0.5f);
