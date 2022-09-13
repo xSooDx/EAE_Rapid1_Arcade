@@ -61,20 +61,23 @@ public class CameraScript_Planet : MonoBehaviour
     /// </summary>
     private Vector3 OriginPos;
 
-    private Vector3 MovePos;
+    private Vector2 MovePos;
 
+    [Tooltip("Camera position: the ratio between planet and player when focusing")]
     [Range(0, 100)]
     public float FocusRatio;
 
+    [Tooltip("Camera position: the ratio between planet and player when not focusing")]
     [Range(0, 100)]
     public float UnFocusRatio;
 
+    [Tooltip("Camera field of view minimum")]
     [Range(0, 100)]
     public float minZoom;
-
+    [Tooltip("Camera field of view Maximum")]
     [Range(0, 500)]
     public float MaxZoom;
-
+    [Tooltip("Camera field of view Limit")]
     [Range(0, 100)]
     public float ZoomLimit;
 

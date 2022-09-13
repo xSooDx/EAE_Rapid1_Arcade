@@ -13,9 +13,6 @@ public abstract class LandingPointScript : MonoBehaviour
     [Tooltip("Horizontal speed exceed this value, crash")]
     public float Req_MAXHorizonSpeed;
 
-    /// <summary>
-    /// this is new
-    /// </summary>
     [Tooltip("Rotation requirement")]
     public float Req_RotateAngle;
     [Tooltip("Rotation requirement tolerance")]
@@ -27,6 +24,13 @@ public abstract class LandingPointScript : MonoBehaviour
         TouchAction(collision);
     }
 
+    /// <summary>
+    /// check if the rotation is correct(base on position of the landing spot)
+    /// </summary>
+    /// <param name="_dir"></param>
+    /// <param name="_rotAngle"></param>
+    /// <param name="_localrot"></param>
+    /// <returns></returns>
     public bool RotationChk(Vector2 _dir, float _rotAngle, float _localrot = 0)
     {
         int sign = (_dir.x >= 0) ? -1 : 1;
@@ -60,6 +64,11 @@ public abstract class LandingPointScript : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// check the rotation is correct
+    /// </summary>
+    /// <param name="_rotAngle"></param>
+    /// <returns></returns>
     public bool RotationChk(float _rotAngle)
     {
         float angle = this.transform.rotation.eulerAngles.z;
@@ -92,6 +101,11 @@ public abstract class LandingPointScript : MonoBehaviour
         return false;
     }
 
+
+    /// <summary>
+    /// function when something land on this object
+    /// </summary>
+    /// <param name="_col"></param>
     public virtual void TouchAction(Collision2D _col)
     {
         Debug.Log("Touch " + _col.gameObject.name);

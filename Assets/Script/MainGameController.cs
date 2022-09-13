@@ -15,9 +15,21 @@ public class MainGameController : MonoBehaviour
     [Tooltip("The score that landing will get")]
     public int LandingScore;
 
+    [Tooltip("The amount of fuel when present land will get")]
+    public float FuelAdd;
+    [Tooltip("The amount of fuel when present crash will decrease")]
+    public float FuelLoss;
+    [Tooltip("If player leave planet over this time, reset player's position")]
+    public float ResetTime;
+    /// <summary>
+    /// Reset time counter
+    /// </summary>
+    private float _RstTimer;
+
     [Header("Game Info:")]
     [SerializeField]
     private int PlayerScore;
+
 
 
 
@@ -33,6 +45,9 @@ public class MainGameController : MonoBehaviour
     [Range(-90, 90)]
     public float InitialRotate;
 
+    /// <summary>
+    /// the prize image that player got
+    /// </summary>
     [SerializeField]
     private List<Sprite> PrizeImgs;
 
@@ -58,14 +73,7 @@ public class MainGameController : MonoBehaviour
     [Tooltip("Text for score")]
     public TextMeshProUGUI ScoreTxt;
 
-    public float FuelAdd;
 
-    public float FuelLoss;
-
-    private bool OutPlanet;
-
-    public float ResetTime;
-    private float _RstTimer;
 
     private void Awake()
     {
@@ -110,6 +118,13 @@ public class MainGameController : MonoBehaviour
     //    StartCoroutine(RestartGameCounter(_continue, _resetPos));
     //}
 
+
+    /// <summary>
+    /// thing do when game's over
+    /// </summary>
+    /// <param name="_ShowTxt">the title of ending</param>
+    /// <param name="_Desc">the description</param>
+    /// <param name="_action">what to do after count down</param>
     void GameOverFunc(string _ShowTxt, string _Desc, GameEndAction _action)
     {
         SetGameTxt(_ShowTxt, _Desc);
@@ -118,13 +133,17 @@ public class MainGameController : MonoBehaviour
         AudioManager.instance.PlayAudio("gameOver");
     }
 
+    /// <summary>
+    /// reset position of player when it's too far
+    /// </summary>
+    /// <param name="_start"></param>
     public void StartRestart(bool _start)
     {
         if (_start)
         {
 
-                _RstTimer = this.ResetTime;
-                ResetTimeCoroutine = StartCoroutine(ResetTimer());
+            _RstTimer = this.ResetTime;
+            ResetTimeCoroutine = StartCoroutine(ResetTimer());
         }
         else
         {
@@ -135,6 +154,10 @@ public class MainGameController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Reset position count down
+    /// </summary>
+    /// <returns></returns>
     IEnumerator ResetTimer()
     {
         while (true)
@@ -150,6 +173,11 @@ public class MainGameController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// adding score
+    /// </summary>
+    /// <param name="_desc"></param>
+    /// <param name="_score"></param>
     public void AddScore(string _desc, int _score)
     {
         if (UIController.uiController != null)
@@ -163,6 +191,10 @@ public class MainGameController : MonoBehaviour
         PlayerScore += _score;
     }
 
+    /// <summary>
+    /// settin when start
+    /// </summary>
+    /// <param name="_rstPos"></param>
     void iniSetup(bool _rstPos = true)
     {
         if (SetPostion && _rstPos) SetPlayerPos();
@@ -173,6 +205,9 @@ public class MainGameController : MonoBehaviour
         if (GameEventManager.gameEvent != null) GameEventManager.gameEvent.CancelFocus.Invoke(true);
     }
 
+    /// <summary>
+    /// set the score to scoremanager
+    /// </summary>
     public void SetScore()
     {
         if (ScoreManager.scoreManager != null)
@@ -183,6 +218,9 @@ public class MainGameController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// set player position
+    /// </summary>
     public void SetPlayerPos()
     {
         if (playerShip != null) playerShip.InitialSetup(InitialPos_Transform == null ? InitialPos : InitialPos_Transform.position, InitialForce, InitialRotate);
