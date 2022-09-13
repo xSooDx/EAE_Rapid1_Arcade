@@ -5,7 +5,9 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class Ui_menu : MonoBehaviour
+
 {
+    public GameObject control;
     // Start is called before the first frame update
     private void Start()
     {
@@ -24,5 +26,10 @@ public class Ui_menu : MonoBehaviour
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
         Application.Quit();
+    }
+
+    public void ControlScreen()
+    {
+        control.SetActive(true);
     }
 }
