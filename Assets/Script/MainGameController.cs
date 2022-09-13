@@ -58,6 +58,8 @@ public class MainGameController : MonoBehaviour
     [Tooltip("Text for score")]
     public TextMeshProUGUI ScoreTxt;
 
+    public float FuelAdd;
+
     private bool OutPlanet;
 
     public float ResetTime;
@@ -151,6 +153,10 @@ public class MainGameController : MonoBehaviour
         if (UIController.uiController != null)
         {
             UIController.uiController.GetScore(_desc, _score, playerShip.transform.position);
+        }
+        if (playerShip != null)
+        {
+            playerShip.FuelAmount += this.FuelAdd;
         }
         PlayerScore += _score;
     }

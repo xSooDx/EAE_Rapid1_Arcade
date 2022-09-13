@@ -138,24 +138,40 @@ public class UIController : MonoBehaviour
     {
         if (CanvasRect != null)
         {
-            Vector2 ViewportPosition = m_Camera.WorldToViewportPoint(_pos);
 
-            Vector2 WorldObject_ScreenPosition = WorldtoScreenPos(ViewportPosition);
-
-            GameObject _obj = Instantiate(AddScoreUI);
-            _obj.transform.SetParent(MainCanvas.transform);
-            TextMeshProUGUI _txt = _obj.GetComponentInChildren<TextMeshProUGUI>();
-            Debug.Log(_txt == null);
-            RectTransform rect = _obj.GetComponent<RectTransform>();
-            if (rect != null && _txt != null)
-            {
-                rect.localScale = Vector2.one;
-                rect.anchoredPosition = WorldObject_ScreenPosition;
-                _txt.text = _desc + "\n+" + _score.ToString();
-            }
-            Destroy(_obj, 2f);
+            StartCoroutine(AddScore(_desc + "\n+" + _score.ToString(), _pos));
         }
 
+    }
+
+    void SpawnTxt(string _desc, Vector2 _pos)
+    {
+        Vector2 ViewportPosition = m_Camera.WorldToViewportPoint(_pos);
+
+        Vector2 WorldObject_ScreenPosition = WorldtoScreenPos(ViewportPosition);
+
+        GameObject _obj = Instantiate(AddScoreUI);
+        _obj.transform.SetParent(MainCanvas.transform);
+        TextMeshProUGUI _txt = _obj.GetComponentInChildren<TextMeshProUGUI>();
+        Debug.Log(_txt == null);
+        RectTransform rect = _obj.GetComponent<RectTransform>();
+        if (rect != null && _txt != null)
+        {
+            rect.localScale = Vector2.one;
+            rect.anchoredPosition = WorldObject_ScreenPosition;
+            _txt.text = _desc;
+        }
+        Destroy(_obj, 2f);
+    }
+
+    IEnumerator AddScore(string _desc, Vector2 _pos)
+    {
+        SpawnTxt(_desc,_pos);
+        yield return new WaitForSeconds(1.5f);
+        if (MainGameController.gameController != null && MainGameController.gameController.FuelAdd > 0)
+        {
+            SpawnTxt("Fuel add!!\n+"+ MainGameController.gameController.FuelAdd, _pos);
+        }
     }
 
     private Vector2 WorldtoScreenPos(Vector2 _VP)
