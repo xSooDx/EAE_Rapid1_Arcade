@@ -411,6 +411,15 @@ public class ShipController : MonoBehaviour
         {
             GameEventManager.gameEvent.PrizeCrash.Invoke(this.GrabbingPrizeID);
         }
+        if (MainGameController.gameController != null)
+        {
+            FuelAmount -= MainGameController.gameController.FuelLoss;
+            if (FuelAmount < 0)
+            {
+                FuelAmount = 0;
+            }
+        }
+        
     }
 
 

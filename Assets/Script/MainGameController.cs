@@ -60,6 +60,8 @@ public class MainGameController : MonoBehaviour
 
     public float FuelAdd;
 
+    public float FuelLoss;
+
     private bool OutPlanet;
 
     public float ResetTime;
