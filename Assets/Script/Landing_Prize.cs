@@ -111,6 +111,8 @@ public class Landing_Prize : LandingPointScript
             {
                 _child.gameObject.layer = LayerMask.NameToLayer("Prize_Grab");
             }
+            Debug.Log("GetPRize");
+            SetPointer(true);
         }
 
     }
@@ -119,8 +121,13 @@ public class Landing_Prize : LandingPointScript
     {
         if (!PrizeID.Equals(_prizeid) || !_IsGrabbing) return;
         //this.transform.SetParent(null);
+        SetPointer(false);
         this._shipCtrl.IsGrabbing = false;
         this._shipCtrl.GrabbingPrizeID = "";
+        if (this._shipCtrl.animationControl != null)
+        {
+            this._shipCtrl.animationControl.HappyEmoji();
+        }
         this._shipCtrl = null;
         this.gameObject.layer = 6;
         this._rg.velocity = Vector2.zero;
@@ -154,11 +161,17 @@ public class Landing_Prize : LandingPointScript
     {
         if (!PrizeID.Equals(_prizeid) || !_IsGrabbing) return;
 
+        SetPointer(false);
         this.transform.SetParent(null);
+        if (this._shipCtrl.animationControl != null)
+        {
+            this._shipCtrl.animationControl.ShockEmoji();
+        }
         this._shipCtrl.IsGrabbing = false;
         this._shipCtrl.GrabbingPrizeID = "";
         this._shipCtrl = null;
         this.FollowTarget = false;
+        
         //AudioManager.instance.PlayAudio("dropoff");
         if (GameEventManager.gameEvent != null)
         {
@@ -167,6 +180,14 @@ public class Landing_Prize : LandingPointScript
         this._rg.AddForce(new Vector2(Random.Range(-5,5),1)*1000f);
         this._rg.AddTorque(Random.Range(-1, 2) * 500f);
         Destroy(this.gameObject, 2f);
+    }
+
+    void SetPointer(bool _set)
+    {
+        if (UIController.uiController != null)
+        {
+            UIController.uiController.SetShowPointer(_set);
+        }
     }
 
     IEnumerator PrizeDisappear()

@@ -50,4 +50,6 @@ public class GameEventManager : MonoBehaviour
     public UnityEvent<Vector2> PlayerCrash;
 
     public UnityEvent<bool> FocusPlayer;
+
+    public UnityEvent<string,bool> SetWarning;
 }

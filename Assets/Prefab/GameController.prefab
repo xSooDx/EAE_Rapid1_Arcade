@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6708420750248565651}
   - component: {fileID: 6708420750248565652}
+  - component: {fileID: 848621314}
+  - component: {fileID: 848621317}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -47,11 +49,47 @@ MonoBehaviour:
   playerShip: {fileID: 0}
   LandingScore: 100
   PlayerScore: 0
-  InitialPos: {x: 0, y: 3}
+  SetPostion: 1
+  InitialPos: {x: 0, y: 0}
+  InitialPos_Transform: {fileID: 0}
   InitialForce: {x: 0, y: 0}
   InitialRotate: 0
+  PrizeImgs: []
   GameTime: 0
   TimeTxt: {fileID: 0}
   GameMsgTitleTxt: {fileID: 0}
   GameMsgDESCTxt: {fileID: 0}
   ScoreTxt: {fileID: 0}
+--- !u!114 &848621314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6708420750248565650}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9442795ca9877840b8659b047876981, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Camera: {fileID: 0}
+  MainCanvas: {fileID: 0}
+  Locations:
+  - TargetObj: {fileID: 0}
+    Pointer_UI: {fileID: 0}
+    Show: 0
+--- !u!114 &848621317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6708420750248565650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22039e8dbae635744b765f31e31cce5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Camera: {fileID: 0}
+  MainCanvas: {fileID: 0}
+  AddScoreUI: {fileID: 154098963589407327, guid: d551ac7374cdc774995fb9ace23063eb, type: 3}

@@ -67,6 +67,7 @@ public class ShipController : MonoBehaviour
     [Tooltip("The layer of ground")]
     public LayerMask GroundLayer;
     public LayerMask PlatformLayer;
+    public LayerMask StatusLayerCheck;
     [Tooltip("The offset of height detection(for altitude)")]
     public Vector2 HeightOffest;
 
@@ -96,6 +97,8 @@ public class ShipController : MonoBehaviour
     [Tooltip("Text for showing Horizontal speed.")]
     public TextMeshProUGUI HorizontalSpeedTxt;
     [Tooltip("Text for showing Altitude.")]
+    public TextMeshProUGUI RotationTxt;
+    [Tooltip("Text for showing Altitude.")]
     public TextMeshProUGUI AltitudeTxt;
     [Tooltip("Text for showing fuel amount")]
     public TextMeshProUGUI FuelAmountTxt;
@@ -114,8 +117,6 @@ public class ShipController : MonoBehaviour
     private void OnEnable()
     {
         Playerinput.Enable();
-       
-
     }
     private void OnDisable()
     {
@@ -143,6 +144,11 @@ public class ShipController : MonoBehaviour
         if (this.HorizontalSpeedTxt != null && ShowInfo)//set the value text
         {
             this.HorizontalSpeedTxt.text = HorizontalSpd.ToString("0");
+        }
+
+        if (this.RotationTxt != null && ShowInfo)//set the value text
+        {
+            this.RotationTxt.text = RotateAngle.ToString("0");
         }
 
         if (this.AltitudeTxt != null && ShowInfo)//set the value text
@@ -258,14 +264,49 @@ public class ShipController : MonoBehaviour
                     {
                         if (Altitude < FocusHeight)
                         {
+                            if (!IsGrabbing)
+                            {
+                                if (animationControl != null) animationControl.SetClawOpen(true);
+                            }
+                            else
+                            {
+                                if (animationControl != null) animationControl.SetClawOpen(false);
+                            }
                             GameEventManager.gameEvent.StartFocus.Invoke();
                         }
                         else
                         {
+                            if (animationControl != null) animationControl.SetClawOpen(false);
                             GameEventManager.gameEvent.CancelFocus.Invoke(false);
                         }
                     }
 
+                }
+
+                RaycastHit2D _WarningHit = Physics2D.Raycast((Vector2)transform.position, _pos - (Vector2)this.gameObject.transform.position, 1000f, StatusLayerCheck);
+                float _alt = Vector2.Distance(_WarningHit.point, (Vector2)this.gameObject.transform.position + HeightOffest) * 10f;
+                if (_WarningHit.collider != null && _alt < 50 && GameEventManager.gameEvent != null && (!IsGrabbing || _WarningHit.collider.gameObject.layer == LayerMask.NameToLayer("Platform")))
+                {
+                    LandingPointScript landingPoint = _WarningHit.collider.gameObject.GetComponent<LandingPointScript>();
+                    if (landingPoint != null)
+                    {
+                        bool VS = GetVerticalSpd() > landingPoint.Req_MAXVerticalSpeed;
+                        GameEventManager.gameEvent.SetWarning.Invoke("VS", VS);
+
+                        bool HS = Mathf.Abs(GetHorizontalSpd()) > landingPoint.Req_MAXHorizonSpeed;
+                        GameEventManager.gameEvent.SetWarning.Invoke("HS", HS);
+
+                        bool AG = _WarningHit.collider.gameObject.layer == LayerMask.NameToLayer("Platform") ? !landingPoint.RotationChk(GetRotateAngle()) : !landingPoint.RotationChk(transform.position - landingPoint.transform.position, GetRotateAngle());
+                        GameEventManager.gameEvent.SetWarning.Invoke("AG", AG);
+
+                        GameEventManager.gameEvent.SetWarning.Invoke("SIGN", VS || HS || AG);
+
+                        GameEventManager.gameEvent.SetWarning.Invoke("SPD", VS || HS);
+                    }
+                }
+                else
+                {
+                    GameEventManager.gameEvent.SetWarning.Invoke("ALL", false);
                 }
 
                 Collider2D[] PlatformChk = Physics2D.OverlapCircleAll(this.gameObject.transform.position, 3f, PlatformLayer);
@@ -366,10 +407,19 @@ public class ShipController : MonoBehaviour
     {
         if (animationControl != null) animationControl.Explosion(_dir);
         AudioManager.instance.PlayAudio("shipDestroy");
-        if(GameEventManager.gameEvent!=null)
+        if (GameEventManager.gameEvent != null)
         {
             GameEventManager.gameEvent.PrizeCrash.Invoke(this.GrabbingPrizeID);
-                }
+        }
+        if (MainGameController.gameController != null)
+        {
+            FuelAmount -= MainGameController.gameController.FuelLoss;
+            if (FuelAmount < 0)
+            {
+                FuelAmount = 0;
+            }
+        }
+        
     }
 
 
