@@ -33,6 +33,8 @@ public class UIController : MonoBehaviour
     public GameObject AddScoreUI;
 
     public GameObject WarningSign;
+    public GameObject AngleSign;
+    public GameObject SpeedSign;
 
     public GameObject PointerObj;
 
@@ -52,10 +54,16 @@ public class UIController : MonoBehaviour
         if (GameEventManager.gameEvent != null)
         {
             GameEventManager.gameEvent.SetWarning.AddListener(SetWarning);
+            //GameEventManager.gameEvent.PlayerCrash.AddListener(ResetWarning);
         }
-        WarningSign.SetActive(false);
+        if (WarningSign != null)
+            WarningSign.SetActive(false);
+        if (AngleSign != null)
+            AngleSign.SetActive(false);
+        if (SpeedSign != null)
+            SpeedSign.SetActive(false);
 
-       
+
     }
 
     private void FixedUpdate()
@@ -63,7 +71,8 @@ public class UIController : MonoBehaviour
         if (ShowPointer)
         {
             SetPointer();
-        } else if (targetPointers.Count>0)
+        }
+        else if (targetPointers.Count > 0)
         {
             foreach (var item in targetPointers)
             {
@@ -98,12 +107,13 @@ public class UIController : MonoBehaviour
             {
                 item.Pointer_UI.gameObject.SetActive(false);
             }
-            
+
         }
     }
 
     void GetPlatform()
     {
+        if (PointerObj == null) return;
         GameObject[] _Platform = GameObject.FindGameObjectsWithTag("Platform");
         if (_Platform.Length > 0)
         {
@@ -157,10 +167,30 @@ public class UIController : MonoBehaviour
 
     void SetWarning(string _tag, bool _Warning)
     {
-        if (WarningSign != null)
+        if (WarningSign != null && (_tag.Equals("SIGN") || _tag.Equals("ALL")))
         {
             WarningSign.SetActive(_Warning);
         }
+
+        if (AngleSign != null && (_tag.Equals("AG") || _tag.Equals("ALL")))
+        {
+            AngleSign.SetActive(_Warning);
+        }
+
+        if (SpeedSign != null && (_tag.Equals("SPD") || _tag.Equals("ALL")))
+        {
+            SpeedSign.SetActive(_Warning);
+        }
+    }
+
+    void ResetWarning(Vector2 _pos)
+    {
+        WarningSign.SetActive(false);
+
+        AngleSign.SetActive(false);
+
+        SpeedSign.SetActive(false);
+
     }
 
     public void SetShowPointer(bool _setup)

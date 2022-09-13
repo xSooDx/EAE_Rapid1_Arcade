@@ -300,6 +300,8 @@ public class ShipController : MonoBehaviour
                         GameEventManager.gameEvent.SetWarning.Invoke("AG", AG);
 
                         GameEventManager.gameEvent.SetWarning.Invoke("SIGN", VS || HS || AG);
+
+                        GameEventManager.gameEvent.SetWarning.Invoke("SPD", VS || HS);
                     }
                 }
                 else
